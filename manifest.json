@@ -1,0 +1,50 @@
+{
+  "name": "AgroBey - Marketplace Agricole, Pastorale & Foncière",
+  "short_name": "AgroBey",
+  "description": "La marketplace digitale de référence pour l'agriculture, l'élevage et le foncier rural au Sénégal et en Afrique de l'Ouest.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#064e3b",
+  "theme_color": "#064e3b",
+  "categories": ["shopping", "business", "productivity"],
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "assets/logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Catalogue & Offres",
+      "short_name": "Catalogue",
+      "description": "Explorer les récoltes, bétail et terres disponibles",
+      "url": "./index.html#marketplace",
+      "icons": [{ "src": "assets/logo.jpg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Assistant IA & Prix",
+      "short_name": "Assistant IA",
+      "description": "Poser une question à l'IA ou voir le baromètre",
+      "url": "./index.html#support",
+      "icons": [{ "src": "assets/logo.jpg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Espace Agriculteur",
+      "short_name": "Agriculteur",
+      "description": "Gérer vos ventes et commandes",
+      "url": "./index.html#seller",
+      "icons": [{ "src": "assets/logo.jpg", "sizes": "192x192" }]
+    }
+  ]
+}

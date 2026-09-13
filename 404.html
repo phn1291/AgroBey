@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>AgroBey - Marketplace Agricole, Élevage & Foncier Rural au Sénégal</title>
+  <meta name="description" content="Plateforme digitale officielle de vente de récoltes maraîchères, bétail de race et location de terres agricoles au Sénégal. Direct producteur, baux ruraux conformes et cartographie live.">
+  <meta name="keywords" content="agriculture sénégal, bétail ladoum, location terres agricoles, récolte oignons podor, mangues casamance, bail rural sénégal, agrobey express">
+  <meta name="author" content="AgroBey Technologies">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://agrobey.sn/">
+  <meta property="og:title" content="AgroBey - Marketplace Agricole, Élevage & Foncier au Sénégal">
+  <meta property="og:description" content="Achetez directement aux producteurs : récoltes fraîches, moutons Ladoum, location de terres avec forage et baux ruraux certifiés.">
+  <meta property="og:image" content="assets/logo.jpg">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AgroBey - Le Monde Rural & Agro-Pastoral Connecté">
+  <meta name="twitter:description" content="Vente directe de récoltes, bétail et location de champs agricoles au Sénégal.">
+  <meta name="twitter:image" content="assets/logo.jpg">
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#064e3b">
+  
+  <!-- Optimisations PWA & Mobile iOS / Android -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AgroBey">
+  <link rel="apple-touch-icon" href="assets/logo.jpg">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="AgroBey">
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            agrogreen: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+              950: '#052e16',
+            },
+            agroamber: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              200: '#fde68a',
+              300: '#fcd34d',
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+              800: '#92400e',
+              900: '#78350f',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Leaflet Interactive Maps (Cartographie Live Sénégal) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Styles personnalisés AgroBey -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex flex-col selection:bg-emerald-600 selection:text-white mobile-safe-bottom">
+
+  <!-- Bannière d'Installation Application Mobile PWA -->
+  <div id="pwa-install-banner" class="hidden bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 text-slate-950 px-4 py-2.5 shadow-md flex items-center justify-between gap-3 text-xs font-bold border-b border-amber-600 sticky top-0 z-50">
+    <div class="flex items-center gap-2.5">
+      <img src="assets/logo.jpg" alt="Logo AgroBey" class="w-8 h-8 rounded-lg object-cover shadow border border-slate-900/20">
+      <div>
+        <div class="font-extrabold text-xs">Installer l'Application Mobile AgroBey</div>
+        <div class="text-[10px] text-slate-900/80 font-medium">Accès direct 1 clic, alertes instantanées & mode hors-ligne</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-1.5 shrink-0">
+      <button onclick="window.AgroBeyApp.promptPWAInstall()" class="px-3 py-1.5 bg-slate-950 hover:bg-slate-800 text-white rounded-lg text-xs font-black shadow transition">
+        Installer
+      </button>
+      <button onclick="document.getElementById('pwa-install-banner').classList.add('hidden')" class="p-1.5 text-slate-950 hover:text-white text-xs">
+        ✕
+      </button>
+    </div>
+  </div>
+
+  <!-- Top Bar d'annonce & Support rapide (Desktop & Tablet) -->
+  <div class="hidden sm:block bg-gradient-to-r from-emerald-950 via-agrogreen-900 to-emerald-950 text-white text-xs py-2 px-4 border-b border-emerald-800">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <div class="flex items-center gap-3">
+        <span class="bg-amber-500 text-emerald-950 font-black px-2 py-0.5 rounded text-[10px] tracking-wide uppercase">Officiel</span>
+        <span class="text-emerald-100" id="topbar-announcement-text">🌿 Plateforme Nationale & Régionale du Monde Rural et Agro-Pastoral</span>
+      </div>
+      <div class="flex items-center gap-4 text-[11px] text-emerald-200">
+        <span class="hidden md:flex items-center gap-1.5"><i class="fa-solid fa-truck-fast text-amber-400"></i> Transport & Logistique certifiés</span>
+        <span class="flex items-center gap-1.5"><i class="fa-solid fa-phone-volume text-amber-400"></i> Support : <strong class="text-white" id="topbar-phone-number">+221 33 800 00 00</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header Principal avec Logo Officiel, Navigation & Profil -->
+  <header class="sticky top-0 z-40 glass-header border-b border-gray-200/80 shadow-sm transition-all duration-200">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
+      
+      <!-- Logo AgroBey Officiel & Menu Hamburger Mobile -->
+      <div class="flex items-center gap-2.5">
+        <button type="button" onclick="window.AgroBeyApp.toggleMobileDrawer()" class="lg:hidden w-10 h-10 rounded-2xl bg-gray-100 hover:bg-emerald-50 text-gray-700 hover:text-emerald-700 flex items-center justify-center border border-gray-200 transition touch-btn" title="Menu latéral">
+          <i class="fa-solid fa-bars text-base"></i>
+        </button>
+
+        <div class="flex items-center gap-2.5 cursor-pointer select-none" onclick="window.AgroBeyApp.switchTab('marketplace')">
+          <img src="assets/logo.jpg" alt="Logo AgroBey" class="h-10 w-10 sm:h-14 sm:w-14 rounded-2xl object-cover shadow-md border-2 border-emerald-600/30">
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-xl sm:text-3xl font-black tracking-tight text-emerald-900">Agro<span class="text-amber-500">Bey</span></span>
+              <span class="bg-emerald-100 text-emerald-800 text-[9px] sm:text-[10px] font-extrabold px-1.5 py-0.5 rounded-full border border-emerald-300">2026</span>
+            </div>
+            <p class="text-[9px] sm:text-[11px] font-semibold text-gray-500 tracking-wide uppercase hidden sm:block">Agriculture • Élevage • Terres • Fermes</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Desktop -->
+      <nav class="hidden lg:flex items-center gap-1 bg-gray-100/80 p-1.5 rounded-2xl border border-gray-200 text-xs font-bold">
+        <button onclick="window.AgroBeyApp.switchTab('marketplace')" class="nav-tab-btn px-4 py-2.5 rounded-xl transition flex items-center gap-2 text-emerald-700 bg-emerald-50" data-tab="marketplace">
+          <i class="fa-solid fa-store text-sm"></i>
+          <span>Catalogue & Offres</span>
+        </button>
+        <button id="nav-btn-publish" onclick="window.AgroBeyApp.switchTab('publish')" class="nav-tab-btn hidden px-4 py-2.5 rounded-xl transition flex items-center gap-2 text-gray-600 hover:text-emerald-700" data-tab="publish">
+          <i class="fa-solid fa-circle-plus text-sm text-amber-500"></i>
+          <span>Déposer une Annonce</span>
+        </button>
+        <button onclick="window.AgroBeyApp.switchTab('seller')" class="nav-tab-btn px-4 py-2.5 rounded-xl transition flex items-center gap-2 text-gray-600 hover:text-emerald-700" data-tab="seller">
+          <i class="fa-solid fa-tractor text-sm"></i>
+          <span>Espace Agriculteur</span>
+        </button>
+        <button onclick="window.AgroBeyApp.switchTab('delivery')" class="nav-tab-btn px-4 py-2.5 rounded-xl transition flex items-center gap-2 text-gray-600 hover:text-emerald-700" data-tab="delivery">
+          <i class="fa-solid fa-truck-fast text-sm text-amber-500"></i>
+          <span>Espace Livreur</span>
+        </button>
+        <button onclick="window.AgroBeyApp.switchTab('support')" class="nav-tab-btn px-4 py-2.5 rounded-xl transition flex items-center gap-2 text-gray-600 hover:text-emerald-700" data-tab="support">
+          <i class="fa-solid fa-chart-simple text-sm"></i>
+          <span>Baromètre & Support</span>
+        </button>
+      </nav>
+
+      <!-- Profil Utilisateur, Cloche Notifications & Connexion -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- État 1 : Non Connecté -->
+        <div id="header-auth-guest" class="flex items-center gap-1.5 sm:gap-2">
+          <button onclick="window.AgroBeyAuth.openAuthModal('login')" class="px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold text-xs rounded-xl transition border border-gray-200 flex items-center gap-1.5 shadow-sm touch-btn">
+            <i class="fa-solid fa-arrow-right-to-bracket text-emerald-700"></i>
+            <span class="hidden sm:inline">Connexion</span>
+          </button>
+          <button onclick="window.AgroBeyAuth.openAuthModal('register')" class="px-3 sm:px-4 py-2 sm:py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl transition shadow flex items-center gap-1.5 touch-btn">
+            <i class="fa-solid fa-user-plus"></i>
+            <span class="hidden sm:inline">S'inscrire</span>
+          </button>
+        </div>
+
+        <!-- État 2 : Connecté -->
+        <div id="header-auth-user" class="hidden items-center gap-2 sm:gap-3">
+          <!-- Mes Commandes & Baux Ruraux Rapide -->
+          <button onclick="window.AgroBeyApp.openClientOrdersModal()" class="px-2.5 sm:px-3 py-2 rounded-xl bg-white hover:bg-emerald-50 text-slate-800 hover:text-emerald-800 border border-gray-200 text-xs font-bold transition flex items-center gap-1.5 shadow-sm" title="Mes Commandes & Baux">
+            <i class="fa-solid fa-receipt text-emerald-700"></i>
+            <span class="hidden md:inline">Commandes</span>
+          </button>
+
+          <!-- Cloche de Notifications -->
+          <div class="relative" id="header-notif-container">
+            <button type="button" onclick="window.AgroBeyApp.toggleNotificationsDropdown()" class="relative w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-white hover:bg-emerald-50 text-gray-700 hover:text-emerald-700 border border-gray-200 shadow-sm flex items-center justify-center transition touch-btn" title="Notifications">
+              <i class="fa-solid fa-bell text-sm"></i>
+              <span id="header-notif-badge" class="hidden absolute -top-1 -right-1 bg-red-600 text-white font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center shadow-md animate-pulse">0</span>
+            </button>
+
+            <!-- Dropdown Notifications -->
+            <div id="header-notif-dropdown" class="absolute right-0 top-full mt-2 w-72 sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 py-3 hidden z-50 text-xs slide-down">
+              <div class="px-4 pb-2 border-b border-gray-100 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="font-black text-gray-900">Notifications</span>
+                  <span id="header-notif-count-label" class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">0</span>
+                </div>
+                <button onclick="window.AgroBeyApp.markAllNotificationsRead()" class="text-[11px] text-emerald-700 hover:underline font-bold">
+                  Tout marquer lu
+                </button>
+              </div>
+              <div id="header-notif-list" class="max-h-80 overflow-y-auto divide-y divide-gray-100">
+                <!-- Rendu dynamique -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Avatar & Menu Utilisateur -->
+          <div class="flex items-center gap-2 sm:gap-2.5 pl-2 border-l border-gray-200">
+            <img id="header-user-avatar" src="assets/logo.jpg" alt="Avatar" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover border border-emerald-600">
+            <div class="hidden sm:block text-left">
+              <div id="header-user-name" class="text-xs font-black text-gray-900 leading-tight">Utilisateur</div>
+              <div id="header-user-role" class="text-[10px] font-bold text-emerald-700">Producteur</div>
+            </div>
+            <button onclick="window.AgroBeyAuth.logout()" class="p-2 text-gray-400 hover:text-red-600 transition" title="Se déconnecter">
+              <i class="fa-solid fa-power-off text-sm"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Menu Coulissant Latéral Mobile (Drawer) -->
+  <div id="mobile-drawer-overlay" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden transition-opacity" onclick="window.AgroBeyApp.closeMobileDrawer()">
+    <div id="mobile-drawer" class="w-80 max-w-[85vw] h-full bg-slate-900 text-slate-100 shadow-2xl flex flex-col justify-between overflow-y-auto p-6 mobile-drawer-slide border-r border-slate-800" onclick="event.stopPropagation()">
+      <div class="space-y-6">
+        <!-- En-tête Drawer -->
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+          <div class="flex items-center gap-2.5">
+            <img src="assets/logo.jpg" alt="Logo AgroBey" class="w-10 h-10 rounded-xl object-cover border border-emerald-500/40">
+            <div>
+              <div class="font-black text-white text-base">Agro<span class="text-amber-400">Bey</span></div>
+              <div class="text-[10px] text-emerald-400 font-bold">App Mobile Officielle</div>
+            </div>
+          </div>
+          <button onclick="window.AgroBeyApp.closeMobileDrawer()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center text-xs font-bold">
+            ✕
+          </button>
+        </div>
+
+        <!-- Profil Utilisateur Mobile -->
+        <div id="mobile-drawer-user-info" class="p-4 bg-slate-950 rounded-2xl border border-slate-800">
+          <!-- Injecté dynamiquement selon auth -->
+        </div>
+
+        <!-- Liens de Navigation Mobile -->
+        <div class="space-y-1.5 text-xs font-bold">
+          <button onclick="window.AgroBeyApp.switchTab('marketplace'); window.AgroBeyApp.closeMobileDrawer();" class="w-full p-3 rounded-xl hover:bg-slate-800 text-slate-200 flex items-center gap-3 transition text-left">
+            <i class="fa-solid fa-store text-emerald-400 text-base w-6 text-center"></i>
+            <span>Catalogue & Offres</span>
+          </button>
+
+          <button onclick="window.AgroBeyApp.openClientOrdersModal(); window.AgroBeyApp.closeMobileDrawer();" class="w-full p-3 rounded-xl hover:bg-slate-800 text-emerald-300 flex items-center gap-3 transition text-left">
+            <i class="fa-solid fa-receipt text-emerald-400 text-base w-6 text-center"></i>
+            <span>Mes Commandes & Baux Ruraux</span>
+          </button>
+
+          <button id="mobile-drawer-btn-publish" onclick="window.AgroBeyApp.switchTab('publish'); window.AgroBeyApp.closeMobileDrawer();" class="w-full p-3 rounded-xl hover:bg-slate-800 text-amber-300 flex items-center gap-3 transition text-left">
+            <i class="fa-solid fa-circle-plus text-amber-400 text-base w-6 text-center"></i>
+            <span>Déposer une Annonce</span>
+          </button>
+
+          <button onclick="window.AgroBeyApp.switchTab('seller'); window.AgroBeyApp.closeMobileDrawer();" class="w-full p-3 rounded-xl hover:bg-slate-800 text-slate-200 flex items-center gap-3 transition text-left">
+            <i class="fa-solid fa-tractor text-cyan-400 text-base w-6 text-center"></i>
+            <span>Espace Agriculteur & Ventes</span>
+          </button>
+
+          <button onclick="window.AgroBeyApp.switchTab('delivery'); window.AgroBeyApp.closeMobileDrawer();" class="w-full p-3 rounded-xl hover:bg-slate-800 text-amber-300 flex items-center gap-3 transition text-left">
+            <i class="fa-solid fa-truck-fast text-amber-400 text-base w-6 text-center"></i>
+            <span>Espace Livreur & Missions</span>
+          </button>
+
+          <button onclick="window.AgroBeyApp.switchTab('support'); window.AgroBeyApp.closeMobileDrawer();" class="w-full p-3 rounded-xl hover:bg-slate-800 text-slate-200 flex items-center gap-3 transition text-left">
+            <i class="fa-solid fa-robot text-purple-400 text-base w-6 text-center"></i>
+            <span>Assistant IA & Baromètre Prix</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Bas du Drawer Mobile -->
+      <div class="pt-6 border-t border-slate-800 space-y-3 text-xs">
+        <button onclick="window.AgroBeyApp.promptPWAInstall()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black rounded-xl shadow flex items-center justify-center gap-2">
+          <i class="fa-solid fa-mobile-screen-button"></i>
+          <span>Installer l'Application</span>
+        </button>
+
+        <a href="https://wa.me/221770000000" target="_blank" class="w-full py-2.5 bg-emerald-950 text-emerald-300 border border-emerald-800/80 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-emerald-900 transition">
+          <i class="fa-brands fa-whatsapp text-emerald-400 text-sm"></i>
+          <span>Support WhatsApp</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main App Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
+
+    <!-- VUE 1 : MARKETPLACE & CATALOGUE PUBLIC -->
+    <section id="view-marketplace" class="space-y-6">
+      
+      <!-- Bannière Héroïque AgroBey Officielle -->
+      <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-emerald-950 via-agrogreen-900 to-emerald-900 text-white p-6 sm:p-10 shadow-xl border border-emerald-800/80">
+        <div class="absolute -right-16 -top-16 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative z-10 max-w-3xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-800/80 border border-emerald-600 text-amber-400 text-xs font-black uppercase tracking-wider mb-3">
+            <i class="fa-solid fa-leaf"></i> 100% Direct Producteur • Sans Intermédiaires Abusifs
+          </div>
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
+            Cultivons. Élevons.<br><span class="text-amber-400">Construisons demain.</span>
+          </h1>
+          <p class="mt-3 text-xs sm:text-sm text-emerald-100 max-w-2xl leading-relaxed">
+            La marketplace digitale de référence dédiée aux récoltes maraîchères, à l élevage de race (Ladoum, Guzera) et à la location de terres et fermes agricoles au Sénégal et en Afrique de l Ouest.
+          </p>
+
+          <!-- Barre de Recherche Universelle Intégrée -->
+          <div class="mt-6 flex flex-col sm:flex-row gap-2 bg-white/10 backdrop-blur-md p-2 rounded-2xl border border-white/20">
+            <div class="flex-1 relative">
+              <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-emerald-300"></i>
+              <input type="text" id="marketplace-search" oninput="window.AgroBeyApp.marketplace.setFilters({ search: this.value })" placeholder="Rechercher oignons de Podor, béliers Ladoum, champs à louer..." class="w-full pl-10 pr-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 text-xs rounded-xl focus:ring-2 focus:ring-amber-400 outline-none">
+            </div>
+            <button onclick="window.AgroBeyApp.marketplace.render()" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-emerald-950 font-black text-xs rounded-xl transition shadow-md flex items-center justify-center gap-2 touch-btn">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <span>Filtrer</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bouton d'accès rapide Filtres Mobile -->
+      <div class="lg:hidden flex items-center gap-2">
+        <button onclick="window.AgroBeyApp.openMobileFilters()" class="flex-1 py-3 px-4 bg-emerald-700 hover:bg-emerald-800 text-white rounded-2xl font-black text-xs flex items-center justify-center gap-2 shadow-sm touch-btn">
+          <i class="fa-solid fa-sliders"></i>
+          <span>Filtres & Régions du Sénégal</span>
+        </button>
+        <button onclick="window.AgroBeyApp.switchTab('support')" class="py-3 px-4 bg-purple-700 hover:bg-purple-800 text-white rounded-2xl font-black text-xs flex items-center justify-center gap-1.5 shadow-sm touch-btn">
+          <i class="fa-solid fa-robot text-amber-300"></i>
+          <span>IA</span>
+        </button>
+      </div>
+
+      <!-- Barre des Catégories Principales (Pills avec défilement tactile) -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar text-xs font-bold select-none">
+        <button onclick="window.AgroBeyApp.marketplace.setCategory('all')" class="cat-pill px-4 py-2.5 rounded-2xl border transition whitespace-nowrap bg-emerald-700 text-white shadow-md touch-btn" data-category="all">
+          🌾 Toutes les Offres
+        </button>
+        <button onclick="window.AgroBeyApp.marketplace.setCategory('recolte')" class="cat-pill px-4 py-2.5 rounded-2xl border transition whitespace-nowrap bg-white text-gray-700 hover:bg-gray-100 touch-btn" data-category="recolte">
+          🥦 Récoltes & Maraîchage
+        </button>
+        <button onclick="window.AgroBeyApp.marketplace.setCategory('elevage')" class="cat-pill px-4 py-2.5 rounded-2xl border transition whitespace-nowrap bg-white text-gray-700 hover:bg-gray-100 touch-btn" data-category="elevage">
+          🐏 Élevage & Bétail
+        </button>
+        <button onclick="window.AgroBeyApp.marketplace.setCategory('terre')" class="cat-pill px-4 py-2.5 rounded-2xl border transition whitespace-nowrap bg-white text-gray-700 hover:bg-gray-100 touch-btn" data-category="terre">
+          🌄 Terres & Champs
+        </button>
+        <button onclick="window.AgroBeyApp.marketplace.setCategory('ferme')" class="cat-pill px-4 py-2.5 rounded-2xl border transition whitespace-nowrap bg-white text-gray-700 hover:bg-gray-100 touch-btn" data-category="ferme">
+          🐓 Fermes & Poulaillers
+        </button>
+        <button onclick="window.AgroBeyApp.marketplace.setCategory('materiel')" class="cat-pill px-4 py-2.5 rounded-2xl border transition whitespace-nowrap bg-white text-gray-700 hover:bg-gray-100 touch-btn" data-category="materiel">
+          🚜 Matériel & Tracteurs
+        </button>
+      </div>
+
+      <!-- Filtres Multi-Critères Secondaires (Desktop) -->
+      <div class="hidden lg:flex bg-white rounded-2xl border border-gray-200/80 p-4 shadow-sm items-center justify-between gap-4 text-xs">
+        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+          <!-- Filtre Transaction -->
+          <div class="flex items-center gap-1.5">
+            <span class="font-bold text-gray-500">Transaction :</span>
+            <select id="filter-type" onchange="window.AgroBeyApp.marketplace.setFilters({ transactionType: this.value })" class="px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-xl font-semibold outline-none focus:ring-2 focus:ring-emerald-500">
+              <option value="all">Toutes transactions</option>
+              <option value="vente">Vente Directe</option>
+              <option value="location">Bail Rural / Location</option>
+            </select>
+          </div>
+
+          <!-- Filtre Région -->
+          <div class="flex items-center gap-1.5">
+            <span class="font-bold text-gray-500">Région :</span>
+            <select id="filter-region" onchange="window.AgroBeyApp.marketplace.setFilters({ region: this.value })" class="px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-xl font-semibold outline-none focus:ring-2 focus:ring-emerald-500">
+              <option value="all">Tout le Sénégal</option>
+              <option value="Dakar">Dakar</option>
+              <option value="Thiès">Thiès</option>
+              <option value="Saint-Louis">Saint-Louis</option>
+              <option value="Kaolack">Kaolack</option>
+              <option value="Louga">Louga</option>
+              <option value="Fatick">Fatick</option>
+              <option value="Ziguinchor">Ziguinchor</option>
+              <option value="Kolda">Kolda</option>
+              <option value="Tambacounda">Tambacounda</option>
+            </select>
+          </div>
+
+          <!-- Filtre Prix Max -->
+          <div class="flex items-center gap-1.5">
+            <span class="font-bold text-gray-500">Budget Max :</span>
+            <input type="number" id="filter-max-price" placeholder="FCFA" oninput="window.AgroBeyApp.marketplace.setFilters({ maxPrice: this.value ? parseInt(this.value) : null })" class="w-28 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-xl font-semibold outline-none focus:ring-2 focus:ring-emerald-500">
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between w-full md:w-auto gap-4">
+          <span id="results-count" class="font-extrabold text-emerald-800">Chargement...</span>
+          <button onclick="window.AgroBeyApp.marketplace.resetFilters()" class="text-gray-400 hover:text-emerald-700 font-bold transition">
+            <i class="fa-solid fa-rotate-left"></i> Réinitialiser
+          </button>
+        </div>
+      </div>
+
+      <!-- Grille des Offres Marketplace -->
+      <div id="listings-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Rendu dynamique via marketplace.js -->
+      </div>
+    </section>
+
+    <!-- VUE 2 : DÉPOSER UNE ANNONCE -->
+    <section id="view-publish" class="hidden space-y-6">
+      <div id="publish-guard-container"></div>
+
+      <div id="publish-form-actual" class="hidden max-w-3xl mx-auto bg-white rounded-3xl border border-gray-200/80 p-6 sm:p-10 shadow-sm">
+        <div class="border-b border-gray-100 pb-4 mb-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase mb-2">
+            Publication Directe
+          </div>
+          <h2 class="text-2xl font-black text-gray-900">Déposer une Offre Agricole ou Pastorale</h2>
+          <p class="text-xs text-gray-500 mt-1">Vos récoltes, bétails ou terres seront instantanément visibles par des milliers d acheteurs.</p>
+        </div>
+
+        <form id="publish-listing-form" onsubmit="window.AgroBeyApp.seller.submitNewListing(event)" class="space-y-4 text-xs">
+          <div>
+            <label class="block font-bold text-gray-700 mb-1">Titre clair de l offre *</label>
+            <input type="text" id="pub-title" required placeholder="Ex: Oignons séchés de Podor sac 25kg ou Champ 5 ha avec forage" class="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-bold text-gray-700 mb-1">Catégorie *</label>
+              <select id="pub-category" required onchange="window.AgroBeyApp.seller.handleCategoryChange(this.value)" class="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs">
+                <option value="recolte">Récoltes & Maraîchage</option>
+                <option value="elevage">Élevage & Cheptel</option>
+                <option value="terre">Terres & Champs Agricoles</option>
+                <option value="ferme">Fermes & Poulaillers</option>
+                <option value="materiel">Matériel Agricole & Tracteurs</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-bold text-gray-700 mb-1">Type de Transaction *</label>
+              <div class="flex items-center gap-4 pt-2">
+                <label class="flex items-center gap-2 cursor-pointer font-bold">
+                  <input type="radio" name="pub-type" value="vente" checked class="text-emerald-600 focus:ring-emerald-500">
+                  <span>Vente Directe</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer font-bold">
+                  <input type="radio" name="pub-type" value="location" class="text-emerald-600 focus:ring-emerald-500">
+                  <span>Bail Rural / Location</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Encart Spécial pour Terres & Fermes (Aucune livraison requise) -->
+          <div id="pub-land-notice" class="hidden p-4 bg-gradient-to-r from-amber-50 to-amber-100/80 rounded-2xl border-2 border-amber-300 space-y-2 text-xs text-amber-950">
+            <div class="flex items-center gap-2 font-black text-amber-900">
+              <span class="w-6 h-6 rounded-full bg-amber-200 text-amber-900 flex items-center justify-center text-xs"><i class="fa-solid fa-landmark-dome"></i></span>
+              <span>🌿 Bien Foncier / Immobilier Rural</span>
+            </div>
+            <p class="text-[11px] text-amber-900 font-medium leading-relaxed">
+              Les transactions de terres, champs et fermes sont des biens immobiliers non soumis au transport routier. Le client prendra rendez-vous pour visiter le terrain, vérifier les limites et signer le bail rural conforme.
+            </p>
+            <div class="text-[10px] font-bold text-emerald-800 bg-white/80 p-2 rounded-xl border border-amber-200">
+              ✓ Aucun véhicule requis • Frais de livraison : 0 FCFA • Modèle de bail rural conforme fourni
+            </div>
+          </div>
+
+          <!-- Gabarit & Règles de Transport (Petits articles vs Gros articles/Bétail) -->
+          <div id="pub-logistics-section" class="p-4 bg-emerald-50/60 rounded-2xl border border-emerald-200/80 space-y-3">
+            <div class="flex items-center justify-between">
+              <label class="block font-black text-emerald-950 text-xs flex items-center gap-1.5">
+                <i class="fa-solid fa-truck-ramp-box text-emerald-700"></i>
+                <span>Gabarit & Logistique de l'Article *</span>
+              </label>
+              <span class="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">Règles de Livraison AgroBey</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <label class="flex items-start gap-2.5 p-3 rounded-xl border cursor-pointer transition bg-white border-emerald-400 text-emerald-950 font-bold shadow-sm" id="pub-size-small-label">
+                <input type="radio" name="pub-item-size" id="pub-size-small" value="small" checked onchange="window.AgroBeyApp.seller.toggleItemSizeUI('small')" class="mt-0.5 text-emerald-600 focus:ring-emerald-500">
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <span>🛵 Petit article / Maraîchage (< 30 kg)</span>
+                  </div>
+                  <p class="text-[10px] text-gray-500 font-normal mt-0.5">Le <strong>client choisit</strong> son mode de livraison (Moto Tiak-Tiak 350-500 F/km, Tricycle, etc.).</p>
+                </div>
+              </label>
+
+              <label class="flex items-start gap-2.5 p-3 rounded-xl border cursor-pointer transition bg-gray-50 border-gray-200 text-gray-700" id="pub-size-large-label">
+                <input type="radio" name="pub-item-size" id="pub-size-large" value="large" onchange="window.AgroBeyApp.seller.toggleItemSizeUI('large')" class="mt-0.5 text-emerald-600 focus:ring-emerald-500">
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <span>🚛 Gros volume / Bétail / Lourd (> 30 kg)</span>
+                  </div>
+                  <p class="text-[10px] text-gray-500 font-normal mt-0.5">Le <strong>vendeur impose</strong> le véhicule sécurisé adapté (Camionnette, Camion, Bétaillère).</p>
+                </div>
+              </label>
+            </div>
+
+            <!-- Sélecteur de véhicule imposé par le vendeur (affiché si gros article) -->
+            <div id="pub-seller-vehicle-box" class="hidden pt-2 border-t border-emerald-200/60 space-y-2">
+              <label class="block font-bold text-gray-800 text-[11px]">Véhicule de transport sécurisé requis par le vendeur :</label>
+              <select id="pub-seller-vehicle" class="w-full px-3.5 py-2 bg-white border border-emerald-300 rounded-xl font-bold text-gray-900 outline-none text-xs">
+                <option value="camionnette">🚐 Camionnette Frigorifique / Bâchée (3.5 Tonnes)</option>
+                <option value="betaillere">🐂 Camion Bétaillère / Transport Bétail Spécialisé</option>
+                <option value="camion">🚛 Camion Plateau Ridelles (10T à 20T)</option>
+                <option value="voiture">🚗 Voiture / Break Utilitaire</option>
+              </select>
+              <p class="text-[10px] text-amber-800 bg-amber-50 p-2 rounded-lg border border-amber-200">
+                ⚠️ Pour la sécurité de la marchandise et le bien-être animal, la livraison à deux-roues sera automatiquement bloquée pour cet article.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-bold text-gray-700 mb-1">Prix Unitaire (FCFA) *</label>
+              <input type="number" id="pub-price" required min="100" placeholder="Ex: 9500" class="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs font-bold">
+            </div>
+            <div>
+              <label class="block font-bold text-gray-700 mb-1">Libellé du Prix *</label>
+              <input type="text" id="pub-price-unit" required placeholder="Ex: le sac de 25 kg, la tête, le mois" class="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-bold text-gray-700 mb-1">Quantité Disponible *</label>
+              <input type="number" id="pub-quantity" required min="1" value="10" class="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs font-bold">
+            </div>
+            <div>
+              <label class="block font-bold text-gray-700 mb-1">Unité de Mesure *</label>
+              <input type="text" id="pub-unit" required placeholder="Ex: sacs, kg, têtes, hectares, mois" class="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-bold text-gray-700 mb-1">Région *</label>
+              <select id="pub-region" required class="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs">
+                <option value="Thiès">Thiès</option>
+                <option value="Dakar">Dakar</option>
+                <option value="Saint-Louis">Saint-Louis</option>
+                <option value="Kaolack">Kaolack</option>
+                <option value="Louga">Louga</option>
+                <option value="Fatick">Fatick</option>
+                <option value="Ziguinchor">Ziguinchor</option>
+                <option value="Kolda">Kolda</option>
+                <option value="Tambacounda">Tambacounda</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-gray-700 mb-1">Ville / Commune / Village *</label>
+              <input type="text" id="pub-city" required placeholder="Ex: Notto Diobass, Podor, Pout" class="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs">
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-gray-700 mb-1">Description Complète de l Offre *</label>
+            <textarea id="pub-description" required rows="3" placeholder="Décrivez l état, la qualité, les accès eau/électricité, la fraîcheur..." class="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs"></textarea>
+          </div>
+
+          <!-- Spécifications Clés -->
+          <div class="p-4 bg-gray-50 rounded-2xl border border-gray-200">
+            <h4 class="font-bold text-gray-900 mb-2">Caractéristiques Techniques (Optionnel)</h4>
+            <div class="grid grid-cols-2 gap-2 mb-2">
+              <input type="text" id="pub-spec-k1" placeholder="Ex: Variété ou Forage" class="px-3 py-2 border rounded-xl bg-white outline-none">
+              <input type="text" id="pub-spec-v1" placeholder="Ex: Violet de Galmi ou Débit 25m3/h" class="px-3 py-2 border rounded-xl bg-white outline-none">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <input type="text" id="pub-spec-k2" placeholder="Ex: Clôture ou Âge" class="px-3 py-2 border rounded-xl bg-white outline-none">
+              <input type="text" id="pub-spec-v2" placeholder="Ex: Grillage galvanisé ou 22 mois" class="px-3 py-2 border rounded-xl bg-white outline-none">
+            </div>
+          </div>
+
+          <!-- Upload Multi-Photos -->
+          <div>
+            <label class="block font-bold text-gray-700 mb-1">Photos de l exploitation ou des produits</label>
+            <input type="file" multiple accept="image/*" onchange="window.AgroBeyApp.seller.handleImageUpload(event)" class="w-full p-2 border border-dashed border-gray-300 rounded-xl bg-gray-50 text-xs">
+            <div id="image-previews-container" class="flex gap-2 mt-3 overflow-x-auto pb-1"></div>
+          </div>
+
+          <div class="pt-4 border-t flex justify-end">
+            <button type="submit" class="w-full sm:w-auto px-8 py-3.5 bg-emerald-700 hover:bg-emerald-800 text-white font-black text-sm rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-check"></i>
+              <span>Publier mon Annonce Immédiatement</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- VUE 3 : ESPACE AGRICULTEUR & VENDEUR -->
+    <section id="view-seller" class="hidden space-y-6">
+      <div id="seller-view-content"></div>
+    </section>
+
+    <!-- VUE 4 : SUPPORT & BAROMÈTRE DES PRIX -->
+    <section id="view-support" class="hidden space-y-6">
+      <div id="support-view-content"></div>
+    </section>
+
+    <!-- VUE 5 : ESPACE LIVREURS & MISSIONS -->
+    <section id="view-delivery" class="hidden space-y-6">
+      <div id="delivery-view-content"></div>
+    </section>
+
+  </main>
+
+  <!-- MODALE AUTHENTIFICATION & CONNEXION SÉCURISÉE -->
+  <div id="auth-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl modal-pop relative overflow-hidden text-xs">
+      <button onclick="window.AgroBeyAuth.closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-base">✕</button>
+
+      <div class="text-center mb-6">
+        <img src="assets/logo.jpg" alt="Logo AgroBey" class="h-14 w-14 mx-auto rounded-2xl shadow-md border border-emerald-600/30 object-cover mb-2">
+        <h3 class="text-xl font-black text-emerald-950">Agro<span class="text-amber-500">Bey</span> Compte</h3>
+        <p class="text-gray-500 text-xs mt-0.5">Accédez à votre espace sécurisé</p>
+        <div id="auth-modal-notice" class="hidden mt-2 p-2 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-[11px] font-bold"></div>
+      </div>
+
+      <!-- Onglets Connexion / Inscription -->
+      <div class="flex border-b border-gray-200 mb-4 font-bold text-center">
+        <button id="auth-tab-login" onclick="window.AgroBeyAuth.switchAuthMode('login')" class="flex-1 py-2.5 border-b-2 border-emerald-600 text-emerald-700">Connexion</button>
+        <button id="auth-tab-register" onclick="window.AgroBeyAuth.switchAuthMode('register')" class="flex-1 py-2.5 border-b-2 border-transparent text-gray-500 hover:text-emerald-700">Créer un Compte</button>
+      </div>
+
+      <div id="auth-error-box" class="hidden p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs mb-4"></div>
+
+      <!-- Formulaire Connexion -->
+      <form id="auth-login-form" class="space-y-3">
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Email ou Téléphone *</label>
+          <input type="text" id="login-email" required placeholder="amadou.ba@agrobey.sn ou +221..." class="w-full px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
+        </div>
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Mot de passe *</label>
+          <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
+        </div>
+        <button type="submit" class="w-full py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-xs rounded-xl shadow-lg transition">
+          Se Connecter en toute Sécurité
+        </button>
+
+        <!-- Comptes de Démonstration Rapides -->
+        <div class="pt-4 border-t border-gray-100">
+          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 text-center">Remplissage Rapide Démo :</p>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-[10px]">
+            <button type="button" onclick="window.AgroBeyAuth.fillDemoCredentials('farmer')" class="p-1.5 bg-emerald-50 text-emerald-800 rounded-lg font-bold hover:bg-emerald-100 transition text-center">
+              🌾 Agriculteur
+            </button>
+            <button type="button" onclick="window.AgroBeyAuth.fillDemoCredentials('breeder')" class="p-1.5 bg-amber-50 text-amber-900 rounded-lg font-bold hover:bg-amber-100 transition text-center">
+              🐏 Éleveur
+            </button>
+            <button type="button" onclick="window.AgroBeyAuth.fillDemoCredentials('buyer')" class="p-1.5 bg-blue-50 text-blue-900 rounded-lg font-bold hover:bg-blue-100 transition text-center">
+              🛒 Acheteur
+            </button>
+            <button type="button" onclick="window.AgroBeyAuth.fillDemoCredentials('driver')" class="p-1.5 bg-purple-50 text-purple-900 rounded-lg font-bold hover:bg-purple-100 transition text-center">
+              🛵 Livreur
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Formulaire Inscription -->
+      <form id="auth-register-form" class="hidden space-y-3">
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Nom & Prénom / Exploitation *</label>
+          <input type="text" id="reg-name" required placeholder="Ex: Amadou Ba ou Ibrahima Ndiaye" class="w-full px-3.5 py-2 border rounded-xl outline-none">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-gray-700 mb-1">Email *</label>
+            <input type="email" id="reg-email" required placeholder="nom@email.com" class="w-full px-3 py-2 border rounded-xl outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-gray-700 mb-1">Téléphone *</label>
+            <input type="tel" id="reg-phone" required placeholder="+221 77..." class="w-full px-3 py-2 border rounded-xl outline-none">
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Type de Profil *</label>
+          <div class="grid grid-cols-3 gap-2">
+            <label class="flex items-center gap-1.5 p-2 bg-gray-50 border rounded-xl cursor-pointer">
+              <input type="radio" name="reg-role" value="client" checked>
+              <span class="font-semibold text-[11px]">Acheteur</span>
+            </label>
+            <label class="flex items-center gap-1.5 p-2 bg-gray-50 border rounded-xl cursor-pointer">
+              <input type="radio" name="reg-role" value="seller">
+              <span class="font-semibold text-[11px]">Producteur</span>
+            </label>
+            <label class="flex items-center gap-1.5 p-2 bg-gray-50 border rounded-xl cursor-pointer">
+              <input type="radio" name="reg-role" value="delivery">
+              <span class="font-semibold text-[11px]">Livreur</span>
+            </label>
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Localisation / Région *</label>
+          <input type="text" id="reg-location" required placeholder="Ex: Thiès, Notto Diobass" class="w-full px-3.5 py-2 border rounded-xl outline-none">
+        </div>
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Mot de passe fort *</label>
+          <input type="password" id="reg-password" required minlength="6" placeholder="••••••••" class="w-full px-3.5 py-2 border rounded-xl outline-none">
+        </div>
+        <button type="submit" class="w-full py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-xs rounded-xl shadow-lg transition">
+          Créer mon Compte AgroBey
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE FICHE DÉTAIL ENRICHIE -->
+  <div id="detail-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-4xl w-full shadow-2xl modal-pop relative my-8 overflow-hidden">
+      <button onclick="window.AgroBeyApp.marketplace.closeDetailModal()" class="absolute top-4 right-4 z-10 w-9 h-9 bg-white/90 hover:bg-white text-gray-800 rounded-full flex items-center justify-center shadow-lg font-bold">✕</button>
+      <div id="detail-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- MODALE COMMANDE DYNAMIQUE -->
+  <div id="order-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl modal-pop relative overflow-hidden">
+      <button onclick="window.AgroBeyApp.marketplace.closeOrderModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 font-bold">✕</button>
+      <div id="order-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- MODALE CONTRAT DE BAIL RURAL CONFORME -->
+  <div id="contract-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-4xl w-full shadow-2xl modal-pop relative my-8 overflow-hidden">
+      <button onclick="window.AgroBeyApp.marketplace.closeContractModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-900 font-bold no-print">✕</button>
+      <div id="contract-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- MODALE SUIVI DE LIVRAISON EN DIRECT & CODE OTP -->
+  <div id="tracking-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-xl w-full shadow-2xl modal-pop relative my-8 overflow-hidden">
+      <button onclick="document.getElementById('tracking-modal').classList.add('hidden')" class="absolute top-4 right-4 z-10 w-9 h-9 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-full flex items-center justify-center shadow font-bold">✕</button>
+      <div id="tracking-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- Footer Officiel Dynamique -->
+  <footer class="bg-slate-950 text-slate-400 text-xs border-t border-slate-800 pt-12 pb-24 sm:pb-12 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-12 border-b border-slate-800">
+        
+        <!-- Colonne 1 : Marque & Slogan -->
+        <div class="lg:col-span-2 space-y-4">
+          <div class="flex items-center gap-3">
+            <img src="assets/logo.jpg" alt="Logo AgroBey" class="h-12 w-12 rounded-2xl object-cover border border-emerald-600/40">
+            <span id="footer-platform-name" class="text-2xl font-black text-white">Agro<span class="text-amber-500">Bey</span></span>
+          </div>
+          <p id="footer-slogan" class="text-amber-400 font-bold italic text-sm">"Cultivons. Élevons. Construisons demain."</p>
+          <p id="footer-description" class="text-xs text-slate-400 leading-relaxed max-w-md">
+            Plateforme digitale de référence pour l agriculture, l élevage, la location de terres et la commercialisation des récoltes au Sénégal et en Afrique de l Ouest.
+          </p>
+          <div class="flex items-center gap-3 text-slate-300">
+            <span class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-emerald-400"><i class="fa-brands fa-facebook"></i></span>
+            <span class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-emerald-400"><i class="fa-brands fa-whatsapp"></i></span>
+            <span class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-emerald-400"><i class="fa-brands fa-linkedin"></i></span>
+          </div>
+        </div>
+
+        <!-- Colonne 2 : Filières -->
+        <div>
+          <h4 id="footer-filieres-title" class="font-black text-white uppercase text-xs tracking-wider mb-3">Filières & Activités</h4>
+          <ul id="footer-filieres-list" class="space-y-2 text-slate-400">
+            <li><a href="javascript:void(0)" onclick="window.AgroBeyApp.marketplace.setCategory('recolte')" class="hover:text-emerald-400 transition">Vente de Récoltes & Légumes</a></li>
+            <li><a href="javascript:void(0)" onclick="window.AgroBeyApp.marketplace.setCategory('elevage')" class="hover:text-emerald-400 transition">Élevage & Moutons Ladoum</a></li>
+            <li><a href="javascript:void(0)" onclick="window.AgroBeyApp.marketplace.setCategory('terre')" class="hover:text-emerald-400 transition">Location & Vente de Champs</a></li>
+            <li><a href="javascript:void(0)" onclick="window.AgroBeyApp.marketplace.setCategory('ferme')" class="hover:text-emerald-400 transition">Fermes & Poulaillers Équipés</a></li>
+          </ul>
+        </div>
+
+        <!-- Colonne 3 : Services -->
+        <div>
+          <h4 id="footer-services-title" class="font-black text-white uppercase text-xs tracking-wider mb-3">Services & Sécurité</h4>
+          <ul id="footer-services-list" class="space-y-2 text-slate-400">
+            <li><a href="javascript:void(0)" onclick="window.AgroBeyApp.switchTab('support')" class="hover:text-emerald-400 transition">Générateur de Bail Rural Conforme</a></li>
+            <li><a href="javascript:void(0)" onclick="window.AgroBeyApp.switchTab('support')" class="hover:text-emerald-400 transition">Baromètre Hebdomadaire des Prix</a></li>
+            <li><a href="javascript:void(0)" onclick="window.AgroBeyApp.switchTab('support')" class="hover:text-emerald-400 transition">Programme Producteur Vérifié KYC</a></li>
+            <li><a href="javascript:void(0)" onclick="window.AgroBeyApp.switchTab('support')" class="hover:text-emerald-400 transition">Réseau Transporteurs Agréés</a></li>
+          </ul>
+        </div>
+
+        <!-- Colonne 4 : Contact & Siège -->
+        <div>
+          <h4 class="font-black text-white uppercase text-xs tracking-wider mb-3">Contact & Siège</h4>
+          <ul class="space-y-2 text-slate-400">
+            <li id="footer-hq" class="text-[11px] leading-relaxed">Immeuble AgroBey, Route des Almadies, Dakar</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-phone text-amber-400"></i> <span id="footer-phone">+221 33 800 00 00</span></li>
+            <li class="flex items-center gap-2"><i class="fa-brands fa-whatsapp text-emerald-400"></i> <span id="footer-whatsapp">+221 77 000 00 00</span></li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-envelope text-slate-400"></i> <span id="footer-email">contact@agrobey.sn</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-500">
+        <div>© 2026 AgroBey Technologies. Tous droits réservés au Sénégal et dans l espace CEDEAO.</div>
+        <div class="flex gap-4">
+          <a href="javascript:void(0)" class="hover:text-slate-300">Mentions Légales</a>
+          <a href="javascript:void(0)" class="hover:text-slate-300">Conditions Générales d Utilisation</a>
+          <a href="javascript:void(0)" class="hover:text-slate-300">Protection des Données Personnelles</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODALE TIROIR / BOTTOM SHEET DE FILTRES MOBILE -->
+  <div id="mobile-filter-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center" onclick="window.AgroBeyApp.closeMobileFilters()">
+    <div class="bg-white w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl bottom-sheet-slide max-h-[85vh] overflow-y-auto" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-4">
+        <div class="flex items-center gap-2 font-black text-gray-900 text-sm">
+          <i class="fa-solid fa-sliders text-emerald-700"></i>
+          <span>Filtres de Recherche</span>
+        </div>
+        <button onclick="window.AgroBeyApp.closeMobileFilters()" class="w-8 h-8 rounded-full bg-gray-100 text-gray-500 hover:text-gray-900 flex items-center justify-center font-bold text-xs">
+          ✕
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-gray-700 mb-1.5">Filière / Catégorie</label>
+          <select id="mobile-filter-category" onchange="window.AgroBeyApp.marketplace.setCategory(this.value); window.AgroBeyApp.closeMobileFilters();" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 outline-none">
+            <option value="all">🌾 Toutes les Filières</option>
+            <option value="recolte">🥦 Récoltes & Maraîchage</option>
+            <option value="elevage">🐏 Élevage & Cheptel</option>
+            <option value="terre">🌄 Terres & Champs</option>
+            <option value="ferme">🏡 Fermes Équipées</option>
+            <option value="materiel">🚜 Matériel Agricole</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold text-gray-700 mb-1.5">Région du Sénégal</label>
+          <select id="mobile-filter-location" onchange="window.AgroBeyApp.marketplace.setFilters({ location: this.value }); window.AgroBeyApp.closeMobileFilters();" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-800 outline-none">
+            <option value="all">Toutes les régions</option>
+            <option value="Podor">Podor / Vallée du Fleuve</option>
+            <option value="Saint-Louis">Saint-Louis / Gandiol</option>
+            <option value="Thiès">Thiès / Pout / Notto</option>
+            <option value="Niayes">Zone des Niayes (Kayar, Mboro)</option>
+            <option value="Casamance">Casamance (Ziguinchor, Kolda)</option>
+            <option value="Dakar">Dakar / Banlieue</option>
+            <option value="Kaolack">Bassin Arachidier / Kaolack</option>
+            <option value="Touba">Touba / Diourbel</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold text-gray-700 mb-1.5">Type d'Offre</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="window.AgroBeyApp.marketplace.setFilters({ type: 'Vente' }); window.AgroBeyApp.closeMobileFilters();" class="p-2.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl font-bold">
+              Achat Direct
+            </button>
+            <button onclick="window.AgroBeyApp.marketplace.setFilters({ type: 'Location' }); window.AgroBeyApp.closeMobileFilters();" class="p-2.5 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl font-bold">
+              Bail / Location
+            </button>
+          </div>
+        </div>
+
+        <div class="pt-2 flex gap-2">
+          <button onclick="window.AgroBeyApp.marketplace.resetFilters(); window.AgroBeyApp.closeMobileFilters();" class="flex-1 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl">
+            Réinitialiser
+          </button>
+          <button onclick="window.AgroBeyApp.closeMobileFilters()" class="flex-1 py-3 bg-emerald-700 text-white font-extrabold rounded-xl shadow">
+            Appliquer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bouton Flottant WhatsApp Rapide Mobile -->
+  <a href="https://wa.me/221770000000?text=Bonjour%20AgroBey,%20je%20souhaite%20des%20renseignements" target="_blank" class="fixed bottom-20 right-4 z-40 lg:hidden w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center text-2xl shadow-xl hover:bg-emerald-500 transition active:scale-90 border-2 border-white fab-shadow" title="Contacter sur WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
+  <!-- Barre de Navigation Mobile Flottante Inférieure Native -->
+  <div class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 mobile-bottom-nav px-2 flex items-center justify-around text-[10px] text-gray-500 shadow-2xl">
+    <button onclick="window.AgroBeyApp.switchTab('marketplace')" class="mobile-nav-btn flex flex-col items-center gap-1 py-1.5 px-2 text-emerald-700 font-extrabold touch-btn transition" data-tab="marketplace">
+      <i class="fa-solid fa-store text-lg"></i>
+      <span>Catalogue</span>
+    </button>
+
+    <button onclick="window.AgroBeyApp.switchTab('support')" class="mobile-nav-btn flex flex-col items-center gap-1 py-1.5 px-2 touch-btn transition" data-tab="support">
+      <i class="fa-solid fa-robot text-lg text-purple-600"></i>
+      <span>Assistant IA</span>
+    </button>
+
+    <!-- Bouton Central de Dépôt d'Annonce (Uniquement Vendeurs & Admins) -->
+    <button id="mobile-nav-btn-publish" onclick="window.AgroBeyApp.switchTab('publish')" class="mobile-nav-btn hidden flex-col items-center gap-0.5 -mt-4 touch-btn transition" data-tab="publish">
+      <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-amber-600 to-amber-400 text-slate-950 flex items-center justify-center text-xl shadow-lg border-2 border-white">
+        <i class="fa-solid fa-plus"></i>
+      </div>
+      <span class="font-bold text-amber-600 text-[9px]">Publier</span>
+    </button>
+
+    <button onclick="window.AgroBeyApp.switchTab('seller')" class="mobile-nav-btn flex flex-col items-center gap-1 py-1.5 px-2 touch-btn transition" data-tab="seller">
+      <i class="fa-solid fa-tractor text-lg text-cyan-600"></i>
+      <span>Producteur</span>
+    </button>
+
+    <button onclick="window.AgroBeyApp.toggleMobileDrawer()" class="mobile-nav-btn flex flex-col items-center gap-1 py-1.5 px-2 touch-btn transition">
+      <i class="fa-solid fa-user-gear text-lg text-gray-600"></i>
+      <span>Mon Compte</span>
+    </button>
+  </div>
+
+  <!-- Conteneur Flottant pour Toasts Notifications -->
+  <div id="toast-container" class="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+
+  <!-- Scripts Modulaires AgroBey (Zéro dépendance lourde) -->
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/db.js"></script>
+  <script src="assets/js/map_engine.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/marketplace.js"></script>
+  <script src="assets/js/seller.js"></script>
+  <script src="assets/js/delivery.js"></script>
+  <script src="assets/js/support.js"></script>
+  <script src="assets/js/admin.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
+

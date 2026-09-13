@@ -1,0 +1,30 @@
+﻿# Environment & secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Logs & temp files
+*.log
+logs/
+temp/
+tmp/
+.system_generated/
+scratch/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor configs
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Build / node
+node_modules/
+dist/
+build/

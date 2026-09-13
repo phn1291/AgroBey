@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>AgroBey - Console Super-Admin & Modération Sécurisée</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  
+  <!-- Optimisations Mobile PWA -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AgroBey Admin">
+  <link rel="apple-touch-icon" href="assets/logo.jpg">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Leaflet Interactive Maps (Cartographie Live Sénégal) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Styles personnalisés -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-purple-600 selection:text-white mobile-safe-bottom">
+
+  <!-- Écran 1 : Authentification Super-Admin Sécurisée -->
+  <div id="admin-login-screen" class="hidden flex-1 flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+      <div class="absolute -right-16 -top-16 w-48 h-48 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -left-16 -bottom-16 w-48 h-48 bg-emerald-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="text-center relative z-10 mb-8">
+        <img src="assets/logo.jpg" alt="Logo AgroBey" class="h-16 w-16 mx-auto rounded-2xl shadow-xl border border-purple-500/40 object-cover mb-3">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-950 border border-purple-800 text-purple-300 text-[11px] font-black uppercase tracking-wider mb-2">
+          Portail Réservé • Niveau Suprême
+        </div>
+        <h1 class="text-2xl font-black text-white">Agro<span class="text-amber-400">Bey</span> Back-Office</h1>
+        <p class="text-xs text-slate-400 mt-1">Console de Contrôle, Modération & Gestion du Site</p>
+      </div>
+
+      <!-- Formulaire de Connexion Admin / Staff -->
+      <form id="admin-auth-form" onsubmit="window.handleAdminLogin(event)" class="space-y-4 relative z-10 text-xs">
+        <div id="admin-login-error" class="hidden p-3 rounded-xl bg-red-950/80 border border-red-800 text-red-300 text-xs"></div>
+
+        <div>
+          <label class="block font-bold text-slate-300 mb-1.5">Identifiant Collaborateur / Staff *</label>
+          <div class="relative">
+            <i class="fa-solid fa-user-shield absolute left-3.5 top-3.5 text-slate-500 text-sm"></i>
+            <input type="text" id="admin-input-id" required value="admin@agrobey.sn" placeholder="nom@agrobey.sn" class="w-full pl-10 pr-3.5 py-3 bg-slate-800 border border-slate-700 rounded-xl text-slate-100 placeholder:text-slate-500 focus:ring-2 focus:ring-purple-500 outline-none text-xs">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-300 mb-1.5">Mot de passe *</label>
+          <div class="relative">
+            <i class="fa-solid fa-lock absolute left-3.5 top-3.5 text-slate-500 text-sm"></i>
+            <input type="password" id="admin-input-pwd" required value="AgroBey@2026!Admin" placeholder="Mot de passe" class="w-full pl-10 pr-10 py-3 bg-slate-800 border border-slate-700 rounded-xl text-slate-100 placeholder:text-slate-500 focus:ring-2 focus:ring-purple-500 outline-none text-xs">
+            <button type="button" onclick="const p = document.getElementById('admin-input-pwd'); p.type = p.type === 'password' ? 'text' : 'password';" class="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-200">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Boutons Démo Rapides Staff -->
+        <div class="p-3 bg-slate-950 rounded-2xl border border-slate-800 space-y-2">
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Comptes Démo Staff :</div>
+          <div class="grid grid-cols-2 gap-1.5 text-[11px]">
+            <button type="button" onclick="window.fillStaffLogin('admin')" class="p-1.5 bg-purple-950/80 hover:bg-purple-900 border border-purple-800 text-purple-200 rounded-lg font-bold text-left truncate">
+              👑 Super-Admin
+            </button>
+            <button type="button" onclick="window.fillStaffLogin('assistant')" class="p-1.5 bg-amber-950/80 hover:bg-amber-900 border border-amber-800 text-amber-200 rounded-lg font-bold text-left truncate">
+              👩‍💼 Assistante
+            </button>
+            <button type="button" onclick="window.fillStaffLogin('it')" class="p-1.5 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-800 text-emerald-200 rounded-lg font-bold text-left truncate">
+              👨‍💻 IT / Tech
+            </button>
+            <button type="button" onclick="window.fillStaffLogin('marketing')" class="p-1.5 bg-pink-950/80 hover:bg-pink-900 border border-pink-800 text-pink-200 rounded-lg font-bold text-left truncate">
+              🎨 Marketing
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-extrabold text-sm rounded-xl shadow-lg transition flex items-center justify-center gap-2 mt-2">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i>
+          <span>Accéder à la Console Back-Office</span>
+        </button>
+
+        <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-500">
+          <a href="index.html" class="text-slate-400 hover:text-white flex items-center gap-1 transition">
+            <i class="fa-solid fa-arrow-left"></i> Retour au site public
+          </a>
+          <span class="text-emerald-400 font-mono">Chiffrement SHA-256 Actif</span>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Écran 2 : Dashboard Centralisé Super-Admin -->
+  <div id="admin-dashboard-screen" class="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+    <!-- Top Bar Admin -->
+    <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <img src="assets/logo.jpg" alt="Logo AgroBey" class="h-10 w-10 rounded-xl object-cover border border-purple-500/40">
+          <div>
+            <h1 class="text-lg font-black text-white">Agro<span class="text-amber-400">Bey</span> Back-Office</h1>
+            <p class="text-[10px] text-slate-400">Contrôle Général, Staff & Modération</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="index.html" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border border-slate-700">
+            <i class="fa-solid fa-external-link"></i> <span class="hidden sm:inline">Portail Public</span>
+          </a>
+          <button onclick="window.handleAdminLogout()" class="px-3.5 py-2 bg-red-950/60 hover:bg-red-900 text-red-300 border border-red-800 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+            <i class="fa-solid fa-power-off"></i> <span class="hidden sm:inline">Déconnexion</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Contenu Principal Super-Admin -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div id="admin-view-content"></div>
+    </main>
+  </div>
+
+  <!-- MODALE SUIVI DE LIVRAISON EN DIRECT & CODE OTP -->
+  <div id="tracking-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-y-auto">
+    <div class="bg-white text-slate-900 rounded-3xl max-w-xl w-full shadow-2xl modal-pop relative my-8 overflow-hidden">
+      <button onclick="document.getElementById('tracking-modal').classList.add('hidden')" class="absolute top-4 right-4 z-10 w-9 h-9 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-full flex items-center justify-center shadow font-bold">✕</button>
+      <div id="tracking-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- Conteneur Flottant pour Toasts Notifications -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+
+  <!-- Scripts Modulaires -->
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/db.js"></script>
+  <script src="assets/js/map_engine.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/admin.js"></script>
+  <script>
+    // Initialisation & Sécurité Admin / Staff
+    window.AgroBeyApp = {
+      admin: new window.AgroBeyAdmin(),
+      openDeliveryTrackingModal: function(orderId) {
+        const modal = document.getElementById('tracking-modal');
+        const content = document.getElementById('tracking-modal-content');
+        if (!modal || !content) return;
+
+        const delivery = window.AgroBeyDB.getDeliveryByOrderId(orderId) || window.AgroBeyDB.getDeliveryById(orderId);
+        if (!delivery) {
+          alert('Aucune livraison trouvée pour la référence ' + orderId);
+          return;
+        }
+
+        const steps = [
+          { key: 'accepted', title: 'Mission Assignée', desc: 'Livreur en route vers la ferme', icon: 'fa-truck-ramp-box' },
+          { key: 'picked_up', title: 'Colis Collecté', desc: 'Prise en charge effectuée', icon: 'fa-box-open' },
+          { key: 'in_transit', title: 'En Transit', desc: 'Acheminement vers l\'adresse', icon: 'fa-truck-fast' },
+          { key: 'delivered', title: 'Colis Livré', desc: 'Réception validée par code OTP', icon: 'fa-circle-check' }
+        ];
+
+        const statusIndexMap = { 'available': -1, 'accepted': 0, 'picked_up': 1, 'in_transit': 2, 'delivered': 3, 'cancelled': -1 };
+        const currentStepIndex = statusIndexMap[delivery.status] !== undefined ? statusIndexMap[delivery.status] : 0;
+
+        content.innerHTML = `
+          <div class="bg-gradient-to-r from-emerald-950 to-slate-900 text-white p-6">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black uppercase">Supervision AgroBey Express</span>
+              <span class="text-xs text-slate-300 font-mono">#${delivery.id}</span>
+            </div>
+            <h3 class="text-xl font-black text-white mt-2">${delivery.listingTitle}</h3>
+            <p class="text-xs text-slate-300">Commande <strong>#${delivery.orderId}</strong> • Quantité: <strong>${delivery.quantity} ${delivery.unit || 'unités'}</strong></p>
+          </div>
+
+          <div class="p-6 space-y-5 text-xs">
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-extrabold text-slate-900">Progression Logistique</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 uppercase">${delivery.status}</span>
+              </div>
+              <div class="grid grid-cols-4 gap-2 text-center text-[10px]">
+                ${steps.map((s, idx) => `
+                  <div class="p-2 rounded-xl border ${idx <= currentStepIndex ? 'bg-emerald-50 border-emerald-300 text-emerald-900 font-bold' : 'bg-white border-gray-200 text-gray-400'}">
+                    <i class="fa-solid ${s.icon} text-sm mb-1 block"></i>
+                    ${s.title}
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="bg-amber-500/10 border-2 border-amber-400 rounded-2xl p-4 text-center">
+              <div class="text-[10px] font-black uppercase text-amber-900">Code de Contrôle OTP</div>
+              <div class="text-3xl font-black font-mono tracking-widest text-emerald-950 my-1">${delivery.verificationOTP || 'Non généré'}</div>
+              <p class="text-[11px] text-amber-900">Code requis pour confirmation de remise.</p>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
+              <div class="font-bold text-slate-900">Itinéraire :</div>
+              <div class="text-[11px] text-slate-600">📍 <strong>Départ :</strong> ${delivery.pickupAddress} (${delivery.sellerName} - ${delivery.sellerPhone})</div>
+              <div class="text-[11px] text-slate-600">🎯 <strong>Arrivée :</strong> ${delivery.dropoffAddress} (${delivery.buyerName} - ${delivery.buyerPhone})</div>
+              <div class="text-[11px] text-slate-600">🛵 <strong>Livreur :</strong> ${delivery.driverName || 'Non assigné'} (${delivery.driverPhone || 'N/A'})</div>
+              <div class="text-[11px] text-emerald-700 font-bold pt-1 border-t">Frais de livraison : ${new Intl.NumberFormat('fr-FR').format(delivery.deliveryFee || 0)} FCFA</div>
+            </div>
+
+            <button onclick="document.getElementById('tracking-modal').classList.add('hidden')" class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl transition">
+              Fermer
+            </button>
+          </div>
+        `;
+        modal.classList.remove('hidden');
+      },
+      showToast: function(type = 'success', title = '', message = '') {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = `p-4 rounded-2xl shadow-xl border text-xs flex items-start gap-3 transition-all duration-300 ${
+          type === 'success' ? 'bg-emerald-900 border-emerald-700 text-white' :
+          type === 'warning' ? 'bg-amber-900 border-amber-700 text-white' :
+          type === 'info' ? 'bg-cyan-900 border-cyan-700 text-white' :
+          'bg-slate-900 border-slate-700 text-white'
+        }`;
+        toast.innerHTML = `
+          <div class="text-base shrink-0 mt-0.5"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="flex-1">
+            ${title ? `<h5 class="font-extrabold text-xs mb-0.5">${title}</h5>` : ''}
+            <p class="leading-relaxed opacity-90">${message}</p>
+          </div>
+          <button onclick="this.parentElement.remove()" class="text-white/60 hover:text-white text-xs">✕</button>
+        `;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+      }
+    };
+
+    function checkAdminAuth() {
+      const user = window.AgroBeyAuth.getCurrentUser();
+      const loginScreen = document.getElementById('admin-login-screen');
+      const dashScreen = document.getElementById('admin-dashboard-screen');
+      const allowedRoles = ['admin', 'assistant', 'it', 'marketing'];
+
+      if (user && allowedRoles.includes(user.role)) {
+        loginScreen.classList.add('hidden');
+        dashScreen.classList.remove('hidden');
+        window.AgroBeyApp.admin.render();
+      } else {
+        dashScreen.classList.add('hidden');
+        loginScreen.classList.remove('hidden');
+      }
+    }
+
+    function fillStaffLogin(role) {
+      const emailInput = document.getElementById('admin-input-id');
+      const pwdInput = document.getElementById('admin-input-pwd');
+      if (role === 'admin') {
+        emailInput.value = 'admin@agrobey.sn';
+        pwdInput.value = 'AgroBey@2026!Admin';
+      } else if (role === 'assistant') {
+        emailInput.value = 'assistant@agrobey.sn';
+        pwdInput.value = 'AgroAssistant@2026';
+      } else if (role === 'it') {
+        emailInput.value = 'it@agrobey.sn';
+        pwdInput.value = 'AgroIT@2026';
+      } else if (role === 'marketing') {
+        emailInput.value = 'marketing@agrobey.sn';
+        pwdInput.value = 'AgroMarketing@2026';
+      }
+    }
+
+    async function handleAdminLogin(event) {
+      event.preventDefault();
+      const id = document.getElementById('admin-input-id').value.trim();
+      const pwd = document.getElementById('admin-input-pwd').value;
+      const errBox = document.getElementById('admin-login-error');
+      const allowedRoles = ['admin', 'assistant', 'it', 'marketing'];
+
+      const res = await window.AgroBeyAuth.login(id, pwd, true);
+      if (res.success && allowedRoles.includes(res.user.role)) {
+        if (errBox) errBox.classList.add('hidden');
+        checkAdminAuth();
+        window.AgroBeyApp.showToast('success', `Bienvenue ${res.user.name}`, `Accès console accordé (${res.user.roleLabel || res.user.role}).`);
+      } else {
+        if (errBox) {
+          errBox.innerText = res.message || 'Identifiant ou mot de passe collaborateur incorrect.';
+          errBox.classList.remove('hidden');
+        }
+      }
+    }
+
+    function handleAdminLogout() {
+      window.AgroBeyAuth.logout();
+      checkAdminAuth();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAdminAuth();
+    });
+  </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * AgroBey - Moteur de Données & Stockage Réactif
  * Gestion de la persistance locale (LocalStorage), Pub/Sub, Multi-Staff, Logs & IA Conversations.
  */
@@ -481,7 +481,7 @@ const DEFAULT_LISTINGS = [
     quantity: 1,
     unit: 'domaine (5 ha)',
     location: { region: 'Thiès', city: 'Notto Diobass', country: 'Sénégal' },
-    description: 'Terrain plat, sol Dior très fertile adapté au maraîchage (papaye, piment, oignon, gombo) et à l arboriculture. Équipé d un forage solaire débit 25 m3/h, château d eau de 15 000 L, réseau goutte-à-goutte installé et maison de gardien.',
+    description: 'Terrain plat, sol Dior très fertile adapté au maraîchage (papaye, piment, oignon, gombo) et à l arboriculture. Équipé d un forage solaire débit 25 m3/h, château d'eau de 15 000 L, réseau goutte-à-goutte installé et maison de gardien.',
     images: [
       'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=800&q=80'

@@ -93,7 +93,7 @@ const AgroBeyI18n = {
       order_destination: "Lieu prÃ©cis de Livraison / Commune :",
       order_has_delivery: "Inclure la Livraison Ã  Domicile / DÃ©pÃ´t",
       order_summary: "RÃ©capitulatif Financier",
-      order_subtotal: "Sous-total articles :",
+      order_subtotal: "Sous-total'articles :",
       order_delivery_fee: "Frais de livraison :",
       order_total: "Total Net Ã  Payer :",
       order_confirm_btn: "Confirmer la Commande & Payer",
@@ -476,7 +476,7 @@ const AgroBeyI18n = {
       pub_field_vehicles: "Vehicles permitted by seller:",
       pub_field_images: "Product Photos (up to 4 real photos):",
       pub_field_desc: "Detailed Description & Terms:",
-      pub_field_desc_ph: "Describe quality, packaging, preservation, road access...",
+      pub_field_desc_ph: "Describe quality, packaging, preservation, road'accÃ¨ss...",
       pub_submit_btn: "Publish Listing Directly",
       pub_success_toast: "Your listing has been successfully published!",
 

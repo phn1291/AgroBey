@@ -1,4 +1,4 @@
-/**
+﻿/**
  * AgroBey - Module Marketplace & Catalogue Public
  * Filtres multi-critères, fiche produit enrichie, commande dynamique et générateur de bail rural.
  */
@@ -977,7 +977,7 @@ class AgroBeyMarketplace {
 
           <div>
             <h4 class="font-bold text-gray-900 uppercase">ARTICLE 5 : EAU, FORAGE, CLÔTURE & INFRASTRUCTURES</h4>
-            <p>Le Preneur jouit de l accès aux points d eau (forage solaire, puits ou réseau) mentionnés dans la fiche technique. Le Preneur s engage à maintenir en bon état les clôtures grillagées, les pompes et les installations d irrigation durant toute la période d occupation.</p>
+            <p>Le Preneur jouit de l accès aux points d'eau (forage solaire, puits ou réseau) mentionnés dans la fiche technique. Le Preneur s engage à maintenir en bon état les clôtures grillagées, les pompes et les installations d irrigation durant toute la période d occupation.</p>
           </div>
 
           <div>

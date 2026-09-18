@@ -1,4 +1,4 @@
-/**
+﻿/**
  * AgroBey - Module Support Client & Moteur d Intelligence Artificielle Agro-Pastorale
  * IA générative experte, persistance temps réel et synchronisation Back-Office Staff.
  */
@@ -43,7 +43,7 @@ class AgroBeySupport {
         {
           id: 'msg-welcome',
           sender: 'bot',
-          text: '👋 Bonjour et bienvenue sur le **Support Intelligent AgroBey** ! Je suis votre conseiller expert pour le monde rural au Sénégal. Posez-moi n importe quelle question : foncier, baux ruraux, diagnostic ravageurs, alimentation Ladoum, prix des marchés ou transport.',
+          text: '👋 Bonjour et bienvenue sur le **Support Intelligent AgroBey** ! Je suis votre conseiller expert pour le monde rural au Sénégal. Posez-moi n'importe quelle question : foncier, baux ruraux, diagnostic ravageurs, alimentation Ladoum, prix des marchés ou transport.',
           time: 'À l instant'
         }
       ];
@@ -168,7 +168,7 @@ class AgroBeySupport {
 
             <!-- Formulaire d'envoi de message -->
             <form onsubmit="window.AgroBeyApp.support.sendChatMessage(event)" class="p-3 bg-white border-t border-gray-100 flex gap-2">
-              <input type="text" id="support-chat-input" required placeholder="Posez n importe quelle question (terre, élevage, récolte, météo, investissement)..." class="flex-1 px-4 py-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:bg-white outline-none">
+              <input type="text" id="support-chat-input" required placeholder="Posez n'importe quelle question (terre, élevage, récolte, météo, investissement)..." class="flex-1 px-4 py-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:bg-white outline-none">
               <button type="submit" class="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-xs rounded-xl shadow transition flex items-center gap-1.5">
                 <i class="fa-solid fa-paper-plane"></i>
                 <span class="hidden sm:inline">Envoyer</span>

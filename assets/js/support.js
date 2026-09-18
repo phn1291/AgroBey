@@ -334,15 +334,63 @@ class AgroBeySupport {
     }, 450);
   }
 
-  // --- MOTEUR SÉMANTIQUE & IA GÉNÉRATIVE EXPERTE ---
+  // --- MOTEUR SÉMANTIQUE & IA GÉNÉRATIVE EXPERTE MULTILINGUE ---
   generateDeepAIReply(query) {
     const q = query.toLowerCase();
+    const lang = (window.AgroBeyI18n && window.AgroBeyI18n.currentLang) || 'fr';
 
+    // Mode WOLOF
+    if (lang === 'wo' || q.includes('soble') || q.includes('xar') || q.includes('tool') || q.includes('luwaas') || q.includes('nag') || q.includes('mbay')) {
+      if (q.includes('tool') || q.includes('suuf') || q.includes('luwaas') || q.includes('bail') || q.includes('forage')) {
+        return `📜 **Ndimbal ci Suuf ak Tool (IA AgroBey) :**\n\n` +
+          `Ci réewum Sénégal, luwaasu tool mbaa jënd suuf dafa laaj kaye notéer ak délibérasiyoŋ méri ngir mu wóor :\n` +
+          `• **1. Ndox mi :** Saytul foraas bi ak ndox mu doy (15 ba 30 m³/waxtu).\n` +
+          `• **2. Kaaraange :** Sampal ñaaxtu ngir jur yi bañ a yàq say mbay.\n` +
+          `• **3. Kontara :** Bindal kontara bu wóor bu mat 1 ba 5 at.\n\n` +
+          `💡 *Mën nga génne kontara bu wóor ci sunu Jaayukaay.*`;
+      }
+      if (q.includes('xar') || q.includes('ladoum') || q.includes('bélier') || q.includes('yar')) {
+        return `🐏 **Xam-xam ci Xaru Ladoum (IA AgroBey) :**\n\n` +
+          `Ngir xaru Ladoum bu am doole te wér ci Sénégal :\n` +
+          `• **Lekku bés bu nekk :** Ñaxu ñebbe (1.5 ba 2 kg), fànn, dugub ak soow.\n` +
+          `• **Kaaraange wér-gu-yaram :** Ñàkk ko ci jamonoy loolli te fajj ko xaññ yépp 3 weer.\n\n` +
+          `📍 *Xoolal xari Ladoum yu wóor ci marsé bi.*`;
+      }
+      return `🌾 **Ndimbalu IA AgroBey ci Wolof :**\n\n` +
+        `Jërejëf ci sa laaj ! AgroBey mooy jaayukaay bu gën ci Sénégal ngir baykat, samakat ak jëndkat yi.\n` +
+        `• Ngir jënd mbaa luwaas, xoolal sunu **Catalogue & Offres**.\n` +
+        `• Ngir wax ak baykat bi, kligal ci WhatsApp ci sàas si.`;
+    }
+
+    // Mode ENGLISH
+    if (lang === 'en' || q.includes('land') || q.includes('lease') || q.includes('sheep') || q.includes('price') || q.includes('onion')) {
+      if (q.includes('land') || q.includes('lease') || q.includes('farm') || q.includes('borehole')) {
+        return `📜 **Farmland & Legal Lease Guide (AgroBey AI):**\n\n` +
+          `In Senegal, securing agricultural farmland requires compliant rural lease terms:\n` +
+          `• **1. Water flow & irrigation:** Check borehole output (15-30 m³/h) and solar pump status.\n` +
+          `• **2. Fencing & Perimeter:** Ensure galvanized mesh to prevent cattle encroachment.\n` +
+          `• **3. Official Registration:** Have the agreement endorsed by the local Municipality / Mayor.\n\n` +
+          `💡 *You can generate an official lease contract directly from any listing page.*`;
+      }
+      if (q.includes('ladoum') || q.includes('sheep') || q.includes('ram') || q.includes('livestock')) {
+        return `🐏 **Ladoum Sheep Breeding AI Advisor:**\n\n` +
+          `To maximize growth and pedigree for elite Ladoum sheep in Senegal:\n` +
+          `• **Daily Diet (80-120 kg live weight):** 1.5-2 kg cowpea/peanut hay + 1 kg concentrate (corn, wheat bran, peanut meal).\n` +
+          `• **Health protocol:** Routine deworming every 3 months and mandatory PPR vaccination.\n\n` +
+          `📍 *Discover certified Ladoum breeders in our Livestock category.*`;
+      }
+      return `🌾 **AgroBey AI Assistant:**\n\n` +
+        `Thank you for your inquiry! AgroBey is the premier agribusiness platform in Senegal.\n` +
+        `• Browse our **Marketplace & Offers** for verified crops, livestock, and farmland.\n` +
+        `• Contact sellers directly via WhatsApp or start a live negotiation.`;
+    }
+
+    // Mode FRANÇAIS (Par défaut avec orthographe soignée)
     // 1. Foncier, baux, terres, forages
     if (q.includes('bail') || q.includes('contrat') || q.includes('foncier') || q.includes('terre') || q.includes('forage') || q.includes('champ')) {
       return `📜 **Guide Juridique & Foncier IA AgroBey :**\n\n` +
-        `Au Sénégal, la sécurisation d'un bail rural (maraîchage ou élevage) repose sur des clauses strictes conformes au Droit Foncier et au Code des Obligations Civiles :\n` +
-        `• **1. Débit et droit d'eau :** Exigez un forage testé avec débit minimal (ex: 15 à 30 m³/h) et mentionnez qui assure l'entretien de la pompe solaire.\n` +
+        `Au Sénégal, la sécurisation d'un bail rural (maraîchage ou élevage) repose sur des clauses strictes conformes au Droit Foncier et au Code des Obligations Civiles et Commerciales (COCC) :\n` +
+        `• **1. Débit et droit d'eau :** Exigez un forage testé avec débit minimal (ex. : 15 à 30 m³/h) et mentionnez qui assure l'entretien de la pompe solaire.\n` +
         `• **2. Clôture & Sécurité :** Précisez le type de clôture (grillage galvanisé ou muret) pour prévenir les divagations de bétail.\n` +
         `• **3. Durée légale :** Privilégiez un bail ferme de 1 à 5 ans renouvelable avec préavis de 3 mois.\n` +
         `• **4. Enregistrement :** Faites viser l'acte devant le Maire de commune / Chef de village ou notaire.\n\n` +
@@ -355,7 +403,7 @@ class AgroBeySupport {
         `Pour maximiser le développement morphologique et la santé d'un bélier Ladoum de race pure au Sénégal :\n` +
         `• **Ration journalière conseillée (poids vif 80-120 kg) :**\n` +
         `  - Fane de niébé ou foin d'arachide : 1,5 à 2 kg\n` +
-        `  - Concentré énergétique (maïs concassé + son de blé + tourteau d'arachide 18% protéines) : 800g à 1,2 kg\n` +
+        `  - Concentré énergétique (maïs concassé + son de blé + tourteau d'arachide 18% protéines) : 800 g à 1,2 kg\n` +
         `  - Pierre à lécher minérale (calcium/phosphore) et eau fraîche à volonté.\n` +
         `• **Protocole sanitaire semestriel :**\n` +
         `  - Vaccination obligatoire PPCB & Clavelée (octobre-novembre)\n` +
@@ -363,10 +411,10 @@ class AgroBeySupport {
         `📍 *Découvrez nos béliers Ladoums certifiés dans la rubrique Élevage.*`;
     }
 
-    // 3. Bovins, vaches, Guzera, Gobra, production laitière
-    if (q.includes('vache') || q.includes('guzera') || q.includes('gobra') || q.includes('bovin') || q.includes('lait') || q.includes('génisse')) {
+    // 3. Bovins, vaches, Guzéra, Gobra, production laitière
+    if (q.includes('vache') || q.includes('guzera') || q.includes('guzéra') || q.includes('gobra') || q.includes('bovin') || q.includes('lait') || q.includes('génisse')) {
       return `🐄 **Conseil Élevage Bovin & Laitier IA :**\n\n` +
-        `• **Race Guzera & Métis :** Excellente résistance à la chaleur et potentiel laitier de 16 à 22 L/jour.\n` +
+        `• **Race Guzéra & Métis :** Excellente résistance à la chaleur et potentiel laitier de 16 à 22 L/jour.\n` +
         `• **Alimentation optimale :** Ensilage de maïs + paille traitée à l'urée + tourteau de coton ou d'arachide.\n` +
         `• **Suivi vétérinaire :** Dépistage régulier de la brucellose et test de mammite subclinique (CMT).`;
     }
@@ -388,7 +436,7 @@ class AgroBeySupport {
         `• **Axe Podor / Saint-Louis - Dakar :** Camions 10T à 35T bâchés (oignons, patates, riz) : 12 à 18 FCFA / kg.\n` +
         `• **Axe Casamance (Ziguinchor/Bignona) - Dakar :** Camions ventilés pour mangues et fruits : 20 à 25 FCFA / kg.\n` +
         `• **Axe Niayes (Thiès/Kayar) - Dakar :** Camionnettes quotidiennes maraîchères direct marché Castors/Thiaroye.\n\n` +
-        `📞 *Contactez le support au +221 33 800 00 00 pour affréter un camion agréé.*`;
+        `📞 *Contactez le support au +221 33 800 00 00 pour affréter un véhicule agréé.*`;
     }
 
     // 6. Prix du marché, rentabilité, investissement

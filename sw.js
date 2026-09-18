@@ -3,7 +3,7 @@
  * Gestion du cache hors-ligne, rapidité d'affichage et installation sur mobile.
  */
 
-const CACHE_NAME = 'agrobey-pwa-v1.3.0';
+const CACHE_NAME = 'agrobey-pwa-v1.4.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -11,6 +11,7 @@ const ASSETS_TO_CACHE = [
   './manifest.json',
   './assets/css/style.css',
   './assets/js/config.js',
+  './assets/js/i18n.js',
   './assets/js/db.js',
   './assets/js/map_engine.js',
   './assets/js/auth.js',

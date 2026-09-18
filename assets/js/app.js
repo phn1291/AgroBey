@@ -34,6 +34,10 @@ class AgroBeyApplication {
     });
 
     document.addEventListener('DOMContentLoaded', () => {
+      if (window.AgroBeyI18n) {
+        window.AgroBeyI18n.init();
+      }
+
       this.marketplace = new window.AgroBeyMarketplace();
       this.seller = new window.AgroBeySeller();
       this.support = new window.AgroBeySupport();
@@ -192,6 +196,13 @@ class AgroBeyApplication {
     if (this.seller) {
       this.seller.showSubTab('publish');
     }
+  }
+
+  renderCurrentView() {
+    if (this.currentTab === 'marketplace' && this.marketplace) this.marketplace.render();
+    if (this.currentTab === 'seller' && this.seller) this.seller.renderDashboard();
+    if (this.currentTab === 'support' && this.support) this.support.render();
+    if (this.currentTab === 'delivery' && this.delivery) this.delivery.render();
   }
 
   updateUserHeaderUI() {

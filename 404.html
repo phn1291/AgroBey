@@ -120,7 +120,8 @@
       </div>
       <div class="flex items-center gap-4 text-[11px] text-emerald-200">
         <span class="hidden md:flex items-center gap-1.5"><i class="fa-solid fa-truck-fast text-amber-400"></i> Transport & Logistique certifiés</span>
-        <span class="flex items-center gap-1.5"><i class="fa-solid fa-phone-volume text-amber-400"></i> Support : <strong class="text-white" id="topbar-phone-number">+221 33 800 00 00</strong></span>
+        <span class="flex items-center gap-1.5"><i class="fa-solid fa-phone-volume text-amber-400"></i> <span data-i18n="support_label">Support</span> : <strong class="text-white" id="topbar-phone-number">+221 33 800 00 00</strong></span>
+        <div class="lang-switcher-container lang-switcher-compact"></div>
       </div>
     </div>
   </div>
@@ -151,15 +152,15 @@
       <nav class="hidden lg:flex items-center gap-1 bg-gray-100/80 p-1.5 rounded-2xl border border-gray-200 text-xs font-bold">
         <button onclick="window.AgroBeyApp.switchTab('marketplace')" class="nav-tab-btn px-4 py-2.5 rounded-xl transition flex items-center gap-2 text-emerald-700 bg-emerald-50" data-tab="marketplace">
           <i class="fa-solid fa-store text-sm"></i>
-          <span>Catalogue & Offres</span>
+          <span data-i18n="nav_marketplace">Catalogue & Offres</span>
         </button>
         <button onclick="window.AgroBeyApp.switchTab('seller')" class="nav-tab-btn px-4 py-2.5 rounded-xl transition flex items-center gap-2 text-gray-600 hover:text-emerald-700" data-tab="seller">
           <i class="fa-solid fa-tractor text-sm text-emerald-700"></i>
-          <span>Espace Agriculteur & Annonces</span>
+          <span data-i18n="nav_seller">Espace Agriculteur & Annonces</span>
         </button>
         <button onclick="window.AgroBeyApp.switchTab('delivery')" class="nav-tab-btn px-4 py-2.5 rounded-xl transition flex items-center gap-2 text-gray-600 hover:text-emerald-700" data-tab="delivery">
           <i class="fa-solid fa-truck-fast text-sm text-amber-500"></i>
-          <span>Espace Livreur</span>
+          <span data-i18n="nav_delivery">Espace Livreur</span>
         </button>
         <button onclick="window.AgroBeyApp.switchTab('support')" class="nav-tab-btn px-4 py-2.5 rounded-xl transition flex items-center gap-2 text-gray-600 hover:text-emerald-700" data-tab="support">
           <i class="fa-solid fa-chart-simple text-sm"></i>
@@ -169,15 +170,18 @@
 
       <!-- Profil Utilisateur, Cloche Notifications & Connexion -->
       <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Sélecteur de Langue Header -->
+        <div class="lang-switcher-container hidden md:flex"></div>
+
         <!-- État 1 : Non Connecté -->
         <div id="header-auth-guest" class="flex items-center gap-1.5 sm:gap-2">
           <button onclick="window.AgroBeyAuth.openAuthModal('login')" class="px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold text-xs rounded-xl transition border border-gray-200 flex items-center gap-1.5 shadow-sm touch-btn">
             <i class="fa-solid fa-arrow-right-to-bracket text-emerald-700"></i>
-            <span class="hidden sm:inline">Connexion</span>
+            <span class="hidden sm:inline" data-i18n="nav_login">Connexion</span>
           </button>
           <button onclick="window.AgroBeyAuth.openAuthModal('register')" class="px-3 sm:px-4 py-2 sm:py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl transition shadow flex items-center gap-1.5 touch-btn">
             <i class="fa-solid fa-user-plus"></i>
-            <span class="hidden sm:inline">S'inscrire</span>
+            <span class="hidden sm:inline" data-i18n="nav_register">S'inscrire</span>
           </button>
         </div>
 
@@ -186,7 +190,7 @@
           <!-- Mes Commandes & Baux Ruraux Rapide -->
           <button onclick="window.AgroBeyApp.openClientOrdersModal()" class="px-2.5 sm:px-3 py-2 rounded-xl bg-white hover:bg-emerald-50 text-slate-800 hover:text-emerald-800 border border-gray-200 text-xs font-bold transition flex items-center gap-1.5 shadow-sm" title="Mes Commandes & Baux">
             <i class="fa-solid fa-receipt text-emerald-700"></i>
-            <span class="hidden md:inline">Commandes</span>
+            <span class="hidden md:inline" data-i18n="nav_orders">Commandes</span>
           </button>
 
           <!-- Cloche de Notifications -->
@@ -247,6 +251,9 @@
           </button>
         </div>
 
+        <!-- SÃ©lecteur de Langue Mobile Drawer -->
+        <div class="lang-switcher-container lang-switcher-drawer"></div>
+
         <!-- Profil Utilisateur Mobile -->
         <div id="mobile-drawer-user-info" class="p-4 bg-slate-950 rounded-2xl border border-slate-800">
           <!-- Injecté dynamiquement selon auth -->
@@ -256,7 +263,7 @@
         <div class="space-y-1.5 text-xs font-bold">
           <button onclick="window.AgroBeyApp.switchTab('marketplace'); window.AgroBeyApp.closeMobileDrawer();" class="w-full p-3 rounded-xl hover:bg-slate-800 text-slate-200 flex items-center gap-3 transition text-left">
             <i class="fa-solid fa-store text-emerald-400 text-base w-6 text-center"></i>
-            <span>Catalogue & Offres</span>
+            <span data-i18n="nav_marketplace">Catalogue & Offres</span>
           </button>
 
           <button onclick="window.AgroBeyApp.openClientOrdersModal(); window.AgroBeyApp.closeMobileDrawer();" class="w-full p-3 rounded-xl hover:bg-slate-800 text-emerald-300 flex items-center gap-3 transition text-left">
@@ -324,7 +331,7 @@
             </div>
             <button onclick="window.AgroBeyApp.marketplace.render()" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-emerald-950 font-black text-xs rounded-xl transition shadow-md flex items-center justify-center gap-2 touch-btn">
               <i class="fa-solid fa-magnifying-glass"></i>
-              <span>Filtrer</span>
+              <span data-i18n="search_btn">Filtrer</span>
             </button>
           </div>
         </div>
@@ -707,27 +714,27 @@
   <div class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 mobile-bottom-nav px-2 flex items-center justify-around text-[10px] text-gray-500 shadow-2xl">
     <button onclick="window.AgroBeyApp.switchTab('marketplace')" class="mobile-nav-btn flex flex-col items-center gap-1 py-1.5 px-2 text-emerald-700 font-extrabold touch-btn transition" data-tab="marketplace">
       <i class="fa-solid fa-store text-lg"></i>
-      <span>Catalogue</span>
+      <span data-i18n="nav_catalogue_short">Catalogue</span>
     </button>
 
     <button onclick="window.AgroBeyApp.switchTab('support')" class="mobile-nav-btn flex flex-col items-center gap-1 py-1.5 px-2 touch-btn transition" data-tab="support">
       <i class="fa-solid fa-robot text-lg text-purple-600"></i>
-      <span>Assistant IA</span>
+      <span data-i18n="nav_ai_short">Assistant IA</span>
     </button>
 
     <button onclick="window.AgroBeyApp.switchTab('seller')" class="mobile-nav-btn flex flex-col items-center gap-1 py-1.5 px-2 touch-btn transition" data-tab="seller">
       <i class="fa-solid fa-tractor text-lg text-emerald-600"></i>
-      <span>Agriculteur</span>
+      <span data-i18n="nav_farmer_short">Agriculteur</span>
     </button>
 
     <button onclick="window.AgroBeyApp.switchTab('delivery')" class="mobile-nav-btn flex flex-col items-center gap-1 py-1.5 px-2 touch-btn transition" data-tab="delivery">
       <i class="fa-solid fa-truck-fast text-lg text-amber-500"></i>
-      <span>Livreur</span>
+      <span data-i18n="nav_courier_short">Livreur</span>
     </button>
 
     <button onclick="window.AgroBeyApp.toggleMobileDrawer()" class="mobile-nav-btn flex flex-col items-center gap-1 py-1.5 px-2 touch-btn transition">
       <i class="fa-solid fa-user-gear text-lg text-gray-600"></i>
-      <span>Mon Compte</span>
+      <span data-i18n="nav_my_account">Mon Compte</span>
     </button>
   </div>
 
@@ -736,6 +743,7 @@
 
   <!-- Scripts Modulaires AgroBey (Zéro dépendance lourde) -->
   <script src="assets/js/config.js"></script>
+  <script src="assets/js/i18n.js"></script>
   <script src="assets/js/db.js"></script>
   <script src="assets/js/map_engine.js"></script>
   <script src="assets/js/auth.js"></script>

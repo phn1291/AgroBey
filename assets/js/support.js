@@ -1,4 +1,4 @@
-﻿/**
+/**
  * AgroBey - Module Support Client & Moteur d Intelligence Artificielle Agro-Pastorale
  * IA générative experte, persistance temps réel et synchronisation Back-Office Staff.
  */
@@ -43,7 +43,7 @@ class AgroBeySupport {
         {
           id: 'msg-welcome',
           sender: 'bot',
-          text: '👋 Bonjour et bienvenue sur le **Support Intelligent AgroBey** ! Je suis votre conseiller expert pour le monde rural au Sénégal. Posez-moi n'importe quelle question : foncier, baux ruraux, diagnostic ravageurs, alimentation Ladoum, prix des marchés ou transport.',
+          text: '👋 Bonjour et bienvenue sur le **Support Intelligent AgroBey** ! Je suis votre conseiller expert pour le monde rural au Sénégal. Posez-moi n\'importe quelle question : foncier, baux ruraux, diagnostic ravageurs, alimentation Ladoum, prix des marchés ou transport.',
           time: 'À l instant'
         }
       ];

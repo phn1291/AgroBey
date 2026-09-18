@@ -85,13 +85,20 @@ class AgroBeyApplication {
         const pwd = document.getElementById('login-password').value;
         const errBox = document.getElementById('auth-error-box');
 
-        const res = await window.AgroBeyAuth.login(id, pwd, true);
-        if (res.success) {
-          window.AgroBeyAuth.closeAuthModal();
-          this.showToast('success', 'Connexion Réussie', `Bienvenue sur AgroBey, ${res.user.name} !`);
-        } else {
+        try {
+          const res = await window.AgroBeyAuth.login(id, pwd, true);
+          if (res.success) {
+            window.AgroBeyAuth.closeAuthModal();
+            this.showToast('success', 'Connexion Réussie', `Bienvenue sur AgroBey, ${res.user.name} !`);
+          } else {
+            if (errBox) {
+              errBox.innerText = res.message || 'Identifiant ou mot de passe incorrect.';
+              errBox.classList.remove('hidden');
+            }
+          }
+        } catch (err) {
           if (errBox) {
-            errBox.innerText = res.message;
+            errBox.innerText = 'Erreur lors de la connexion : ' + (err.message || 'erreur système');
             errBox.classList.remove('hidden');
           }
         }
@@ -106,18 +113,25 @@ class AgroBeyApplication {
         const name = document.getElementById('reg-name').value.trim();
         const email = document.getElementById('reg-email').value.trim();
         const phone = document.getElementById('reg-phone').value.trim();
-        const role = document.querySelector('input[name="reg-role"]:checked').value;
+        const role = document.querySelector('input[name="reg-role"]:checked')?.value || 'client';
         const pwd = document.getElementById('reg-password').value;
         const location = document.getElementById('reg-location').value.trim();
         const errBox = document.getElementById('auth-error-box');
 
-        const res = await window.AgroBeyAuth.register({ name, email, phone, role, password: pwd, location });
-        if (res.success) {
-          window.AgroBeyAuth.closeAuthModal();
-          this.showToast('success', 'Compte Créé', `Bienvenue parmi nous, ${name} !`);
-        } else {
+        try {
+          const res = await window.AgroBeyAuth.register({ name, email, phone, role, password: pwd, location });
+          if (res.success) {
+            window.AgroBeyAuth.closeAuthModal();
+            this.showToast('success', 'Compte Créé', `Bienvenue parmi nous, ${name} !`);
+          } else {
+            if (errBox) {
+              errBox.innerText = res.message || 'Impossible de créer le compte.';
+              errBox.classList.remove('hidden');
+            }
+          }
+        } catch (err) {
           if (errBox) {
-            errBox.innerText = res.message;
+            errBox.innerText = 'Erreur lors de l\'inscription : ' + (err.message || 'erreur système');
             errBox.classList.remove('hidden');
           }
         }

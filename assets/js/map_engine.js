@@ -1,4 +1,4 @@
-﻿/**
+/**
  * AgroBeyMapEngine - Moteur Cartographique Haute Performance
  * Multi-calques (Satellite HD, Vectoriel Retina, Dark Tactical Radar),
  * Routage routier réel OSRM, Animation fluide de véhicule avec cap/orientation,
@@ -76,7 +76,7 @@ class AgroBeyMapEngine {
     {
       id: 'bassin_arachidier',
       name: '🥜 Bassin Arachidier (Saloum & Baol)',
-      description: 'Production intensive d'arachide, mil souna, maïs, niébé et élevage semi-intensif.',
+      description: 'Production intensive d\'arachide, mil souna, maïs, niébé et élevage semi-intensif.',
       color: '#d97706',
       fillOpacity: 0.18,
       coordinates: [

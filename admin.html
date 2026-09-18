@@ -231,14 +231,14 @@
         if (!container) return;
 
         const toast = document.createElement('div');
-        toast.className = `p-4 rounded-2xl shadow-xl border text-xs flex items-start gap-3 transition-all duration-300 ${
+        toast.className = `p-4 rounded-2xl shadow-xl border text-xs flex items-start gap-3 transition-all duration-300 pointer-events-auto ${
           type === 'success' ? 'bg-emerald-900 border-emerald-700 text-white' :
           type === 'warning' ? 'bg-amber-900 border-amber-700 text-white' :
           type === 'info' ? 'bg-cyan-900 border-cyan-700 text-white' :
           'bg-slate-900 border-slate-700 text-white'
         }`;
         toast.innerHTML = `
-          <div class="text-base shrink-0 mt-0.5"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="text-base shrink-0 mt-0.5"><i class="fa-solid ${type === 'success' ? 'fa-circle-check text-emerald-400' : type === 'warning' ? 'fa-triangle-exclamation text-amber-400' : 'fa-circle-info text-cyan-400'}"></i></div>
           <div class="flex-1">
             ${title ? `<h5 class="font-extrabold text-xs mb-0.5">${title}</h5>` : ''}
             <p class="leading-relaxed opacity-90">${message}</p>
@@ -285,20 +285,34 @@
     }
 
     async function handleAdminLogin(event) {
-      event.preventDefault();
+      if (event && event.preventDefault) event.preventDefault();
       const id = document.getElementById('admin-input-id').value.trim();
       const pwd = document.getElementById('admin-input-pwd').value;
       const errBox = document.getElementById('admin-login-error');
       const allowedRoles = ['admin', 'assistant', 'it', 'marketing'];
 
-      const res = await window.AgroBeyAuth.login(id, pwd, true);
-      if (res.success && allowedRoles.includes(res.user.role)) {
-        if (errBox) errBox.classList.add('hidden');
-        checkAdminAuth();
-        window.AgroBeyApp.showToast('success', `Bienvenue ${res.user.name}`, `Accès console accordé (${res.user.roleLabel || res.user.role}).`);
-      } else {
+      try {
+        const res = await window.AgroBeyAuth.login(id, pwd, true);
+        if (res.success) {
+          if (allowedRoles.includes(res.user.role)) {
+            if (errBox) errBox.classList.add('hidden');
+            checkAdminAuth();
+            window.AgroBeyApp.showToast('success', `Bienvenue ${res.user.name}`, `Accès console accordé (${res.user.roleLabel || res.user.role}).`);
+          } else {
+            if (errBox) {
+              errBox.innerText = `Le profil "${res.user.roleLabel || res.user.role}" n'est pas autorisé sur le Back-Office Collaborateurs. Veuillez utiliser les identifiants Super-Admin, Assistante, IT ou Marketing.`;
+              errBox.classList.remove('hidden');
+            }
+          }
+        } else {
+          if (errBox) {
+            errBox.innerText = res.message || 'Identifiant ou mot de passe collaborateur incorrect.';
+            errBox.classList.remove('hidden');
+          }
+        }
+      } catch (err) {
         if (errBox) {
-          errBox.innerText = res.message || 'Identifiant ou mot de passe collaborateur incorrect.';
+          errBox.innerText = 'Erreur inattendue : ' + (err.message || 'Échec de connexion.');
           errBox.classList.remove('hidden');
         }
       }
@@ -308,6 +322,11 @@
       window.AgroBeyAuth.logout();
       checkAdminAuth();
     }
+
+    window.checkAdminAuth = checkAdminAuth;
+    window.fillStaffLogin = fillStaffLogin;
+    window.handleAdminLogin = handleAdminLogin;
+    window.handleAdminLogout = handleAdminLogout;
 
     document.addEventListener('DOMContentLoaded', () => {
       checkAdminAuth();

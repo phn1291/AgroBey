@@ -1,4 +1,4 @@
-﻿/**
+/**
  * AgroBey - Moteur de Données & Stockage Réactif
  * Gestion de la persistance locale (LocalStorage), Pub/Sub, Multi-Staff, Logs & IA Conversations.
  */
@@ -95,7 +95,7 @@ const DEFAULT_USERS = [
     whatsapp: '221775551234',
     location: 'Dakar, Almadies',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
-    passwordHash: 'c4e47087f9c2d1b0d268579df20ceb72ea98df5b3ec2a8c3d82a4729f272c72b', // AgroClient@2026
+    passwordHash: '98ae296b9129f5cf1e166ff567b5531d706b8d2e698fd27e743b7772e84a7078', // AgroClient@2026
     salt: 'agrobey_salt_client',
     isVerified: true,
     badge: 'Acheteur Vérifié',
@@ -180,7 +180,7 @@ const DEFAULT_USERS = [
     whatsapp: '221770000000',
     location: 'Dakar, Siège AgroBey',
     avatar: 'assets/logo.jpg',
-    passwordHash: '1e5e2e8df818301548680d287bcab60a80e0cce08053a479ff731118fb36c6ad', // AgroBey@2026!Admin
+    passwordHash: 'b8350f460853efff6d0494bb9f2973cd03c245286b2f644c693f7f8020f29fd7', // AgroBey@2026!Admin
     salt: 'agrobey_salt_admin',
     isVerified: true,
     badge: 'Direction Suprême',
@@ -198,7 +198,7 @@ const DEFAULT_USERS = [
     whatsapp: '221778889900',
     location: 'Dakar, Plateau',
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',
-    passwordHash: '1970b59b56f8f53aeecba947b0a82e9d298aa9662e0807b5dbb159fbb1e6b8c9', // AgroAssistant@2026
+    passwordHash: '2f8a50dd3a9d7fc55d76c88f2b2d5d229c2ef04a56db0dac57205b6218ca6fa0', // AgroAssistant@2026
     salt: 'agrobey_salt_assistant',
     isVerified: true,
     badge: 'Support Officiel',
@@ -481,7 +481,7 @@ const DEFAULT_LISTINGS = [
     quantity: 1,
     unit: 'domaine (5 ha)',
     location: { region: 'Thiès', city: 'Notto Diobass', country: 'Sénégal' },
-    description: 'Terrain plat, sol Dior très fertile adapté au maraîchage (papaye, piment, oignon, gombo) et à l arboriculture. Équipé d un forage solaire débit 25 m3/h, château d'eau de 15 000 L, réseau goutte-à-goutte installé et maison de gardien.',
+    description: 'Terrain plat, sol Dior très fertile adapté au maraîchage (papaye, piment, oignon, gombo) et à l arboriculture. Équipé d un forage solaire débit 25 m3/h, château d\'eau de 15 000 L, réseau goutte-à-goutte installé et maison de gardien.',
     images: [
       'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=800&q=80'
@@ -1057,6 +1057,9 @@ class AgroBeyDatabase {
     }
     if (!localStorage.getItem(STORAGE_KEYS.USERS)) {
       localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(DEFAULT_USERS));
+    } else {
+      // Synchronisation et réparation automatique des comptes par défaut
+      this.syncDefaultUsers();
     }
     if (!localStorage.getItem(STORAGE_KEYS.LISTINGS)) {
       localStorage.setItem(STORAGE_KEYS.LISTINGS, JSON.stringify(DEFAULT_LISTINGS));
@@ -1081,6 +1084,35 @@ class AgroBeyDatabase {
     }
     if (!localStorage.getItem(STORAGE_KEYS.SYSTEM_LOGS)) {
       localStorage.setItem(STORAGE_KEYS.SYSTEM_LOGS, JSON.stringify(DEFAULT_SYSTEM_LOGS));
+    }
+  }
+
+  syncDefaultUsers() {
+    try {
+      const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || [];
+      let modified = false;
+      DEFAULT_USERS.forEach(defUser => {
+        const idx = users.findIndex(u => (u.email && u.email.toLowerCase() === defUser.email.toLowerCase()) || u.id === defUser.id);
+        if (idx === -1) {
+          users.push(defUser);
+          modified = true;
+        } else {
+          // Mise à jour de sécurité des hashes & sels si obsolètes
+          if (users[idx].passwordHash !== defUser.passwordHash || users[idx].salt !== defUser.salt || users[idx].role !== defUser.role) {
+            users[idx].passwordHash = defUser.passwordHash;
+            users[idx].salt = defUser.salt;
+            users[idx].role = defUser.role;
+            users[idx].roleLabel = defUser.roleLabel;
+            if (defUser.department) users[idx].department = defUser.department;
+            modified = true;
+          }
+        }
+      });
+      if (modified) {
+        localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+      }
+    } catch (e) {
+      console.warn('Erreur syncDefaultUsers:', e);
     }
   }
 

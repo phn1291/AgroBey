@@ -1,4 +1,4 @@
-﻿?/**
+/**
  * AgroBey - Espace Agriculteur, Éleveur & Propriétaire Terrien (Vendeur)
  * Gestion unifiée : Publication d'annonces, catalogue d'exploitation, commandes en temps réel, alertes et transport.
  */

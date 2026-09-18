@@ -49,7 +49,6 @@ class AgroBeyApplication {
       window.AgroBeyAuth.subscribe(() => {
         this.updateUserHeaderUI();
         if (this.currentTab === 'seller') this.seller.renderDashboard();
-        if (this.currentTab === 'publish') this.renderPublishGuard();
         if (this.currentTab === 'delivery') this.delivery.render();
       });
 
@@ -123,6 +122,15 @@ class AgroBeyApplication {
   }
 
   switchTab(tab) {
+    // Redirection unifiée : "Déposer une annonce" est maintenant fusionné dans l'Espace Agriculteur
+    if (tab === 'publish') {
+      this.switchTab('seller');
+      if (this.seller) {
+        this.seller.showSubTab('publish');
+      }
+      return;
+    }
+
     const currentUser = window.AgroBeyAuth ? window.AgroBeyAuth.getCurrentUser() : null;
     
     // Règle d'accès stricte : Les comptes livreurs ont un accès exclusif à la page livreur
@@ -156,8 +164,8 @@ class AgroBeyApplication {
       }
     });
 
-    // Affichage des vues
-    const views = ['marketplace', 'publish', 'seller', 'support', 'delivery'];
+    // Affichage des vues principales
+    const views = ['marketplace', 'seller', 'support', 'delivery'];
     views.forEach(v => {
       const el = document.getElementById(`view-${v}`);
       if (el) {
@@ -172,16 +180,6 @@ class AgroBeyApplication {
     });
 
     if (tab === 'marketplace' && this.marketplace) this.marketplace.render();
-    if (tab === 'publish') {
-      const user = window.AgroBeyAuth.getCurrentUser();
-      if (!user) {
-        window.AgroBeyAuth.guardAction('seller', () => {
-          this.switchTab('publish');
-        });
-        return;
-      }
-      this.renderPublishGuard();
-    }
     if (tab === 'seller' && this.seller) this.seller.renderDashboard();
     if (tab === 'support' && this.support) this.support.render();
     if (tab === 'delivery' && this.delivery) this.delivery.render();
@@ -189,93 +187,10 @@ class AgroBeyApplication {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  renderPublishGuard() {
-    const pubContent = document.getElementById('publish-guard-container');
-    const pubForm = document.getElementById('publish-form-actual');
-    if (!pubContent || !pubForm) return;
-
-    const user = window.AgroBeyAuth.getCurrentUser();
-
-    if (!user) {
-      pubContent.classList.remove('hidden');
-      pubForm.classList.add('hidden');
-      pubContent.innerHTML = `
-        <div class="max-w-md mx-auto py-12 text-center bg-white rounded-3xl border border-gray-200/80 p-8 shadow-sm">
-          <div class="w-16 h-16 mx-auto mb-4 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center text-3xl shadow-inner">
-            <i class="fa-solid fa-lock text-emerald-700"></i>
-          </div>
-          <h3 class="text-lg font-black text-gray-900 mb-2">Espace Réservé aux Vendeurs</h3>
-          <p class="text-xs text-gray-500 mb-6 leading-relaxed">
-            La publication d'annonces est exclusivement réservée aux comptes <strong>Agriculteurs, Éleveurs et Bailleurs</strong>. Connectez-vous avec un compte vendeur pour continuer.
-          </p>
-          <div class="flex flex-col gap-2.5">
-            <button onclick="window.AgroBeyAuth.openAuthModal('login', 'Connectez-vous avec un compte vendeur pour publier.')" class="w-full py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow transition">
-              Se Connecter (Compte Vendeur)
-            </button>
-            <button onclick="window.AgroBeyAuth.openAuthModal('register')" class="w-full py-3 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold text-xs rounded-xl transition">
-              Créer un Compte Producteur
-            </button>
-          </div>
-        </div>
-      `;
-    } else if (user.role === 'client') {
-      pubContent.classList.remove('hidden');
-      pubForm.classList.add('hidden');
-      pubContent.innerHTML = `
-        <div class="max-w-lg mx-auto py-12 text-center bg-white rounded-3xl border border-gray-200/80 p-8 shadow-sm">
-          <div class="w-16 h-16 mx-auto mb-4 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center text-3xl shadow-inner">
-            <i class="fa-solid fa-wheat-awn"></i>
-          </div>
-          <h3 class="text-lg font-black text-gray-900 mb-2">Compte Acheteur Détecté</h3>
-          <p class="text-xs text-gray-500 mb-6 leading-relaxed">
-            Vous êtes actuellement connecté en tant qu'<strong>Acheteur (${user.name})</strong>. Pour pouvoir déposer des annonces et commercialiser vos récoltes ou terres, demandez l'activation de votre profil Vendeur (validation sous 24h par l'Admin ou l'IT).
-          </p>
-          <div class="flex flex-col sm:flex-row gap-2.5 justify-center">
-            <button onclick="window.AgroBeyDB.updateUser('${user.id}', { role: 'seller', sellerStatus: 'pending_approval', isSellerApproved: false, badge: '⏳ Validation Admin/IT en cours' }); window.AgroBeyDB.addSystemLog('AUTH', 'Demande Activation Vendeur', 'L utilisateur ${user.name} a demandé l activation de son profil vendeur.', '${user.name}'); window.AgroBeyApp.showToast('info', 'Demande Transmise', 'Votre demande de profil vendeur est en attente de validation par l\\'Admin ou l\\'IT.'); window.AgroBeyApp.updateUserHeaderUI(); window.AgroBeyApp.renderPublishGuard();" class="px-6 py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-lg transition">
-              ✓ Demander l'Activation Vendeur
-            </button>
-            <button onclick="window.AgroBeyApp.switchTab('marketplace')" class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold text-xs rounded-xl transition">
-              Retour au Catalogue
-            </button>
-          </div>
-        </div>
-      `;
-    } else if (user.role === 'seller' && !user.isSellerApproved && user.sellerStatus !== 'approved') {
-      pubContent.classList.remove('hidden');
-      pubForm.classList.add('hidden');
-      pubContent.innerHTML = `
-        <div class="max-w-lg mx-auto py-12 text-center bg-white rounded-3xl border border-amber-300 p-8 shadow-sm">
-          <div class="w-16 h-16 mx-auto mb-4 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center text-3xl shadow-inner animate-pulse">
-            <i class="fa-solid fa-user-clock"></i>
-          </div>
-          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-[10px] font-black uppercase mb-2">
-            Validation Admin / IT en cours
-          </div>
-          <h3 class="text-lg font-black text-gray-900 mb-2">Compte Vendeur en Attente d'Approbation</h3>
-          <p class="text-xs text-gray-600 mb-6 leading-relaxed">
-            Bonjour <strong>${user.name}</strong>. Conformément aux règles de sécurité AgroBey, tout compte vendeur (agriculteur, éleveur, propriétaire terrien) doit d'abord être vérifié et validé par le <strong>Super-Admin</strong> ou l'<strong>Ingénieur IT</strong> avant de pouvoir publier des annonces sur la plateforme.
-          </p>
-          <div class="bg-amber-50/60 p-4 rounded-2xl border border-amber-200 text-left text-xs space-y-2 mb-6 text-amber-950">
-            <div class="font-bold flex items-center gap-2 text-amber-900">
-              <i class="fa-solid fa-shield-halved text-amber-600"></i> Procédure de validation officielle :
-            </div>
-            <p class="text-[11px]">• Contrôle de l'identité et des coordonnées par l'équipe administrative.</p>
-            <p class="text-[11px]">• Validation rapide sous 24h par l'équipe Admin ou IT.</p>
-            <p class="text-[11px]">• Dès validation, le bouton de publication sera automatiquement débloqué.</p>
-          </div>
-          <div class="flex flex-col sm:flex-row gap-2.5 justify-center">
-            <button onclick="window.AgroBeyApp.switchTab('seller')" class="px-6 py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow transition">
-              Accéder à mon Espace Producteur
-            </button>
-            <a href="https://wa.me/221770000000?text=${encodeURIComponent(`Bonjour AgroBey, je viens de créer mon compte vendeur (${user.name}) et souhaite accélérer la validation.`)}" target="_blank" class="px-6 py-3 bg-emerald-50 text-emerald-800 border border-emerald-300 hover:bg-emerald-100 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5">
-              <i class="fa-brands fa-whatsapp text-emerald-600"></i> Contacter Support
-            </a>
-          </div>
-        </div>
-      `;
-    } else {
-      pubContent.classList.add('hidden');
-      pubForm.classList.remove('hidden');
+  openPublishListing() {
+    this.switchTab('seller');
+    if (this.seller) {
+      this.seller.showSubTab('publish');
     }
   }
 
@@ -1008,3 +923,4 @@ class AgroBeyApplication {
 
 // Initialisation globale
 window.AgroBeyApp = new AgroBeyApplication();
+

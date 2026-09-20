@@ -144,28 +144,85 @@ class AgroBeyDelivery {
   }
 
   promptUpgradeToDriver() {
+    this.openDriverUpgradeModal();
+  }
+
+  openDriverUpgradeModal() {
+    const user = window.AgroBeyAuth.getCurrentUser();
+    if (!user) {
+      window.AgroBeyAuth.openAuthModal('Veuillez vous connecter pour postuler comme transporteur.');
+      return;
+    }
+
+    const modal = document.getElementById('driver-upgrade-modal');
+    if (modal) {
+      const vehicleSelect = document.getElementById('upgrade-modal-vehicle');
+      const zoneSelect = document.getElementById('upgrade-modal-zone');
+      const plateInput = document.getElementById('upgrade-modal-plate');
+      const licenseInput = document.getElementById('upgrade-modal-license');
+
+      if (vehicleSelect && user.vehicleType) {
+        for (let opt of vehicleSelect.options) {
+          if (opt.value === user.vehicleType || opt.value.includes(user.vehicleType) || user.vehicleType.includes(opt.value.split(' ')[1])) {
+            vehicleSelect.value = opt.value;
+            break;
+          }
+        }
+      }
+      if (zoneSelect && user.coverageZones) {
+        for (let opt of zoneSelect.options) {
+          if (opt.value === user.coverageZones || opt.value.includes(user.coverageZones) || user.coverageZones.includes(opt.value.split(' ')[0])) {
+            zoneSelect.value = opt.value;
+            break;
+          }
+        }
+      }
+      if (plateInput) plateInput.value = user.vehiclePlate || '';
+      if (licenseInput) licenseInput.value = user.driverLicense || '';
+
+      modal.classList.remove('hidden');
+    }
+  }
+
+  handleSaveDriverVehicle(event) {
+    if (event) event.preventDefault();
     const user = window.AgroBeyAuth.getCurrentUser();
     if (!user) return;
 
-    const vehicle = prompt("Type de véhicule (Ex: Moto/Tricycle, Camionnette Frigo 3.5T, Camion Plateau 10T) :", "Camionnette Frigorifique (3.5 Tonnes)");
-    if (!vehicle) return;
-
-    const zones = prompt("Zones de couverture habituelles (Ex: Thiès, Dakar, Niayes, Saint-Louis) :", "Dakar, Thiès, Niayes");
-    if (!zones) return;
+    const vehicle = document.getElementById('upgrade-modal-vehicle')?.value || 'Camionnette Frigorifique / Isotherme (3.5 Tonnes)';
+    const zones = document.getElementById('upgrade-modal-zone')?.value || 'Thiès & Zone des Niayes (Pout, Kayar, Mboro, Notto)';
+    const plate = document.getElementById('upgrade-modal-plate')?.value.trim() || 'DK-PROVISOIRE';
+    const license = document.getElementById('upgrade-modal-license')?.value.trim() || 'Permis B';
 
     user.role = 'delivery';
     user.roleLabel = 'Livreur / Transporteur Agro-Logistique';
     user.vehicleType = vehicle;
     user.coverageZones = zones;
-    user.isDriverApproved = false;
-    user.driverStatus = 'pending_approval';
-    user.badge = '⏳ Validation Admin/IT en cours';
-    user.availability = 'offline';
+    user.vehiclePlate = plate;
+    user.driverLicense = license;
+    user.isDriverApproved = true;
+    if (!user.driverStatus || user.driverStatus === 'none') {
+      user.driverStatus = 'approved';
+    }
+    user.badge = '🚚 Transporteur Vérifié';
+    if (!user.availability) user.availability = 'online';
 
     window.AgroBeyDB.saveUser(user);
-    window.AgroBeyDB.addSystemLog('AUTH', 'Demande Profil Transporteur', `${user.name} a demandé l'activation de son profil transporteur (${vehicle})`, user.name);
+    window.AgroBeyDB.addSystemLog('DELIVERY', 'Mise à jour Véhicule', `${user.name} a mis à jour son véhicule : ${vehicle} (${plate}) - Zone: ${zones}`, user.name);
 
-    window.AgroBeyApp.showToast('info', 'Demande Transmise', 'Votre demande de profil transporteur a été transmise à l\'administration pour validation.');
+    document.getElementById('driver-upgrade-modal')?.classList.add('hidden');
+    window.AgroBeyApp.showToast('success', 'Véhicule Enregistré !', `Votre véhicule (${vehicle.split('(')[0]}) et zone ont été mis à jour avec succès.`);
+    this.render();
+  }
+
+  changeDriverVehicle(driverId, newVehicle) {
+    const user = window.AgroBeyAuth.getCurrentUser();
+    if (!user || user.id !== driverId) return;
+
+    user.vehicleType = newVehicle;
+    window.AgroBeyDB.saveUser(user);
+    window.AgroBeyDB.addSystemLog('DELIVERY', 'Changement Véhicule Rapide', `${user.name} a changé son véhicule actif pour : ${newVehicle}`, user.name);
+    window.AgroBeyApp.showToast('info', 'Véhicule Modifié', `Véhicule actif : ${newVehicle.split('(')[0]}`);
     this.render();
   }
 
@@ -234,15 +291,35 @@ class AgroBeyDelivery {
                     ${isOnline ? '🟢 En Service & Géolocalisé' : '🔴 Hors Ligne'}
                   </span>
                 </div>
-                <p class="text-xs text-slate-400 mt-0.5">
-                  <i class="fa-solid fa-truck-moving text-cyan-400"></i> ${user.vehicleType || 'Camionnette'} • 
-                  <i class="fa-solid fa-location-dot text-amber-400 ml-1"></i> <strong class="text-slate-200">${user.currentZone || user.location || 'Thiès'}</strong>
-                </p>
+                <!-- Barre de sélection de véhicule avec petite flèche (Chevron) & Zone -->
+                <div class="flex items-center gap-2 mt-2 flex-wrap">
+                  <div class="relative inline-flex items-center">
+                    <select onchange="window.AgroBeyApp.delivery.changeDriverVehicle('${user.id}', this.value)" class="appearance-none pl-8 pr-8 py-1.5 bg-slate-800/95 hover:bg-slate-800 text-amber-300 border border-amber-500/40 rounded-xl text-xs font-bold outline-none cursor-pointer transition shadow-inner">
+                      <option value="🛵 Moto Tiak-Tiak Express (Colis Légers < 30 kg)" ${user.vehicleType?.includes('Moto') ? 'selected' : ''}>🛵 Moto Express (&lt; 30 kg)</option>
+                      <option value="🛺 Tricycle Utilitaire Benne (Jusqu'à 500 kg)" ${user.vehicleType?.includes('Tricycle') ? 'selected' : ''}>🛺 Tricycle Benne (500 kg)</option>
+                      <option value="🚐 Camionnette Frigorifique / Isotherme (3.5 Tonnes)" ${(!user.vehicleType || user.vehicleType.includes('Frigo') || user.vehicleType.includes('3.5')) ? 'selected' : ''}>🚐 Camionnette Frigo (3.5T)</option>
+                      <option value="🚛 Camion Plateau Ridelles (10 Tonnes - Gros Volumes)" ${user.vehicleType?.includes('Plateau') || user.vehicleType?.includes('10') ? 'selected' : ''}>🚛 Camion Plateau (10 Tonnes)</option>
+                      <option value="🚜 Bétaillère Spécialisée (Transport Bétail & Ladoum)" ${user.vehicleType?.includes('Bétaillère') || user.vehicleType?.includes('Ladoum') ? 'selected' : ''}>🚜 Bétaillère (Bétail & Ladoum)</option>
+                    </select>
+                    <i class="fa-solid fa-truck text-amber-400 text-xs absolute left-2.5 pointer-events-none"></i>
+                    <i class="fa-solid fa-chevron-down text-amber-400 text-[10px] absolute right-2.5 pointer-events-none"></i>
+                  </div>
+
+                  <span class="text-xs text-slate-400 flex items-center gap-1">
+                    <i class="fa-solid fa-location-dot text-emerald-400"></i> <strong class="text-slate-200">${user.currentZone || user.location || 'Thiès'}</strong>
+                  </span>
+                </div>
               </div>
             </div>
 
-            <!-- Boutons Disponibilité & Reconnexion -->
+            <!-- Boutons Disponibilité & Paramètres Véhicule -->
             <div class="flex items-center gap-2 flex-wrap">
+              <button onclick="window.AgroBeyApp.delivery.openDriverUpgradeModal()" class="px-4 py-3 rounded-2xl font-bold text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-2" title="Modifier immatriculation, zones et permis">
+                <i class="fa-solid fa-sliders text-amber-400"></i>
+                <span>Modifier mon véhicule</span>
+                <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
+              </button>
+
               <button onclick="window.AgroBeyApp.delivery.toggleAvailability('${user.id}')" class="px-5 py-3 rounded-2xl font-black text-xs transition shadow-lg flex items-center gap-2 ${
                 isOnline 
                   ? 'bg-red-950/80 hover:bg-red-900 border border-red-800 text-red-200' 
@@ -894,14 +971,29 @@ class AgroBeyDelivery {
   }
 
   promptValidateOTP(deliveryId) {
-    const otp = prompt("Veuillez saisir le Code OTP secret à 4 chiffres fourni par l'acheteur :");
-    if (otp === null) return;
+    const modal = document.getElementById('otp-validate-modal');
+    const input = document.getElementById('otp-input-code');
+    const hiddenId = document.getElementById('otp-delivery-id');
+    if (modal && input && hiddenId) {
+      hiddenId.value = deliveryId;
+      input.value = '';
+      modal.classList.remove('hidden');
+      setTimeout(() => input.focus(), 100);
+    }
+  }
+
+  handleConfirmOTP(event) {
+    if (event) event.preventDefault();
+    const deliveryId = document.getElementById('otp-delivery-id')?.value;
+    const otp = document.getElementById('otp-input-code')?.value.trim();
+    if (!deliveryId || !otp) return;
 
     const currentUser = window.AgroBeyAuth.getCurrentUser();
     const actor = currentUser ? currentUser.name : 'Livreur';
     const res = window.AgroBeyDB.verifyDeliveryOTP(deliveryId, otp, actor);
 
     if (res.success) {
+      document.getElementById('otp-validate-modal')?.classList.add('hidden');
       window.AgroBeyApp.showToast('success', 'Livraison Clôturée !', 'Code OTP vérifié avec succès. Les frais de livraison ont été crédités sur votre solde.');
       this.render();
     } else {

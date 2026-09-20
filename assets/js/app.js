@@ -116,10 +116,11 @@ class AgroBeyApplication {
         const role = document.querySelector('input[name="reg-role"]:checked')?.value || 'client';
         const pwd = document.getElementById('reg-password').value;
         const location = document.getElementById('reg-location').value.trim();
+        const vehicleType = document.getElementById('reg-vehicle')?.value;
         const errBox = document.getElementById('auth-error-box');
 
         try {
-          const res = await window.AgroBeyAuth.register({ name, email, phone, role, password: pwd, location });
+          const res = await window.AgroBeyAuth.register({ name, email, phone, role, password: pwd, location, vehicleType });
           if (res.success) {
             window.AgroBeyAuth.closeAuthModal();
             this.showToast('success', 'Compte Créé', `Bienvenue parmi nous, ${name} !`);
@@ -136,6 +137,17 @@ class AgroBeyApplication {
           }
         }
       });
+    }
+  }
+
+  toggleRegRoleFields(role) {
+    const deliveryFields = document.getElementById('reg-delivery-fields');
+    if (deliveryFields) {
+      if (role === 'delivery') {
+        deliveryFields.classList.remove('hidden');
+      } else {
+        deliveryFields.classList.add('hidden');
+      }
     }
   }
 

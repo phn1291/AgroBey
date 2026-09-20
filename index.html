@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
@@ -512,20 +512,43 @@
         <div>
           <label class="block font-bold text-gray-700 mb-1">Type de Profil *</label>
           <div class="grid grid-cols-3 gap-2">
-            <label class="flex items-center gap-1.5 p-2 bg-gray-50 border rounded-xl cursor-pointer">
-              <input type="radio" name="reg-role" value="client" checked>
+            <label class="flex items-center gap-1.5 p-2 bg-gray-50 border rounded-xl cursor-pointer hover:bg-gray-100 transition">
+              <input type="radio" name="reg-role" value="client" checked onchange="window.AgroBeyApp.toggleRegRoleFields(this.value)">
               <span class="font-semibold text-[11px]">Acheteur</span>
             </label>
-            <label class="flex items-center gap-1.5 p-2 bg-gray-50 border rounded-xl cursor-pointer">
-              <input type="radio" name="reg-role" value="seller">
+            <label class="flex items-center gap-1.5 p-2 bg-gray-50 border rounded-xl cursor-pointer hover:bg-gray-100 transition">
+              <input type="radio" name="reg-role" value="seller" onchange="window.AgroBeyApp.toggleRegRoleFields(this.value)">
               <span class="font-semibold text-[11px]">Producteur</span>
             </label>
-            <label class="flex items-center gap-1.5 p-2 bg-gray-50 border rounded-xl cursor-pointer">
-              <input type="radio" name="reg-role" value="delivery">
+            <label class="flex items-center gap-1.5 p-2 bg-gray-50 border rounded-xl cursor-pointer hover:bg-gray-100 transition">
+              <input type="radio" name="reg-role" value="delivery" onchange="window.AgroBeyApp.toggleRegRoleFields(this.value)">
               <span class="font-semibold text-[11px]">Livreur</span>
             </label>
           </div>
         </div>
+
+        <!-- Champs Spécifiques Livreur / Transporteur -->
+        <div id="reg-delivery-fields" class="hidden p-3.5 bg-amber-50/90 border border-amber-200 rounded-2xl space-y-2.5">
+          <div class="text-[11px] font-bold text-amber-900 flex items-center gap-1.5">
+            <i class="fa-solid fa-truck-fast text-amber-600"></i>
+            <span>Sélectionnez votre Type de Véhicule :</span>
+          </div>
+          <div>
+            <label class="block font-bold text-gray-700 mb-1 text-[10px]">Moyen de Transport Disponible *</label>
+            <div class="relative">
+              <select id="reg-vehicle" class="w-full appearance-none pl-9 pr-8 py-2.5 bg-white border border-gray-300 rounded-xl text-xs font-bold text-gray-800 outline-none cursor-pointer focus:ring-2 focus:ring-amber-500">
+                <option value="🛵 Moto Tiak-Tiak Express (Colis Légers < 30 kg)">🛵 Moto Tiak-Tiak Express (Colis Légers &lt; 30 kg)</option>
+                <option value="🛺 Tricycle Utilitaire Benne (Jusqu'à 500 kg)">🛺 Tricycle Utilitaire Benne (Jusqu'à 500 kg)</option>
+                <option value="🚐 Camionnette Frigorifique / Isotherme (3.5 Tonnes)" selected>🚐 Camionnette Frigorifique / Isotherme (3.5 Tonnes)</option>
+                <option value="🚛 Camion Plateau Ridelles (10 Tonnes)">🚛 Camion Plateau Ridelles (10 Tonnes)</option>
+                <option value="🚜 Bétaillère Spécialisée (Bétail & Ladoum)">🚜 Bétaillère Spécialisée (Bétail &amp; Ladoum)</option>
+              </select>
+              <i class="fa-solid fa-truck absolute left-3 top-3 text-amber-600 text-xs pointer-events-none"></i>
+              <i class="fa-solid fa-chevron-down absolute right-3 top-3 text-gray-500 text-[10px] pointer-events-none"></i>
+            </div>
+          </div>
+        </div>
+
         <div>
           <label class="block font-bold text-gray-700 mb-1">Localisation / Région *</label>
           <input type="text" id="reg-location" required placeholder="Ex: Thiès, Notto Diobass" class="w-full px-3.5 py-2 border rounded-xl outline-none">
@@ -570,6 +593,116 @@
     <div class="bg-white rounded-3xl max-w-xl w-full shadow-2xl modal-pop relative my-8 overflow-hidden">
       <button onclick="document.getElementById('tracking-modal').classList.add('hidden')" class="absolute top-4 right-4 z-10 w-9 h-9 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-full flex items-center justify-center shadow font-bold">✕</button>
       <div id="tracking-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- MODALE SÉLECTION / CONFIGURATION DU VÉHICULE TRANSPORTEUR -->
+  <div id="driver-upgrade-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl modal-pop relative overflow-hidden text-xs text-slate-800 my-8">
+      <button onclick="document.getElementById('driver-upgrade-modal').classList.add('hidden')" class="absolute top-4 right-4 z-10 w-9 h-9 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-full flex items-center justify-center shadow font-bold">✕</button>
+
+      <div class="text-center mb-6">
+        <div class="w-14 h-14 mx-auto rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center text-2xl mb-3 shadow-inner">
+          <i class="fa-solid fa-truck-fast"></i>
+        </div>
+        <h3 class="text-xl font-black text-slate-900">Type de Véhicule & Zone Agro-Logistique</h3>
+        <p class="text-gray-500 text-xs mt-1">Sélectionnez les caractéristiques de votre moyen de transport</p>
+      </div>
+
+      <form id="driver-upgrade-form" onsubmit="window.AgroBeyApp.delivery.handleSaveDriverVehicle(event)" class="space-y-4">
+        <!-- Sélection du Véhicule avec Flèche Déroulante -->
+        <div>
+          <label class="block font-bold text-gray-700 mb-1.5 flex items-center gap-1">
+            <i class="fa-solid fa-truck-pickup text-amber-600"></i>
+            <span>Type de Véhicule Disponible *</span>
+          </label>
+          <div class="relative">
+            <select id="upgrade-modal-vehicle" required class="w-full appearance-none pl-11 pr-10 py-3 bg-gray-50 border border-gray-300 rounded-xl text-xs font-bold text-gray-800 focus:ring-2 focus:ring-amber-500 outline-none cursor-pointer">
+              <option value="🛵 Moto Tiak-Tiak Express (Colis Légers < 30 kg)">🛵 Moto Tiak-Tiak Express (Colis Légers &lt; 30 kg)</option>
+              <option value="🛺 Tricycle Utilitaire Benne (Jusqu'à 500 kg)">🛺 Tricycle Utilitaire Benne (Jusqu'à 500 kg)</option>
+              <option value="🚐 Camionnette Frigorifique / Isotherme (3.5 Tonnes)" selected>🚐 Camionnette Frigorifique / Isotherme (3.5 Tonnes)</option>
+              <option value="🚛 Camion Plateau Ridelles (10 Tonnes - Gros Volumes)">🚛 Camion Plateau Ridelles (10 Tonnes - Gros Volumes)</option>
+              <option value="🚜 Bétaillère Spécialisée (Transport Bétail & Ladoum)">🚜 Bétaillère Spécialisée (Transport Bétail &amp; Ladoum)</option>
+            </select>
+            <div class="absolute left-3.5 top-3.5 text-amber-600 pointer-events-none">
+              <i class="fa-solid fa-truck"></i>
+            </div>
+            <div class="absolute right-3.5 top-3.5 text-gray-500 pointer-events-none text-xs">
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+          </div>
+          <p class="text-[10px] text-gray-500 mt-1">La catégorie détermine les missions et gabarits de colis pris en charge.</p>
+        </div>
+
+        <!-- Zone de Couverture Principale avec Flèche Déroulante -->
+        <div>
+          <label class="block font-bold text-gray-700 mb-1.5 flex items-center gap-1">
+            <i class="fa-solid fa-map-location-dot text-emerald-600"></i>
+            <span>Zone Principale de Couverture *</span>
+          </label>
+          <div class="relative">
+            <select id="upgrade-modal-zone" required class="w-full appearance-none pl-11 pr-10 py-3 bg-gray-50 border border-gray-300 rounded-xl text-xs font-bold text-gray-800 focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer">
+              <option value="Dakar & Banlieue (Pikine, Guédiawaye, Rufisque, Diamniadio)">Dakar &amp; Banlieue (Pikine, Guédiawaye, Rufisque, Diamniadio)</option>
+              <option value="Thiès & Zone des Niayes (Pout, Kayar, Mboro, Notto)" selected>Thiès &amp; Zone des Niayes (Pout, Kayar, Mboro, Notto)</option>
+              <option value="Saint-Louis & Vallée du Fleuve (Podor, Richard-Toll, Dagana)">Saint-Louis &amp; Vallée du Fleuve (Podor, Richard-Toll, Dagana)</option>
+              <option value="Bassin Arachidier & Centre (Kaolack, Touba, Diourbel, Fatick)">Bassin Arachidier &amp; Centre (Kaolack, Touba, Diourbel, Fatick)</option>
+              <option value="Casamance & Sud (Ziguinchor, Bignona, Kolda)">Casamance &amp; Sud (Ziguinchor, Bignona, Kolda)</option>
+              <option value="Sénégal Oriental (Tambacounda, Kédougou)">Sénégal Oriental (Tambacounda, Kédougou)</option>
+              <option value="National (Tout le Sénégal & Corridors Régionaux)">National (Tout le Sénégal &amp; Corridors Régionaux)</option>
+            </select>
+            <div class="absolute left-3.5 top-3.5 text-emerald-600 pointer-events-none">
+              <i class="fa-solid fa-location-crosshairs"></i>
+            </div>
+            <div class="absolute right-3.5 top-3.5 text-gray-500 pointer-events-none text-xs">
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-gray-700 mb-1">Immatriculation / Plaque</label>
+            <input type="text" id="upgrade-modal-plate" placeholder="Ex: DK-4820-BG" class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-xs uppercase font-mono font-bold focus:ring-2 focus:ring-amber-500 outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-gray-700 mb-1">Permis de Conduire</label>
+            <input type="text" id="upgrade-modal-license" placeholder="Ex: Permis B ou C" class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-xs font-bold focus:ring-2 focus:ring-amber-500 outline-none">
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-gray-100 flex items-center justify-end gap-2">
+          <button type="button" onclick="document.getElementById('driver-upgrade-modal').classList.add('hidden')" class="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition">
+            Annuler
+          </button>
+          <button type="submit" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl shadow-lg transition flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Enregistrer mon Véhicule</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE VALIDATION CODE OTP LIVRAISON -->
+  <div id="otp-validate-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl modal-pop relative overflow-hidden text-xs text-slate-800">
+      <button onclick="document.getElementById('otp-validate-modal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 font-bold">✕</button>
+
+      <div class="w-14 h-14 mx-auto rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center text-2xl mb-3 shadow-inner">
+        <i class="fa-solid fa-key"></i>
+      </div>
+      <h3 class="text-base font-black text-slate-900">Validation de Réception (OTP)</h3>
+      <p class="text-gray-500 text-[11px] mt-1 mb-4">Saisissez le code secret à 4 chiffres remis par le destinataire pour clôturer la course.</p>
+
+      <form id="otp-validate-form" onsubmit="window.AgroBeyApp.delivery.handleConfirmOTP(event)" class="space-y-4">
+        <input type="hidden" id="otp-delivery-id" value="">
+        <div>
+          <input type="text" id="otp-input-code" required maxlength="6" placeholder="• • • •" class="w-full text-center text-2xl font-black tracking-widest py-3 border-2 border-emerald-500/50 rounded-2xl bg-emerald-50/50 focus:ring-4 focus:ring-emerald-500/20 outline-none font-mono">
+        </div>
+        <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-xl shadow-lg transition">
+          Valider & Clôturer la Livraison
+        </button>
+      </form>
     </div>
   </div>
 

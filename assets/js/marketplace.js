@@ -1,4 +1,4 @@
-﻿/**
+/**
  * AgroBey - Module Marketplace & Catalogue Public
  * Filtres multi-critères, fiche produit enrichie, commande dynamique et générateur de bail rural.
  */
@@ -538,7 +538,7 @@ class AgroBeyMarketplace {
                     <div>
                       <div class="flex items-center gap-1.5">
                         <i class="fa-solid fa-truck-fast text-emerald-600"></i>
-                        <span>AgroBey Express</span>
+                        <span>Ferm2Table Express</span>
                       </div>
                       <div class="text-[10px] text-emerald-800/80 font-normal mt-0.5">Livreur géolocalisé le plus proche</div>
                     </div>
@@ -556,7 +556,7 @@ class AgroBeyMarketplace {
                   </label>
                 </div>
 
-                <!-- Section Paramètres Transport AgroBey Express -->
+                <!-- Section Paramètres Transport Ferm2Table Express -->
                 <div id="shipping-details-box" class="p-3.5 bg-slate-900 text-white rounded-2xl space-y-3">
                   <div class="flex items-center justify-between">
                     <span class="text-xs font-black text-amber-400 flex items-center gap-1.5">
@@ -926,7 +926,7 @@ class AgroBeyMarketplace {
           </div>
           <div class="text-right text-xs">
             <span class="bg-emerald-100 text-emerald-900 font-extrabold px-3 py-1 rounded-full border border-emerald-300">Modèle Conforme Loi Sénégalaise</span>
-            <div class="text-gray-500 font-mono mt-1">Réf : AGB-BAIL-${listing.id.toUpperCase()}-${Date.now().toString().slice(-4)}</div>
+            <div class="text-gray-500 font-mono mt-1">Réf : F2T-BAIL-${listing.id.toUpperCase()}-${Date.now().toString().slice(-4)}</div>
             <div class="text-gray-500">Établi le : <strong>${today}</strong></div>
           </div>
         </div>
@@ -1010,7 +1010,7 @@ class AgroBeyMarketplace {
             <p class="font-black text-gray-900">Témoin / Notaire / AgroBey</p>
             <p class="text-[10px] text-gray-400 mt-0.5">Visa & Cachet officiel</p>
             <div class="h-20 flex items-center justify-center text-emerald-700 font-bold text-xs">
-              <span class="border-2 border-dashed border-emerald-600 px-3 py-1 rounded-lg">VISA AGROBEY OK</span>
+              <span class="border-2 border-dashed border-emerald-600 px-3 py-1 rounded-lg">VISA FERM2TABLE OK</span>
             </div>
             <div class="border-t border-gray-300 pt-1 text-[10px] text-gray-500">Enregistrement Foncier</div>
           </div>

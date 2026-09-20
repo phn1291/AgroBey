@@ -65,7 +65,7 @@ class AgroBeyDelivery {
           </div>
           
           <h2 class="text-2xl sm:text-4xl font-black tracking-tight leading-tight">
-            Devenez Transporteur Agréé <span class="text-amber-400">AgroBey Express</span>
+            Devenez Transporteur Agréé <span class="text-amber-400">Ferm2Table Express</span>
           </h2>
           <p class="text-xs sm:text-sm text-emerald-100/90 mt-2 max-w-2xl leading-relaxed">
             Acheminez les récoltes maraîchères, le bétail et les intrants agricoles des zones de production (Podor, Niayes, Casamance, Thiès) vers les grands marchés et restaurants de Dakar.

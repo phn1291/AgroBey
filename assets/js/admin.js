@@ -716,7 +716,7 @@ class AgroBeyAdmin {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `agrobey_backup_${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `ferm2table_backup_${new Date().toISOString().slice(0, 10)}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -1115,7 +1115,7 @@ class AgroBeyAdmin {
           <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-lg">
             <div class="text-slate-400 text-xs font-bold mb-1">Volume Frais Transport</div>
             <div class="text-xl sm:text-2xl font-black text-purple-400">${new Intl.NumberFormat('fr-FR').format(totalFees)} <span class="text-xs">FCFA</span></div>
-            <div class="text-[10px] text-slate-500 font-semibold mt-1">Collectés via AgroBey Express</div>
+            <div class="text-[10px] text-slate-500 font-semibold mt-1">Collectés via Ferm2Table Express</div>
           </div>
         </div>
 

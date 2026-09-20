@@ -20,7 +20,7 @@ const AgroBeyI18n = {
       transport_certified: "Transport & Logistique certifi\u00E9s",
       support_label: "Support",
       tagline_sub: "Agriculture \u2022 \u00C9levage \u2022 Terres \u2022 Fermes",
-      pwa_banner_title: "Installer l'Application Mobile AgroBey",
+      pwa_banner_title: "Installer l'Application Mobile Ferm2Table",
       pwa_banner_desc: "Acc\u00E8s direct en 1 clic, alertes instantan\u00E9es & mode hors-ligne",
       pwa_install_btn: "Installer",
       whatsapp_support: "Support WhatsApp",
@@ -113,7 +113,7 @@ const AgroBeyI18n = {
       seller_btn_publish_cta: "\u2795 D\u00E9poser une Nouvelle Annonce",
       seller_no_listings: "Vous n'avez pas encore publi\u00E9 d'offres.",
       seller_delete_confirm: "\u00CAtes-vous s\u00FBr de vouloir retirer cette offre ?",
-      seller_pending_approval: "Compte en attente de v\u00E9rification d'identit\u00E9 par l'administration AgroBey.",
+      seller_pending_approval: "Compte en attente de v\u00E9rification d'identit\u00E9 par l'administration Ferm2Table.",
 
       // Publish Listing Form
       pub_title: "D\u00E9poser une Annonce Agricole ou Pastorale",
@@ -163,8 +163,8 @@ const AgroBeyI18n = {
       barometer_last_update: "Mis \u00E0 jour aujourd'hui \u00E0 08h00 GMT",
 
       // Auth Modals
-      auth_login_title: "Connexion \u00E0 votre Espace AgroBey",
-      auth_register_title: "Cr\u00E9er un Compte AgroBey",
+      auth_login_title: "Connexion \u00E0 votre Espace Ferm2Table",
+      auth_register_title: "Cr\u00E9er un Compte Ferm2Table",
       auth_email_or_phone: "T\u00E9l\u00E9phone ou Adresse E-mail :",
       auth_password: "Mot de passe s\u00E9curis\u00E9 :",
       auth_name: "Nom complet & Pr\u00E9nom :",
@@ -187,11 +187,11 @@ const AgroBeyI18n = {
     wo: {
       // Topbar & Global
       official_badge: "Magget bu w\u00E9r",
-      topbar_announcement: "\uD83C\uDF3F Dalal jamm ci AgroBey : Jaay ak J\u00EBnd ci mbayum S\u00E9n\u00E9gal ak yarum jur yi",
+      topbar_announcement: "\uD83C\uDF3F Dalal jamm ci Ferm2Table : Jaay ak J\u00EBnd ci mbayum S\u00E9n\u00E9gal ak yarum jur yi",
       transport_certified: "Y\u00F3bbale ak Dawalkat yu w\u00F3or",
       support_label: "Ndimbal",
       tagline_sub: "Mbay \u2022 Yar \u2022 Suuf \u2022 Tool yu am ndox",
-      pwa_banner_title: "Sampal AgroBey ci sa Telefon",
+      pwa_banner_title: "Sampal Ferm2Table ci sa Telefon",
       pwa_banner_desc: "Dugg ci 1 klig, jot xibaar ci s\u00E0as si te du la laaj internet bu bare",
       pwa_install_btn: "Sampal",
       whatsapp_support: "Ligg\u00E9ey ci WhatsApp",
@@ -284,7 +284,7 @@ const AgroBeyI18n = {
       seller_btn_publish_cta: "\u2795 Y\u00E9glel Sa Mars\u00E9 L\u00E9egi",
       seller_no_listings: "Y\u00E9gle gulo dara fi tay.",
       seller_delete_confirm: "Ndax danga b\u00EBgg dindi y\u00E9gle bi ?",
-      seller_pending_approval: "Sa k\u00F3nt mi ngi ci loxol njiiti AgroBey ngir w\u00F3oral ko.",
+      seller_pending_approval: "Sa k\u00F3nt mi ngi ci loxol njiiti Ferm2Table ngir w\u00F3oral ko.",
 
       // Publish Listing Form
       pub_title: "Y\u00E9glel sa G\u00F3ob, sa Jur mbaa sa Tool",
@@ -362,7 +362,7 @@ const AgroBeyI18n = {
       transport_certified: "Certified Transport & Logistics",
       support_label: "Support",
       tagline_sub: "Agriculture \u2022 Livestock \u2022 Farmland \u2022 Equipped Farms",
-      pwa_banner_title: "Install the AgroBey Mobile App",
+      pwa_banner_title: "Install the Ferm2Table Mobile App",
       pwa_banner_desc: "1-click instant access, real-time alerts & offline capabilities",
       pwa_install_btn: "Install",
       whatsapp_support: "WhatsApp Support",
@@ -455,7 +455,7 @@ const AgroBeyI18n = {
       seller_btn_publish_cta: "\u2795 Post a New Listing",
       seller_no_listings: "You haven't posted any listings yet.",
       seller_delete_confirm: "Are you sure you want to remove this listing?",
-      seller_pending_approval: "Account awaiting identity certification by AgroBey administration.",
+      seller_pending_approval: "Account awaiting identity certification by Ferm2Table administration.",
 
       // Publish Listing Form
       pub_title: "Post an Agricultural or Livestock Listing",
@@ -505,8 +505,8 @@ const AgroBeyI18n = {
       barometer_last_update: "Updated today at 08:00 AM GMT",
 
       // Auth Modals
-      auth_login_title: "Sign in to AgroBey",
-      auth_register_title: "Create an AgroBey Account",
+      auth_login_title: "Sign in to Ferm2Table",
+      auth_register_title: "Create a Ferm2Table Account",
       auth_email_or_phone: "Phone Number or Email Address:",
       auth_password: "Secure Password:",
       auth_name: "Full Name:",
@@ -679,6 +679,7 @@ const AgroBeyI18n = {
 // Exposition globale & raccourci de traduction
 if (typeof window !== 'undefined') {
   window.AgroBeyI18n = AgroBeyI18n;
+window.Ferm2TableI18n = AgroBeyI18n;
   window.t = AgroBeyI18n.t.bind(AgroBeyI18n);
 }
 if (typeof module !== 'undefined' && module.exports) {

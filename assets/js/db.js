@@ -17,14 +17,14 @@ const STORAGE_KEYS = {
 };
 
 const DEFAULT_SETTINGS = {
-  platformName: 'AgroBey',
-  platformSuffix: 'Bey',
+  platformName: 'Ferm2Table',
+  platformSuffix: 'Table',
   slogan: 'Cultivons. Élevons. Construisons demain.',
   description: 'Plateforme digitale de référence pour l agriculture, l élevage, la location de terres et la commercialisation des récoltes au Sénégal et en Afrique de l Ouest.',
-  headquarters: 'Siège social : Immeuble AgroBey, Route des Almadies, Dakar, Sénégal',
+  headquarters: 'Siège social : Immeuble Ferm2Table, Route des Almadies, Dakar, Sénégal',
   phone: '+221 33 800 00 00',
   whatsapp: '+221 77 000 00 00',
-  email: 'contact@agrobey.sn',
+  email: 'contact@ferm2table.sn',
   currency: 'FCFA',
   topbarText: '🌿 Plateforme Nationale & Régionale du Monde Rural et Agro-Pastoral',
   filieresTitle: 'Filières & Activités',

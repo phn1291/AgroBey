@@ -1,8 +1,8 @@
-﻿# AgroBey - Marketplace Digitale Agricole, Pastorale & Foncière au Sénégal
+# Ferm2Table - Marketplace Digitale Agricole, Pastorale & Foncière au Sénégal
 
-> **"Cultivons. Élevons. Construisons demain."**
+> **"Du Producteur à la Table • Cultivons. Élevons. Construisons demain."**
 
-**AgroBey** est la plateforme web & PWA de référence dédiée à l'écosystème agro-pastoral, foncier et logistique au Sénégal et en Afrique de l'Ouest. Elle connecte directement les producteurs, éleveurs et propriétaires fonciers avec les acheteurs et restaurateurs, avec un réseau logistique intégré et une gestion stricte des baux ruraux conformes.
+**Ferm2Table** est la plateforme web & PWA de référence dédiée à l'écosystème agro-pastoral, foncier et logistique au Sénégal et en Afrique de l'Ouest. Elle connecte directement les producteurs, éleveurs et propriétaires fonciers avec les acheteurs et restaurateurs, avec un réseau logistique intégré et une gestion stricte des baux ruraux conformes.
 
 ---
 
@@ -16,7 +16,7 @@
 
 ---
 
-## 🛵 AgroBey Express & Règles Logistiques
+## 🛵 Ferm2Table Express & Règles Logistiques
 
 1. **Transactions Foncières & Baux Ruraux (Zéro Livraison)** :
    - Pour tout achat ou location de terres (`terre`) et fermes (`ferme`), la livraison physique par transporteur est **strictement éliminée**.

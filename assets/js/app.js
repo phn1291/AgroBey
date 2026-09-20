@@ -89,7 +89,7 @@ class AgroBeyApplication {
           const res = await window.AgroBeyAuth.login(id, pwd, true);
           if (res.success) {
             window.AgroBeyAuth.closeAuthModal();
-            this.showToast('success', 'Connexion Réussie', `Bienvenue sur AgroBey, ${res.user.name} !`);
+            this.showToast('success', 'Connexion Réussie', `Bienvenue sur Ferm2Table, ${res.user.name} !`);
           } else {
             if (errBox) {
               errBox.innerText = res.message || 'Identifiant ou mot de passe incorrect.';
@@ -617,7 +617,7 @@ class AgroBeyApplication {
           <div class="w-16 h-16 mx-auto bg-amber-50 text-amber-600 rounded-full flex items-center justify-center text-3xl shadow-inner">
             <i class="fa-solid fa-truck"></i>
           </div>
-          <h3 class="text-lg font-black text-gray-900">Aucune Livraison AgroBey Express Trouvée</h3>
+          <h3 class="text-lg font-black text-gray-900">Aucune Livraison Ferm2Table Express Trouvée</h3>
           <p class="text-xs text-gray-500 leading-relaxed max-w-sm mx-auto">
             Cette commande (${orderId}) a été enregistrée avec l'option <strong>"Retrait direct à la ferme"</strong> ou n'a pas encore de mission logistique assignée.
           </p>
@@ -673,7 +673,7 @@ class AgroBeyApplication {
       <div class="bg-gradient-to-r from-emerald-950 via-slate-900 to-emerald-950 text-white p-6 relative overflow-hidden">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="px-2.5 py-0.5 rounded-full bg-amber-400 text-emerald-950 text-[10px] font-black uppercase">AgroBey Express Live</span>
+            <span class="px-2.5 py-0.5 rounded-full bg-amber-400 text-emerald-950 text-[10px] font-black uppercase">Ferm2Table Express Live</span>
             <span class="text-xs text-emerald-200 font-mono">#${delivery.id}</span>
           </div>
           <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase ${

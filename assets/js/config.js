@@ -1,11 +1,11 @@
-﻿/**
+/**
  * AgroBey - Configuration Centralisée & Paramètres de Production
  * Gestion des environnements, serveurs de tuiles cartographiques, routage OSRM, sécurité et constantes métier.
  */
 
 const AgroBeyConfig = {
   // Informations Applicatives
-  APP_NAME: 'AgroBey',
+  APP_NAME: 'Ferm2Table',
   APP_VERSION: '1.3.0',
   ENV: 'production', // 'development' | 'production' | 'staging'
   BUILD_DATE: '2026-09-13',
@@ -14,11 +14,11 @@ const AgroBeyConfig = {
   
   // Contact & Siège Social
   CONTACT: {
-    HQ: 'Siège social : Immeuble AgroBey, Route des Almadies, Dakar, Sénégal',
+    HQ: 'Siège social : Immeuble Ferm2Table, Route des Almadies, Dakar, Sénégal',
     PHONE: '+221 33 800 00 00',
     WHATSAPP: '+221 77 000 00 00',
     WHATSAPP_CLEAN: '221770000000',
-    EMAIL: 'contact@agrobey.sn',
+    EMAIL: 'contact@ferm2table.sn',
     SUPPORT_HOURS: '7j/7 • 07h00 - 22h00 GMT'
   },
 
@@ -109,6 +109,7 @@ const AgroBeyConfig = {
 // Exposition globale
 if (typeof window !== 'undefined') {
   window.AgroBeyConfig = AgroBeyConfig;
+window.Ferm2TableConfig = AgroBeyConfig;
 }
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = AgroBeyConfig;

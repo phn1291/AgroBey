@@ -59,7 +59,7 @@ class AgroBeySeller {
           <div class="w-20 h-20 mx-auto mb-4 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center text-3xl shadow-inner">
             <i class="fa-solid fa-wheat-awn"></i>
           </div>
-          <h3 class="text-xl font-black text-gray-900 mb-2">Devenir Vendeur / Bailleur sur AgroBey</h3>
+          <h3 class="text-xl font-black text-gray-900 mb-2">Devenir Vendeur / Bailleur sur Ferm2Table</h3>
           <p class="text-gray-500 text-xs mb-6 leading-relaxed">
             Vous êtes actuellement connecté en tant qu'<strong>Acheteur (${currentUser.name})</strong>. Souhaitez-vous demander l'activation de votre profil Agriculteur / Éleveur pour publier des offres ? Votre compte sera examiné et validé sous 24h par l'Administrateur ou l'équipe IT.
           </p>
@@ -467,7 +467,7 @@ class AgroBeySeller {
                   </span>
                   ${hasDelivery ? `
                     <span class="text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-full flex items-center gap-1">
-                      <i class="fa-solid fa-truck-fast"></i> AgroBey Express
+                      <i class="fa-solid fa-truck-fast"></i> Ferm2Table Express
                     </span>
                   ` : `
                     <span class="text-[10px] font-bold bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full">

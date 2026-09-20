@@ -256,6 +256,9 @@ class AgroBeyMarketplace {
     if (!modal || !content) return;
 
     const isLandOrFarm = listing.category === 'terre' || listing.category === 'ferme';
+    const locationDisplay = typeof listing.location === 'object' && listing.location !== null 
+      ? `${listing.location.city || ''}, ${listing.location.region || ''}` 
+      : (listing.location || 'Sénégal');
     const images = listing.images && listing.images.length > 0 ? listing.images : ['assets/logo.jpg'];
     const specsEntries = Object.entries(listing.specs || {});
 

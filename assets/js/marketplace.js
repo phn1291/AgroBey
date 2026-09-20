@@ -158,12 +158,12 @@ class AgroBeyMarketplace {
       const mainImg = (l.images && l.images.length > 0) ? l.images[0] : 'assets/logo.jpg';
 
       return `
-        <div class="bg-white rounded-3xl border border-gray-200/80 overflow-hidden shadow-sm card-hover flex flex-col justify-between group">
+        <div class="bg-white rounded-3xl border border-gray-200/80 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
           <div>
-            <!-- Image & Badges -->
-            <div class="relative h-52 sm:h-56 w-full overflow-hidden bg-gray-100 cursor-pointer" onclick="window.AgroBeyApp.marketplace.openDetailModal('${l.id}')">
+            <!-- Image Plein Format & Badges -->
+            <div class="relative h-64 sm:h-72 w-full overflow-hidden bg-gray-100 cursor-pointer" onclick="window.AgroBeyApp.marketplace.openDetailModal('${l.id}')">
               <img src="${mainImg}" alt="${l.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80"></div>
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
               
               <!-- Badges supérieurs -->
               <div class="absolute top-3 left-3 right-3 flex items-center justify-between gap-2">
@@ -171,36 +171,59 @@ class AgroBeyMarketplace {
                 ${l.isFeatured ? '<span class="bg-amber-500 text-slate-900 font-extrabold text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider shadow"><i class="fa-solid fa-star"></i> Vedette</span>' : ''}
               </div>
 
-              <!-- Localisation & Stock -->
-              <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-xs">
-                <span class="flex items-center gap-1 font-semibold drop-shadow">
-                  <i class="fa-solid fa-location-dot text-amber-400"></i> ${l.location ? `${l.location.city}, ${l.location.region}` : 'Sénégal'}
-                </span>
-                <span class="bg-black/50 backdrop-blur-md px-2 py-0.5 rounded-md text-[11px] font-medium border border-white/20">
-                  ${l.quantity} ${l.unit} dispo.
-                </span>
+              <!-- Informations Incrustées sur l'Image (Localisation & Prix) -->
+              <div class="absolute bottom-3 left-3 right-3 text-white space-y-1.5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="flex items-center gap-1 font-semibold drop-shadow text-[11px] text-amber-300">
+                    <i class="fa-solid fa-location-dot"></i> ${l.location ? `${l.location.city}, ${l.location.region}` : 'Sénégal'}
+                  </span>
+                  <span class="bg-black/60 backdrop-blur-md px-2 py-0.5 rounded-md text-[10px] font-medium border border-white/20">
+                    ${l.quantity} ${l.unit} dispo.
+                  </span>
+                </div>
+
+                <div class="flex items-center justify-between gap-2">
+                  <div class="bg-emerald-700/90 backdrop-blur-md px-3 py-1 rounded-xl text-white font-black text-sm border border-emerald-500/40 shadow">
+                    ${this.formatPrice(l.price)} <span class="text-[10px] font-normal text-emerald-200">/ ${l.priceUnit || l.unit}</span>
+                  </div>
+                  <div class="text-[10px] text-slate-300 font-bold flex items-center gap-1 bg-black/40 backdrop-blur-xs px-2 py-0.5 rounded-lg">
+                    <i class="fa-solid fa-star text-amber-400"></i> ${(l.seller && l.seller.rating) || '4.9'}
+                  </div>
+                </div>
               </div>
             </div>
 
-            <!-- Corps de la Carte -->
-            <div class="p-5">
-              <div class="flex items-center justify-between gap-2 mb-2 text-xs text-gray-500">
+            <!-- Boutons d'Action Inférieurs (Immédiatement sous l'image) -->
+            <div class="p-3 bg-gray-50/90 border-t border-gray-100 grid grid-cols-2 gap-2">
+              <button id="btn-details-${l.id}" onclick="window.AgroBeyApp.marketplace.toggleCardDetails('${l.id}')" class="w-full py-2.5 px-3 bg-white hover:bg-emerald-50 border border-gray-200 hover:border-emerald-300 text-gray-800 hover:text-emerald-800 font-extrabold text-xs rounded-xl shadow-xs transition flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-circle-info text-emerald-700"></i>
+                <span>Détails</span>
+              </button>
+              <button onclick="window.AgroBeyApp.marketplace.openOrderModal('${l.id}')" class="w-full py-2.5 px-3 bg-emerald-700 hover:bg-emerald-800 text-white font-black text-xs rounded-xl shadow transition flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>${l.transactionType === 'location' ? 'Louer' : 'Acheter'}</span>
+              </button>
+            </div>
+
+            <!-- Partie Écrite / Détails (Initialement Masquée, s'affiche au clic sur Détails) -->
+            <div id="listing-text-${l.id}" class="hidden p-5 border-t border-gray-100 bg-white space-y-3.5 slide-down">
+              <div class="flex items-center justify-between gap-2 text-xs text-gray-500">
                 <span class="font-bold text-emerald-800">${l.subCategory || 'Agro-Pastorale'}</span>
                 <span class="flex items-center gap-1 text-amber-600 font-bold">
                   <i class="fa-solid fa-eye text-[10px]"></i> ${l.views || 100} vues
                 </span>
               </div>
 
-              <h3 class="font-extrabold text-gray-900 text-sm sm:text-base leading-snug mb-2 line-clamp-2 hover:text-emerald-700 transition cursor-pointer" onclick="window.AgroBeyApp.marketplace.openDetailModal('${l.id}')">
+              <h3 class="font-extrabold text-gray-900 text-base leading-snug cursor-pointer hover:text-emerald-700 transition" onclick="window.AgroBeyApp.marketplace.openDetailModal('${l.id}')">
                 ${l.title}
               </h3>
 
-              <p class="text-xs text-gray-600 line-clamp-2 mb-4 leading-relaxed">
+              <p class="text-xs text-gray-600 leading-relaxed bg-gray-50 p-3 rounded-xl border border-gray-100">
                 ${l.description}
               </p>
 
-              <!-- Prix & Unité -->
-              <div class="bg-emerald-50/70 border border-emerald-100 rounded-2xl p-3 mb-4">
+              <!-- Tarif Officiel Box -->
+              <div class="bg-emerald-50/70 border border-emerald-100 rounded-2xl p-3">
                 <div class="text-[10px] uppercase font-extrabold text-emerald-700 tracking-wider">Tarif Officiel</div>
                 <div class="flex items-baseline gap-1.5 mt-0.5">
                   <span class="text-lg sm:text-xl font-black text-emerald-950">${this.formatPrice(l.price)}</span>
@@ -208,39 +231,45 @@ class AgroBeyMarketplace {
                 </div>
               </div>
 
-              <!-- Profil Vendeur & Badge Vérifié -->
+              <!-- Profil Vendeur & Bouton Modale Complète -->
               <div class="flex items-center justify-between pt-2 border-t border-gray-100 text-xs">
                 <div class="flex items-center gap-2">
                   <div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">
                     ${l.seller.name.charAt(0)}
                   </div>
                   <div>
-                    <div class="font-bold text-gray-800 flex items-center gap-1 line-clamp-1">
+                    <div class="font-bold text-gray-800 flex items-center gap-1">
                       ${l.seller.name}
                       ${l.seller.isVerified ? '<i class="fa-solid fa-circle-check text-emerald-600 text-[11px]" title="Producteur Certifié KYC"></i>' : ''}
                     </div>
                   </div>
                 </div>
-                <div class="flex items-center gap-1 text-amber-500 font-bold text-xs">
-                  <i class="fa-solid fa-star"></i>
-                  <span>${l.seller.rating || '5.0'}</span>
-                </div>
+                <button onclick="window.AgroBeyApp.marketplace.openDetailModal('${l.id}')" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-[11px] rounded-lg border border-emerald-200 transition flex items-center gap-1">
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> Fiche Complète
+                </button>
               </div>
             </div>
-          </div>
-
-          <!-- Boutons d'Action Inférieurs -->
-          <div class="p-5 pt-0 grid grid-cols-2 gap-2 mt-2">
-            <button onclick="window.AgroBeyApp.marketplace.openDetailModal('${l.id}')" class="w-full py-2.5 px-3 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-circle-info text-emerald-700"></i> Détails
-            </button>
-            <button onclick="window.AgroBeyApp.marketplace.openOrderModal('${l.id}')" class="w-full py-2.5 px-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-cart-shopping"></i> ${l.transactionType === 'location' ? 'Louer' : 'Acheter'}
-            </button>
           </div>
         </div>
       `;
     }).join('');
+  }
+
+  toggleCardDetails(listingId) {
+    const textEl = document.getElementById(`listing-text-${listingId}`);
+    const btnEl = document.getElementById(`btn-details-${listingId}`);
+    if (textEl) {
+      const isHidden = textEl.classList.contains('hidden');
+      if (isHidden) {
+        textEl.classList.remove('hidden');
+        textEl.classList.add('fade-in');
+        if (btnEl) btnEl.innerHTML = '<i class="fa-solid fa-chevron-up text-amber-600"></i> <span>Masquer</span>';
+      } else {
+        textEl.classList.add('hidden');
+        textEl.classList.remove('fade-in');
+        if (btnEl) btnEl.innerHTML = '<i class="fa-solid fa-circle-info text-emerald-700"></i> <span>Détails</span>';
+      }
+    }
   }
 
   // --- MODALE DÉTAIL ENRICHIE ---

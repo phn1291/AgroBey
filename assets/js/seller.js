@@ -562,30 +562,48 @@ class AgroBeySeller {
     return `
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         ${myListings.map(l => `
-          <div class="bg-white rounded-3xl border border-gray-200/80 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition">
-            <div class="relative h-44 bg-gray-100">
-              <img src="${(l.images && l.images[0]) || 'assets/logo.jpg'}" alt="${l.title}" class="w-full h-full object-cover">
-              <span class="absolute top-2 left-2 bg-emerald-800 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                ${l.transactionType === 'location' ? 'Bail / Location' : 'Vente'}
-              </span>
-              <span class="absolute top-2 right-2 bg-black/60 backdrop-blur text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                ${l.status === 'approved' ? '✓ En Ligne' : l.status === 'pending' ? '⏳ En attente' : '❌ Rejetée'}
-              </span>
-            </div>
-            <div class="p-4 flex-1 flex flex-col justify-between">
-              <div>
-                <h4 class="font-extrabold text-sm text-gray-900 line-clamp-1 mb-1">${l.title}</h4>
-                <div class="text-emerald-900 font-black text-base mb-2">
-                  ${new Intl.NumberFormat('fr-FR').format(l.price)} FCFA <span class="text-xs text-gray-500 font-normal">/ ${l.priceUnit || l.unit}</span>
+          <div class="bg-white rounded-3xl border border-gray-200/80 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <!-- Image Plein Format & Badges -->
+              <div class="relative h-60 sm:h-64 bg-gray-100 cursor-pointer overflow-hidden" onclick="window.AgroBeyApp.marketplace.openDetailModal('${l.id}')">
+                <img src="${(l.images && l.images[0]) || 'assets/logo.jpg'}" alt="${l.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                
+                <span class="absolute top-2.5 left-2.5 bg-emerald-800 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow">
+                  ${l.transactionType === 'location' ? 'Bail / Location' : 'Vente'}
+                </span>
+                <span class="absolute top-2.5 right-2.5 bg-black/60 backdrop-blur text-white text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/20">
+                  ${l.status === 'approved' ? '✓ En Ligne' : l.status === 'pending' ? '⏳ En attente' : '❌ Rejetée'}
+                </span>
+
+                <!-- Prix & Titre Incrustés sur l'Image -->
+                <div class="absolute bottom-3 left-3 right-3 text-white space-y-1">
+                  <div class="text-xs font-bold line-clamp-1 drop-shadow">${l.title}</div>
+                  <div class="bg-emerald-700/90 backdrop-blur-md px-3 py-1 rounded-xl text-white font-black text-sm inline-block border border-emerald-500/40">
+                    ${new Intl.NumberFormat('fr-FR').format(l.price)} FCFA <span class="text-[10px] font-normal text-emerald-200">/ ${l.priceUnit || l.unit}</span>
+                  </div>
                 </div>
-                <p class="text-[11px] text-gray-500 line-clamp-2">${l.description}</p>
               </div>
-              <div class="pt-3 mt-3 border-t border-gray-100 flex items-center justify-between gap-2">
-                <button onclick="window.AgroBeyApp.marketplace.openDetailModal('${l.id}')" class="text-xs text-emerald-700 font-bold hover:underline flex items-center gap-1">
-                  <i class="fa-solid fa-eye"></i> Voir Fiche
+
+              <!-- Barre d'Action Immédiate sous l'Image -->
+              <div class="p-3 bg-gray-50/90 border-t border-gray-100 flex items-center justify-between gap-2">
+                <button id="seller-btn-details-${l.id}" onclick="window.AgroBeyApp.seller.toggleCardDetails('${l.id}')" class="px-3.5 py-2 bg-white hover:bg-emerald-50 border border-gray-200 hover:border-emerald-300 text-emerald-800 font-extrabold text-xs rounded-xl shadow-xs transition flex items-center gap-1.5">
+                  <i class="fa-solid fa-eye text-emerald-700"></i>
+                  <span>Détails</span>
                 </button>
-                <button onclick="if(confirm('Confirmer la suppression de cette annonce ?')) { window.AgroBeyDB.deleteListing('${l.id}'); window.AgroBeyApp.showToast('info', 'Annonce Supprimée', 'Votre offre a été retirée du catalogue.'); window.AgroBeyApp.seller.renderDashboard(); }" class="text-xs text-red-600 font-bold hover:underline flex items-center gap-1">
-                  <i class="fa-solid fa-trash"></i> Supprimer
+                <button onclick="if(confirm('Confirmer la suppression de cette annonce ?')) { window.AgroBeyDB.deleteListing('${l.id}'); window.AgroBeyApp.showToast('info', 'Annonce Supprimée', 'Votre offre a été retirée du catalogue.'); window.AgroBeyApp.seller.renderDashboard(); }" class="px-3 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 font-bold text-xs rounded-xl transition flex items-center gap-1">
+                  <i class="fa-solid fa-trash"></i>
+                  <span>Supprimer</span>
+                </button>
+              </div>
+
+              <!-- Partie Écrite / Description (Masquée par défaut, s'affiche au clic) -->
+              <div id="seller-listing-text-${l.id}" class="hidden p-5 border-t border-gray-100 bg-white space-y-3 slide-down">
+                <h4 class="font-extrabold text-sm text-gray-900 leading-snug cursor-pointer hover:text-emerald-700" onclick="window.AgroBeyApp.marketplace.openDetailModal('${l.id}')">${l.title}</h4>
+                <p class="text-xs text-gray-600 leading-relaxed bg-gray-50 p-3 rounded-xl border border-gray-100">${l.description}</p>
+                <button onclick="window.AgroBeyApp.marketplace.openDetailModal('${l.id}')" class="w-full py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs rounded-xl border border-emerald-200 transition flex items-center justify-center gap-1.5">
+                  <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                  <span>Ouvrir la Fiche Complète & Carte</span>
                 </button>
               </div>
             </div>
@@ -593,6 +611,23 @@ class AgroBeySeller {
         `).join('')}
       </div>
     `;
+  }
+
+  toggleCardDetails(listingId) {
+    const textEl = document.getElementById(`seller-listing-text-${listingId}`);
+    const btnEl = document.getElementById(`seller-btn-details-${listingId}`);
+    if (textEl) {
+      const isHidden = textEl.classList.contains('hidden');
+      if (isHidden) {
+        textEl.classList.remove('hidden');
+        textEl.classList.add('fade-in');
+        if (btnEl) btnEl.innerHTML = '<i class="fa-solid fa-chevron-up text-amber-600"></i> <span>Masquer</span>';
+      } else {
+        textEl.classList.add('hidden');
+        textEl.classList.remove('fade-in');
+        if (btnEl) btnEl.innerHTML = '<i class="fa-solid fa-eye text-emerald-700"></i> <span>Détails</span>';
+      }
+    }
   }
 
   // --- GESTION DU FORMULAIRE DE PUBLICATION ---

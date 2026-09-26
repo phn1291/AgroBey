@@ -528,23 +528,144 @@
         </div>
 
         <!-- Champs Spécifiques Livreur / Transporteur -->
-        <div id="reg-delivery-fields" class="hidden p-3.5 bg-amber-50/90 border border-amber-200 rounded-2xl space-y-2.5">
-          <div class="text-[11px] font-bold text-amber-900 flex items-center gap-1.5">
-            <i class="fa-solid fa-truck-fast text-amber-600"></i>
-            <span>Sélectionnez votre Type de Véhicule :</span>
+        <div id="reg-delivery-fields" class="hidden p-4 bg-gradient-to-br from-amber-50 to-orange-50/60 border-2 border-amber-300/80 rounded-2xl space-y-4">
+          <div class="flex items-center justify-between border-b border-amber-200/80 pb-2">
+            <div class="text-xs font-black text-amber-950 flex items-center gap-1.5">
+              <i class="fa-solid fa-truck-fast text-amber-600"></i>
+              <span>Dossier Obligatoire Transporteur</span>
+            </div>
+            <span class="text-[9px] bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-full">KYC Logistique</span>
           </div>
-          <div>
-            <label class="block font-bold text-gray-700 mb-1 text-[10px]">Moyen de Transport Disponible *</label>
-            <div class="relative">
-              <select id="reg-vehicle" class="w-full appearance-none pl-9 pr-8 py-2.5 bg-white border border-gray-300 rounded-xl text-xs font-bold text-gray-800 outline-none cursor-pointer focus:ring-2 focus:ring-amber-500">
-                <option value="🛵 Moto Tiak-Tiak Express (Colis Légers < 30 kg)">🛵 Moto Tiak-Tiak Express (Colis Légers &lt; 30 kg)</option>
-                <option value="🛺 Tricycle Utilitaire Benne (Jusqu'à 500 kg)">🛺 Tricycle Utilitaire Benne (Jusqu'à 500 kg)</option>
-                <option value="🚐 Camionnette Frigorifique / Isotherme (3.5 Tonnes)" selected>🚐 Camionnette Frigorifique / Isotherme (3.5 Tonnes)</option>
-                <option value="🚛 Camion Plateau Ridelles (10 Tonnes)">🚛 Camion Plateau Ridelles (10 Tonnes)</option>
-                <option value="🚜 Bétaillère Spécialisée (Bétail & Ladoum)">🚜 Bétaillère Spécialisée (Bétail &amp; Ladoum)</option>
-              </select>
-              <i class="fa-solid fa-truck absolute left-3 top-3 text-amber-600 text-xs pointer-events-none"></i>
-              <i class="fa-solid fa-chevron-down absolute right-3 top-3 text-gray-500 text-[10px] pointer-events-none"></i>
+
+          <!-- 1. Photo de Profil / Visage (Visible par tous) -->
+          <div class="bg-white p-3 rounded-xl border border-amber-200/80 shadow-xs space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="block font-black text-slate-800 text-[11px] flex items-center gap-1">
+                <i class="fa-solid fa-camera text-emerald-600"></i>
+                <span>1. Photo du Livreur (Visage de Face) *</span>
+              </label>
+              <span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                <i class="fa-solid fa-eye text-[8px]"></i> Visible par tous
+              </span>
+            </div>
+            <p class="text-[10px] text-gray-500">Prenez un selfie ou chargez une photo nette de votre visage. Elle sera affichée sur votre profil public et lors des livraisons.</p>
+            
+            <div class="flex items-center gap-3 pt-1">
+              <div class="w-16 h-16 rounded-2xl bg-slate-100 border-2 border-dashed border-emerald-400 flex items-center justify-center overflow-hidden shrink-0 relative group shadow-inner">
+                <img id="reg-preview-avatar" src="" class="w-full h-full object-cover hidden">
+                <div id="reg-placeholder-avatar" class="text-center text-slate-400 p-1">
+                  <i class="fa-solid fa-user text-xl"></i>
+                  <div class="text-[8px] font-bold mt-0.5">Selfie</div>
+                </div>
+              </div>
+              <div class="flex-1 space-y-1.5">
+                <div class="flex gap-1.5">
+                  <label class="flex-1 py-2 px-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-[10px] font-black cursor-pointer text-center transition shadow flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-camera"></i>
+                    <span>Prendre Photo</span>
+                    <input type="file" id="reg-input-driver-photo" accept="image/*" capture="user" class="hidden" onchange="window.AgroBeyApp.handleDriverDocUpload(event, 'reg-preview-avatar', 'reg-placeholder-avatar', 'reg-hidden-driver-photo', 'reg-badge-driver-photo')">
+                  </label>
+                  <label class="py-2 px-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-[10px] font-bold cursor-pointer transition border border-slate-200 flex items-center justify-center gap-1" title="Choisir un fichier depuis la galerie">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <input type="file" id="reg-input-driver-photo-file" accept="image/*" class="hidden" onchange="window.AgroBeyApp.handleDriverDocUpload(event, 'reg-preview-avatar', 'reg-placeholder-avatar', 'reg-hidden-driver-photo', 'reg-badge-driver-photo')">
+                  </label>
+                </div>
+                <input type="hidden" id="reg-hidden-driver-photo" value="">
+                <div id="reg-badge-driver-photo" class="text-[9px] text-gray-400 font-semibold italic">Aucune photo sélectionnée</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Permis de Conduire (Confidentiel Admin Uniquement) -->
+          <div class="bg-white p-3 rounded-xl border border-amber-200/80 shadow-xs space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="block font-black text-slate-800 text-[11px] flex items-center gap-1">
+                <i class="fa-solid fa-id-card text-purple-600"></i>
+                <span>2. Photo du Permis de Conduire *</span>
+              </label>
+              <span class="text-[9px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-200 flex items-center gap-1">
+                <i class="fa-solid fa-lock text-[8px]"></i> Admin Uniquement
+              </span>
+            </div>
+            <p class="text-[10px] text-gray-500">Document confidentiel de vérification réglementaire. Strictement réservé au Super-Admin.</p>
+            
+            <div class="flex items-center gap-3 pt-1">
+              <div class="w-16 h-16 rounded-2xl bg-slate-100 border-2 border-dashed border-purple-400 flex items-center justify-center overflow-hidden shrink-0 relative shadow-inner">
+                <img id="reg-preview-license" src="" class="w-full h-full object-cover hidden">
+                <div id="reg-placeholder-license" class="text-center text-slate-400 p-1">
+                  <i class="fa-solid fa-id-card text-xl"></i>
+                  <div class="text-[8px] font-bold mt-0.5">Permis</div>
+                </div>
+              </div>
+              <div class="flex-1 space-y-1.5">
+                <div class="flex gap-1.5">
+                  <label class="flex-1 py-2 px-2.5 bg-purple-700 hover:bg-purple-600 text-white rounded-xl text-[10px] font-black cursor-pointer text-center transition shadow flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-camera"></i>
+                    <span>Photo Permis</span>
+                    <input type="file" id="reg-input-license" accept="image/*" class="hidden" onchange="window.AgroBeyApp.handleDriverDocUpload(event, 'reg-preview-license', 'reg-placeholder-license', 'reg-hidden-license', 'reg-badge-license')">
+                  </label>
+                </div>
+                <input type="hidden" id="reg-hidden-license" value="">
+                <div id="reg-badge-license" class="text-[9px] text-gray-400 font-semibold italic">Permis non fourni</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Premier Véhicule & Carte Grise (Confidentiel Admin Uniquement) -->
+          <div class="bg-white p-3 rounded-xl border border-amber-200/80 shadow-xs space-y-2.5">
+            <div class="flex items-center justify-between">
+              <label class="block font-black text-slate-800 text-[11px] flex items-center gap-1">
+                <i class="fa-solid fa-truck-pickup text-amber-600"></i>
+                <span>3. Véhicule & Carte Grise *</span>
+              </label>
+              <span class="text-[9px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-200 flex items-center gap-1">
+                <i class="fa-solid fa-lock text-[8px]"></i> Admin Uniquement
+              </span>
+            </div>
+
+            <div>
+              <label class="block font-bold text-gray-700 mb-1 text-[10px]">Catégorie du Véhicule *</label>
+              <div class="relative">
+                <select id="reg-vehicle" class="w-full appearance-none pl-9 pr-8 py-2 bg-slate-50 border border-gray-300 rounded-xl text-xs font-bold text-gray-800 outline-none cursor-pointer focus:ring-2 focus:ring-amber-500">
+                  <option value="🛵 Moto Tiak-Tiak Express (Colis Légers < 30 kg)">🛵 Moto Tiak-Tiak Express (&lt; 30 kg)</option>
+                  <option value="🛺 Tricycle Utilitaire Benne (Jusqu'à 500 kg)">🛺 Tricycle Utilitaire Benne (500 kg)</option>
+                  <option value="🚐 Camionnette Frigorifique / Isotherme (3.5 Tonnes)" selected>🚐 Camionnette Frigorifique / Isotherme (3.5 Tonnes)</option>
+                  <option value="🚛 Camion Plateau Ridelles (10 Tonnes)">🚛 Camion Plateau Ridelles (10 Tonnes)</option>
+                  <option value="🚜 Bétaillère Spécialisée (Bétail & Ladoum)">🚜 Bétaillère Spécialisée (Bétail &amp; Ladoum)</option>
+                </select>
+                <i class="fa-solid fa-truck absolute left-3 top-2.5 text-amber-600 text-xs pointer-events-none"></i>
+                <i class="fa-solid fa-chevron-down absolute right-3 top-2.5 text-gray-500 text-[10px] pointer-events-none"></i>
+              </div>
+            </div>
+
+            <div>
+              <label class="block font-bold text-gray-700 mb-1 text-[10px]">Numéro d'Immatriculation / Plaque *</label>
+              <input type="text" id="reg-vehicle-plate" placeholder="Ex: DK-4820-BG ou TH-1209-A" class="w-full px-3 py-2 bg-slate-50 border border-gray-300 rounded-xl text-xs uppercase font-mono font-bold outline-none focus:ring-2 focus:ring-amber-500">
+            </div>
+
+            <!-- Upload Carte Grise -->
+            <div class="pt-1">
+              <label class="block font-bold text-gray-700 mb-1 text-[10px]">Photo de la Carte Grise du Véhicule *</label>
+              <div class="flex items-center gap-3">
+                <div class="w-16 h-16 rounded-2xl bg-slate-100 border-2 border-dashed border-amber-400 flex items-center justify-center overflow-hidden shrink-0 relative shadow-inner">
+                  <img id="reg-preview-cartegrise" src="" class="w-full h-full object-cover hidden">
+                  <div id="reg-placeholder-cartegrise" class="text-center text-slate-400 p-1">
+                    <i class="fa-solid fa-file-lines text-xl"></i>
+                    <div class="text-[8px] font-bold mt-0.5">Carte Grise</div>
+                  </div>
+                </div>
+                <div class="flex-1 space-y-1.5">
+                  <div class="flex gap-1.5">
+                    <label class="flex-1 py-2 px-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl text-[10px] font-black cursor-pointer text-center transition shadow flex items-center justify-center gap-1">
+                      <i class="fa-solid fa-camera"></i>
+                      <span>Photo Carte Grise</span>
+                      <input type="file" id="reg-input-cartegrise" accept="image/*" class="hidden" onchange="window.AgroBeyApp.handleDriverDocUpload(event, 'reg-preview-cartegrise', 'reg-placeholder-cartegrise', 'reg-hidden-cartegrise', 'reg-badge-cartegrise')">
+                    </label>
+                  </div>
+                  <input type="hidden" id="reg-hidden-cartegrise" value="">
+                  <div id="reg-badge-cartegrise" class="text-[9px] text-gray-400 font-semibold italic">Carte grise non fournie</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -596,90 +717,191 @@
     </div>
   </div>
 
-  <!-- MODALE SÉLECTION / CONFIGURATION DU VÉHICULE TRANSPORTEUR -->
-  <div id="driver-upgrade-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm overflow-y-auto">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl modal-pop relative overflow-hidden text-xs text-slate-800 my-8">
+  <!-- MODALE GESTION FLOTTE VÉHICULES, PIÈCES & DOCUMENTS TRANSPORTEUR -->
+  <div id="driver-upgrade-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl modal-pop relative overflow-hidden text-xs text-slate-800 my-8 max-h-[90vh] overflow-y-auto">
       <button onclick="document.getElementById('driver-upgrade-modal').classList.add('hidden')" class="absolute top-4 right-4 z-10 w-9 h-9 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-full flex items-center justify-center shadow font-bold">✕</button>
 
       <div class="text-center mb-6">
-        <div class="w-14 h-14 mx-auto rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center text-2xl mb-3 shadow-inner">
+        <div class="w-14 h-14 mx-auto rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center text-2xl mb-2 shadow-inner">
           <i class="fa-solid fa-truck-fast"></i>
         </div>
-        <h3 class="text-xl font-black text-slate-900">Type de Véhicule & Zone Agro-Logistique</h3>
-        <p class="text-gray-500 text-xs mt-1">Sélectionnez les caractéristiques de votre moyen de transport</p>
+        <h3 class="text-xl font-black text-slate-900">Gestion de Flotte & Documents Transporteur</h3>
+        <p class="text-gray-500 text-xs mt-0.5">Enregistrez vos véhicules, carte grise et pièces d'identité pour validation</p>
       </div>
 
-      <form id="driver-upgrade-form" onsubmit="window.AgroBeyApp.delivery.handleSaveDriverVehicle(event)" class="space-y-4">
-        <!-- Sélection du Véhicule avec Flèche Déroulante -->
+      <!-- Onglets du Gestionnaire Livreur -->
+      <div class="flex border-b border-gray-200 mb-5 font-bold text-center text-xs">
+        <button id="driver-modal-tab-vehicles" onclick="window.AgroBeyApp.delivery.switchDriverModalTab('vehicles')" class="flex-1 py-2.5 border-b-2 border-amber-500 text-amber-900 flex items-center justify-center gap-1.5 font-black">
+          <i class="fa-solid fa-car-side"></i> <span>Mes Véhicules Enregistrés</span>
+        </button>
+        <button id="driver-modal-tab-add" onclick="window.AgroBeyApp.delivery.switchDriverModalTab('add')" class="flex-1 py-2.5 border-b-2 border-transparent text-gray-500 hover:text-amber-800 flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-plus-circle"></i> <span>Ajouter un Véhicule</span>
+        </button>
+        <button id="driver-modal-tab-profile" onclick="window.AgroBeyApp.delivery.switchDriverModalTab('profile')" class="flex-1 py-2.5 border-b-2 border-transparent text-gray-500 hover:text-amber-800 flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-id-card"></i> <span>Mes Documents & Photo</span>
+        </button>
+      </div>
+
+      <!-- Section 1 : Liste des Véhicules Enregistrés -->
+      <div id="driver-modal-view-vehicles" class="space-y-4">
+        <div id="driver-registered-vehicles-list" class="space-y-3">
+          <!-- Rendu dynamique via delivery.js -->
+        </div>
+
+        <button onclick="window.AgroBeyApp.delivery.switchDriverModalTab('add')" class="w-full py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-2xl shadow transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-plus"></i>
+          <span>Enregistrer un Nouveau Véhicule</span>
+        </button>
+      </div>
+
+      <!-- Section 2 : Formulaire d'Ajout d'un Véhicule -->
+      <form id="driver-add-vehicle-form" onsubmit="window.AgroBeyApp.delivery.handleAddNewVehicle(event)" class="hidden space-y-4">
+        <div class="p-3.5 bg-amber-50 rounded-2xl border border-amber-200 text-amber-900 text-xs">
+          <strong>💡 Validation obligatoire :</strong> Chaque nouveau véhicule déclaré doit être accompagné de sa photo de carte grise pour examen par le Super-Admin avant d'être activé dans votre cockpit.
+        </div>
+
         <div>
-          <label class="block font-bold text-gray-700 mb-1.5 flex items-center gap-1">
+          <label class="block font-bold text-gray-700 mb-1 flex items-center gap-1">
             <i class="fa-solid fa-truck-pickup text-amber-600"></i>
-            <span>Type de Véhicule Disponible *</span>
+            <span>Type de Véhicule *</span>
           </label>
           <div class="relative">
-            <select id="upgrade-modal-vehicle" required class="w-full appearance-none pl-11 pr-10 py-3 bg-gray-50 border border-gray-300 rounded-xl text-xs font-bold text-gray-800 focus:ring-2 focus:ring-amber-500 outline-none cursor-pointer">
-              <option value="🛵 Moto Tiak-Tiak Express (Colis Légers < 30 kg)">🛵 Moto Tiak-Tiak Express (Colis Légers &lt; 30 kg)</option>
-              <option value="🛺 Tricycle Utilitaire Benne (Jusqu'à 500 kg)">🛺 Tricycle Utilitaire Benne (Jusqu'à 500 kg)</option>
+            <select id="add-vehicle-type" required class="w-full appearance-none pl-9 pr-8 py-2.5 bg-slate-50 border border-gray-300 rounded-xl text-xs font-bold text-gray-800 focus:ring-2 focus:ring-amber-500 outline-none">
+              <option value="🛵 Moto Tiak-Tiak Express (Colis Légers < 30 kg)">🛵 Moto Tiak-Tiak Express (&lt; 30 kg)</option>
+              <option value="🛺 Tricycle Utilitaire Benne (Jusqu'à 500 kg)">🛺 Tricycle Utilitaire Benne (500 kg)</option>
               <option value="🚐 Camionnette Frigorifique / Isotherme (3.5 Tonnes)" selected>🚐 Camionnette Frigorifique / Isotherme (3.5 Tonnes)</option>
-              <option value="🚛 Camion Plateau Ridelles (10 Tonnes - Gros Volumes)">🚛 Camion Plateau Ridelles (10 Tonnes - Gros Volumes)</option>
+              <option value="🚛 Camion Plateau Ridelles (10 Tonnes - Gros Volumes)">🚛 Camion Plateau Ridelles (10 Tonnes)</option>
               <option value="🚜 Bétaillère Spécialisée (Transport Bétail & Ladoum)">🚜 Bétaillère Spécialisée (Transport Bétail &amp; Ladoum)</option>
             </select>
-            <div class="absolute left-3.5 top-3.5 text-amber-600 pointer-events-none">
-              <i class="fa-solid fa-truck"></i>
-            </div>
-            <div class="absolute right-3.5 top-3.5 text-gray-500 pointer-events-none text-xs">
-              <i class="fa-solid fa-chevron-down"></i>
-            </div>
+            <i class="fa-solid fa-truck absolute left-3 top-3 text-amber-600 text-xs pointer-events-none"></i>
+            <i class="fa-solid fa-chevron-down absolute right-3 top-3 text-gray-500 text-[10px] pointer-events-none"></i>
           </div>
-          <p class="text-[10px] text-gray-500 mt-1">La catégorie détermine les missions et gabarits de colis pris en charge.</p>
         </div>
 
-        <!-- Zone de Couverture Principale avec Flèche Déroulante -->
         <div>
-          <label class="block font-bold text-gray-700 mb-1.5 flex items-center gap-1">
-            <i class="fa-solid fa-map-location-dot text-emerald-600"></i>
-            <span>Zone Principale de Couverture *</span>
-          </label>
-          <div class="relative">
-            <select id="upgrade-modal-zone" required class="w-full appearance-none pl-11 pr-10 py-3 bg-gray-50 border border-gray-300 rounded-xl text-xs font-bold text-gray-800 focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer">
-              <option value="Dakar & Banlieue (Pikine, Guédiawaye, Rufisque, Diamniadio)">Dakar &amp; Banlieue (Pikine, Guédiawaye, Rufisque, Diamniadio)</option>
-              <option value="Thiès & Zone des Niayes (Pout, Kayar, Mboro, Notto)" selected>Thiès &amp; Zone des Niayes (Pout, Kayar, Mboro, Notto)</option>
-              <option value="Saint-Louis & Vallée du Fleuve (Podor, Richard-Toll, Dagana)">Saint-Louis &amp; Vallée du Fleuve (Podor, Richard-Toll, Dagana)</option>
-              <option value="Bassin Arachidier & Centre (Kaolack, Touba, Diourbel, Fatick)">Bassin Arachidier &amp; Centre (Kaolack, Touba, Diourbel, Fatick)</option>
-              <option value="Casamance & Sud (Ziguinchor, Bignona, Kolda)">Casamance &amp; Sud (Ziguinchor, Bignona, Kolda)</option>
-              <option value="Sénégal Oriental (Tambacounda, Kédougou)">Sénégal Oriental (Tambacounda, Kédougou)</option>
-              <option value="National (Tout le Sénégal & Corridors Régionaux)">National (Tout le Sénégal &amp; Corridors Régionaux)</option>
-            </select>
-            <div class="absolute left-3.5 top-3.5 text-emerald-600 pointer-events-none">
-              <i class="fa-solid fa-location-crosshairs"></i>
-            </div>
-            <div class="absolute right-3.5 top-3.5 text-gray-500 pointer-events-none text-xs">
-              <i class="fa-solid fa-chevron-down"></i>
-            </div>
-          </div>
+          <label class="block font-bold text-gray-700 mb-1">Immatriculation / Plaque *</label>
+          <input type="text" id="add-vehicle-plate" required placeholder="Ex: DK-4820-BG ou TH-8812-A" class="w-full px-3.5 py-2.5 bg-slate-50 border border-gray-300 rounded-xl text-xs uppercase font-mono font-bold focus:ring-2 focus:ring-amber-500 outline-none">
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block font-bold text-gray-700 mb-1">Immatriculation / Plaque</label>
-            <input type="text" id="upgrade-modal-plate" placeholder="Ex: DK-4820-BG" class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-xs uppercase font-mono font-bold focus:ring-2 focus:ring-amber-500 outline-none">
+        <!-- Photo de la Carte Grise -->
+        <div class="p-3 bg-slate-50 rounded-2xl border border-gray-200 space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="block font-bold text-gray-800 text-xs">Photo de la Carte Grise du Véhicule *</label>
+            <span class="text-[9px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-200 flex items-center gap-1">
+              <i class="fa-solid fa-lock text-[8px]"></i> Confidentiel Admin
+            </span>
           </div>
-          <div>
-            <label class="block font-bold text-gray-700 mb-1">Permis de Conduire</label>
-            <input type="text" id="upgrade-modal-license" placeholder="Ex: Permis B ou C" class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-xs font-bold focus:ring-2 focus:ring-amber-500 outline-none">
+          <div class="flex items-center gap-3">
+            <div class="w-16 h-16 rounded-2xl bg-white border-2 border-dashed border-amber-400 flex items-center justify-center overflow-hidden shrink-0 relative shadow-inner">
+              <img id="add-veh-preview-cartegrise" src="" class="w-full h-full object-cover hidden">
+              <div id="add-veh-placeholder-cartegrise" class="text-center text-slate-400 p-1">
+                <i class="fa-solid fa-file-lines text-xl"></i>
+                <div class="text-[8px] font-bold mt-0.5">Carte Grise</div>
+              </div>
+            </div>
+            <div class="flex-1 space-y-1.5">
+              <label class="py-2 px-3 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl text-[10px] font-black cursor-pointer inline-flex items-center gap-1.5 shadow transition">
+                <i class="fa-solid fa-camera"></i>
+                <span>Prendre / Choisir Photo</span>
+                <input type="file" id="add-veh-input-cartegrise" accept="image/*" class="hidden" onchange="window.AgroBeyApp.handleDriverDocUpload(event, 'add-veh-preview-cartegrise', 'add-veh-placeholder-cartegrise', 'add-veh-hidden-cartegrise', 'add-veh-badge-cartegrise')">
+              </label>
+              <input type="hidden" id="add-veh-hidden-cartegrise" value="">
+              <div id="add-veh-badge-cartegrise" class="text-[9px] text-gray-400 italic">Carte grise obligatoire</div>
+            </div>
           </div>
         </div>
 
         <div class="pt-3 border-t border-gray-100 flex items-center justify-end gap-2">
-          <button type="button" onclick="document.getElementById('driver-upgrade-modal').classList.add('hidden')" class="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition">
+          <button type="button" onclick="window.AgroBeyApp.delivery.switchDriverModalTab('vehicles')" class="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition">
             Annuler
           </button>
           <button type="submit" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl shadow-lg transition flex items-center gap-1.5">
-            <i class="fa-solid fa-circle-check"></i>
-            <span>Enregistrer mon Véhicule</span>
+            <i class="fa-solid fa-paper-plane"></i>
+            <span>Soumettre pour Validation</span>
           </button>
         </div>
       </form>
+
+      <!-- Section 3 : Mise à jour Photo & Permis -->
+      <form id="driver-update-docs-form" onsubmit="window.AgroBeyApp.delivery.handleUpdateDriverDocs(event)" class="hidden space-y-4">
+        <!-- Photo de Face Publique -->
+        <div class="p-3.5 bg-emerald-50/70 border border-emerald-200 rounded-2xl space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="block font-black text-slate-900 text-xs">Photo de Profil / Visage (Face) *</label>
+            <span class="text-[9px] font-bold text-emerald-700 bg-white px-2 py-0.5 rounded border border-emerald-200">
+              <i class="fa-solid fa-eye text-[8px]"></i> Visible par tous
+            </span>
+          </div>
+          <div class="flex items-center gap-3">
+            <img id="docs-preview-avatar" src="" class="w-16 h-16 rounded-2xl object-cover border-2 border-emerald-500 shadow">
+            <div class="flex-1 space-y-1.5">
+              <label class="py-2 px-3 bg-emerald-700 hover:bg-emerald-600 text-white rounded-xl text-[10px] font-black cursor-pointer inline-flex items-center gap-1.5 shadow transition">
+                <i class="fa-solid fa-camera"></i>
+                <span>Changer la Photo</span>
+                <input type="file" id="docs-input-avatar" accept="image/*" capture="user" class="hidden" onchange="window.AgroBeyApp.handleDriverDocUpload(event, 'docs-preview-avatar', null, 'docs-hidden-avatar', 'docs-badge-avatar')">
+              </label>
+              <input type="hidden" id="docs-hidden-avatar" value="">
+              <div id="docs-badge-avatar" class="text-[9px] text-emerald-700 font-semibold">Photo actuelle active</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Permis Confidentiel -->
+        <div class="p-3.5 bg-purple-50/70 border border-purple-200 rounded-2xl space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="block font-black text-slate-900 text-xs">Permis de Conduire *</label>
+            <span class="text-[9px] font-bold text-purple-700 bg-white px-2 py-0.5 rounded border border-purple-200">
+              <i class="fa-solid fa-lock text-[8px]"></i> Admin Uniquement
+            </span>
+          </div>
+          <div class="flex items-center gap-3">
+            <img id="docs-preview-license" src="" class="w-16 h-16 rounded-2xl object-cover border-2 border-purple-500 shadow">
+            <div class="flex-1 space-y-1.5">
+              <label class="py-2 px-3 bg-purple-700 hover:bg-purple-600 text-white rounded-xl text-[10px] font-black cursor-pointer inline-flex items-center gap-1.5 shadow transition">
+                <i class="fa-solid fa-camera"></i>
+                <span>Mettre à jour le Permis</span>
+                <input type="file" id="docs-input-license" accept="image/*" class="hidden" onchange="window.AgroBeyApp.handleDriverDocUpload(event, 'docs-preview-license', null, 'docs-hidden-license', 'docs-badge-license')">
+              </label>
+              <input type="hidden" id="docs-hidden-license" value="">
+              <div id="docs-badge-license" class="text-[9px] text-purple-700 font-semibold">Permis enregistré</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Zone Principale de Couverture</label>
+          <select id="docs-update-zone" class="w-full p-2.5 bg-slate-50 border border-gray-300 rounded-xl text-xs font-bold text-gray-800 outline-none">
+            <option value="Dakar & Banlieue (Pikine, Guédiawaye, Rufisque, Diamniadio)">Dakar &amp; Banlieue (Pikine, Guédiawaye, Rufisque, Diamniadio)</option>
+            <option value="Thiès & Zone des Niayes (Pout, Kayar, Mboro, Notto)">Thiès &amp; Zone des Niayes (Pout, Kayar, Mboro, Notto)</option>
+            <option value="Saint-Louis & Vallée du Fleuve (Podor, Richard-Toll, Dagana)">Saint-Louis &amp; Vallée du Fleuve (Podor, Richard-Toll, Dagana)</option>
+            <option value="Bassin Arachidier & Centre (Kaolack, Touba, Diourbel, Fatick)">Bassin Arachidier &amp; Centre (Kaolack, Touba, Diourbel, Fatick)</option>
+            <option value="Casamance & Sud (Ziguinchor, Bignona, Kolda)">Casamance &amp; Sud (Ziguinchor, Bignona, Kolda)</option>
+            <option value="National (Tout le Sénégal & Corridors Régionaux)">National (Tout le Sénégal &amp; Corridors Régionaux)</option>
+          </select>
+        </div>
+
+        <div class="pt-3 border-t border-gray-100 flex items-center justify-end gap-2">
+          <button type="button" onclick="window.AgroBeyApp.delivery.switchDriverModalTab('vehicles')" class="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition">
+            Retour
+          </button>
+          <button type="submit" class="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white font-extrabold rounded-xl shadow-lg transition flex items-center gap-1.5">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span>Enregistrer les Modifications</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE INSPECTION DOSSIER LIVREUR & PIÈCES CONFIDENTIELLES (ADMIN / IT) -->
+  <div id="admin-driver-docs-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
+    <div class="bg-slate-900 border-2 border-purple-500/60 text-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl modal-pop relative overflow-hidden text-xs my-8 max-h-[90vh] overflow-y-auto">
+      <button onclick="document.getElementById('admin-driver-docs-modal').classList.add('hidden')" class="absolute top-4 right-4 z-10 w-9 h-9 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-full flex items-center justify-center shadow font-bold">✕</button>
+
+      <div id="admin-driver-docs-modal-content">
+        <!-- Rendu dynamique via admin.js -->
+      </div>
     </div>
   </div>
 

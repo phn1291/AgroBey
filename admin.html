@@ -144,6 +144,17 @@
     </div>
   </div>
 
+  <!-- MODALE INSPECTION DOSSIER LIVREUR & PIÈCES CONFIDENTIELLES (ADMIN / IT) -->
+  <div id="admin-driver-docs-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
+    <div class="bg-slate-900 border-2 border-purple-500/60 text-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl modal-pop relative overflow-hidden text-xs my-8 max-h-[90vh] overflow-y-auto">
+      <button onclick="document.getElementById('admin-driver-docs-modal').classList.add('hidden')" class="absolute top-4 right-4 z-10 w-9 h-9 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-full flex items-center justify-center shadow font-bold">✕</button>
+
+      <div id="admin-driver-docs-modal-content">
+        <!-- Rendu dynamique via admin.js -->
+      </div>
+    </div>
+  </div>
+
   <!-- Conteneur Flottant pour Toasts Notifications -->
   <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
 

@@ -144,74 +144,220 @@ class AgroBeyDelivery {
   }
 
   promptUpgradeToDriver() {
-    this.openDriverUpgradeModal();
+    this.openDriverUpgradeModal('add');
   }
 
-  openDriverUpgradeModal() {
+  openDriverUpgradeModal(defaultTab = 'vehicles') {
     const user = window.AgroBeyAuth.getCurrentUser();
     if (!user) {
-      window.AgroBeyAuth.openAuthModal('Veuillez vous connecter pour postuler comme transporteur.');
+      window.AgroBeyAuth.openAuthModal('login', 'Veuillez vous connecter pour gérer votre flotte de véhicules.');
       return;
     }
 
     const modal = document.getElementById('driver-upgrade-modal');
-    if (modal) {
-      const vehicleSelect = document.getElementById('upgrade-modal-vehicle');
-      const zoneSelect = document.getElementById('upgrade-modal-zone');
-      const plateInput = document.getElementById('upgrade-modal-plate');
-      const licenseInput = document.getElementById('upgrade-modal-license');
+    if (!modal) return;
 
-      if (vehicleSelect && user.vehicleType) {
-        for (let opt of vehicleSelect.options) {
-          if (opt.value === user.vehicleType || opt.value.includes(user.vehicleType) || user.vehicleType.includes(opt.value.split(' ')[1])) {
-            vehicleSelect.value = opt.value;
-            break;
-          }
-        }
-      }
-      if (zoneSelect && user.coverageZones) {
-        for (let opt of zoneSelect.options) {
-          if (opt.value === user.coverageZones || opt.value.includes(user.coverageZones) || user.coverageZones.includes(opt.value.split(' ')[0])) {
-            zoneSelect.value = opt.value;
-            break;
-          }
-        }
-      }
-      if (plateInput) plateInput.value = user.vehiclePlate || '';
-      if (licenseInput) licenseInput.value = user.driverLicense || '';
+    this.switchDriverModalTab(defaultTab);
+    this.renderRegisteredVehiclesList(user);
 
-      modal.classList.remove('hidden');
+    // Initialisation des champs documents & profil
+    const avatarPreview = document.getElementById('docs-preview-avatar');
+    const licensePreview = document.getElementById('docs-preview-license');
+    const hiddenAvatar = document.getElementById('docs-hidden-avatar');
+    const hiddenLicense = document.getElementById('docs-hidden-license');
+    const zoneSelect = document.getElementById('docs-update-zone');
+
+    if (avatarPreview) avatarPreview.src = user.avatar || user.driverPhoto || 'assets/logo.jpg';
+    if (hiddenAvatar) hiddenAvatar.value = user.avatar || user.driverPhoto || '';
+    if (licensePreview) licensePreview.src = user.driverLicenseDoc || 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=600&q=80';
+    if (hiddenLicense) hiddenLicense.value = user.driverLicenseDoc || '';
+    if (zoneSelect && user.coverageZones) zoneSelect.value = user.coverageZones;
+
+    modal.classList.remove('hidden');
+  }
+
+  switchDriverModalTab(tab) {
+    const viewVehicles = document.getElementById('driver-modal-view-vehicles');
+    const viewAdd = document.getElementById('driver-add-vehicle-form');
+    const viewProfile = document.getElementById('driver-update-docs-form');
+
+    const tabVehicles = document.getElementById('driver-modal-tab-vehicles');
+    const tabAdd = document.getElementById('driver-modal-tab-add');
+    const tabProfile = document.getElementById('driver-modal-tab-profile');
+
+    if (viewVehicles) viewVehicles.classList.toggle('hidden', tab !== 'vehicles');
+    if (viewAdd) viewAdd.classList.toggle('hidden', tab !== 'add');
+    if (viewProfile) viewProfile.classList.toggle('hidden', tab !== 'profile');
+
+    if (tabVehicles) {
+      tabVehicles.className = `flex-1 py-2.5 border-b-2 font-black flex items-center justify-center gap-1.5 transition ${tab === 'vehicles' ? 'border-amber-500 text-amber-900 bg-amber-50/50' : 'border-transparent text-gray-500 hover:text-amber-800'}`;
+    }
+    if (tabAdd) {
+      tabAdd.className = `flex-1 py-2.5 border-b-2 font-black flex items-center justify-center gap-1.5 transition ${tab === 'add' ? 'border-amber-500 text-amber-900 bg-amber-50/50' : 'border-transparent text-gray-500 hover:text-amber-800'}`;
+    }
+    if (tabProfile) {
+      tabProfile.className = `flex-1 py-2.5 border-b-2 font-black flex items-center justify-center gap-1.5 transition ${tab === 'profile' ? 'border-amber-500 text-amber-900 bg-amber-50/50' : 'border-transparent text-gray-500 hover:text-amber-800'}`;
     }
   }
 
-  handleSaveDriverVehicle(event) {
+  renderRegisteredVehiclesList(user) {
+    const container = document.getElementById('driver-registered-vehicles-list');
+    if (!container) return;
+
+    const vehicles = user.vehicles || [];
+
+    if (vehicles.length === 0) {
+      container.innerHTML = `
+        <div class="p-6 text-center bg-slate-50 rounded-2xl border border-gray-200 text-gray-500 space-y-2">
+          <i class="fa-solid fa-truck-ramp-box text-3xl text-gray-400"></i>
+          <p class="font-bold text-xs text-gray-700">Aucun véhicule enregistré pour le moment.</p>
+          <p class="text-[11px]">Enregistrez votre moyen de transport et téléversez sa carte grise pour activer votre cockpit.</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = vehicles.map(v => {
+      const isApproved = v.status === 'approved';
+      const isPending = v.status === 'pending_approval' || !v.status;
+      const isRejected = v.status === 'rejected';
+      const isActive = user.vehicleType === v.type && (user.vehiclePlate === v.plate || !user.vehiclePlate);
+
+      return `
+        <div class="p-4 rounded-2xl border ${isActive ? 'border-emerald-500 bg-emerald-50/50 ring-2 ring-emerald-500/20' : 'border-gray-200 bg-white'} shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-slate-900 text-amber-400 flex items-center justify-center text-xl shrink-0">
+              <i class="fa-solid ${v.category === 'moto' ? 'fa-motorcycle' : v.category === 'tricycle' ? 'fa-motorcycle' : v.category === 'camion' ? 'fa-truck' : 'fa-truck-ramp-box'}"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="font-black text-gray-900">${v.type}</span>
+                ${isActive ? `<span class="px-2 py-0.5 rounded-full bg-emerald-700 text-white text-[9px] font-black uppercase">Actif</span>` : ''}
+              </div>
+              <div class="text-[11px] text-gray-500 mt-0.5 flex items-center gap-2">
+                <span>Plaque : <strong class="font-mono text-gray-800">${v.plate}</strong></span>
+                <span>•</span>
+                ${isApproved 
+                  ? `<span class="text-emerald-700 font-bold flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Validé par Admin</span>` 
+                  : isPending 
+                  ? `<span class="text-amber-700 font-bold flex items-center gap-1"><i class="fa-solid fa-hourglass-half"></i> En attente d'examen</span>` 
+                  : `<span class="text-red-700 font-bold flex items-center gap-1"><i class="fa-solid fa-circle-xmark"></i> Rejeté (${v.rejectionReason || 'Non conforme'})</span>`}
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 justify-end">
+            ${isApproved && !isActive ? `
+              <button onclick="window.AgroBeyApp.delivery.changeDriverVehicle('${user.id}', '${v.type}'); window.AgroBeyApp.delivery.renderRegisteredVehiclesList(window.AgroBeyAuth.getCurrentUser());" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-[11px] rounded-xl shadow transition">
+                Activer
+              </button>
+            ` : ''}
+
+            ${v.carteGriseDoc ? `
+              <button onclick="window.AgroBeyApp.delivery.previewCarteGriseModal('${v.id}', '${encodeURIComponent(v.carteGriseDoc)}', '${v.plate}')" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px] rounded-xl border border-slate-200 transition flex items-center gap-1" title="Voir la carte grise enregistrée">
+                <i class="fa-solid fa-file-image text-amber-600"></i> Carte Grise
+              </button>
+            ` : ''}
+
+            <button onclick="if(confirm('Supprimer ce véhicule de votre flotte ?')) { window.AgroBeyDB.deleteDriverVehicle('${user.id}', '${v.id}'); window.AgroBeyApp.delivery.openDriverUpgradeModal('vehicles'); window.AgroBeyApp.delivery.render(); }" class="px-2 py-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition text-[11px]" title="Supprimer ce véhicule">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  previewCarteGriseModal(vehicleId, encodedDoc, plate) {
+    const docUrl = decodeURIComponent(encodedDoc);
+    const win = window.open('', '_blank');
+    if (win) {
+      win.document.write(`
+        <html>
+          <head><title>Carte Grise ${plate}</title></head>
+          <body style="margin:0;background:#0f172a;display:flex;align-items:center;justify-center;min-height:100vh;flex-direction:column;font-family:sans-serif;color:white;">
+            <h3 style="margin-top:20px;">Document Carte Grise - Immatriculation : ${plate}</h3>
+            <p style="color:#94a3b8;font-size:12px;">Document Confidentiel Ferm2Table</p>
+            <img src="${docUrl}" style="max-width:90%;max-height:80vh;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.5);border:2px solid #334155;margin:20px auto;object-fit:contain;">
+          </body>
+        </html>
+      `);
+    } else {
+      window.AgroBeyApp.showToast('info', 'Carte Grise', `Plaque : ${plate}`);
+    }
+  }
+
+  handleAddNewVehicle(event) {
     if (event) event.preventDefault();
     const user = window.AgroBeyAuth.getCurrentUser();
     if (!user) return;
 
-    const vehicle = document.getElementById('upgrade-modal-vehicle')?.value || 'Camionnette Frigorifique / Isotherme (3.5 Tonnes)';
-    const zones = document.getElementById('upgrade-modal-zone')?.value || 'Thiès & Zone des Niayes (Pout, Kayar, Mboro, Notto)';
-    const plate = document.getElementById('upgrade-modal-plate')?.value.trim() || 'DK-PROVISOIRE';
-    const license = document.getElementById('upgrade-modal-license')?.value.trim() || 'Permis B';
+    const type = document.getElementById('add-vehicle-type')?.value;
+    const plate = document.getElementById('add-vehicle-plate')?.value.trim();
+    const carteGriseDoc = document.getElementById('add-veh-hidden-cartegrise')?.value;
 
-    user.role = 'delivery';
-    user.roleLabel = 'Livreur / Transporteur Agro-Logistique';
-    user.vehicleType = vehicle;
-    user.coverageZones = zones;
-    user.vehiclePlate = plate;
-    user.driverLicense = license;
-    user.isDriverApproved = true;
-    if (!user.driverStatus || user.driverStatus === 'none') {
-      user.driverStatus = 'approved';
+    if (!plate) {
+      window.AgroBeyApp.showToast('warning', 'Plaque Requise', 'Veuillez saisir le numéro d\'immatriculation.');
+      return;
     }
-    user.badge = '🚚 Transporteur Vérifié';
-    if (!user.availability) user.availability = 'online';
+
+    if (!carteGriseDoc) {
+      window.AgroBeyApp.showToast('warning', 'Carte Grise Requise', 'Veuillez prendre une photo ou téléverser la carte grise de ce véhicule.');
+      return;
+    }
+
+    const newVeh = window.AgroBeyDB.addDriverVehicle(user.id, {
+      type,
+      plate,
+      carteGriseDoc
+    });
+
+    // Réinitialiser le formulaire d'ajout
+    const form = document.getElementById('driver-add-vehicle-form');
+    if (form) form.reset();
+    const preview = document.getElementById('add-veh-preview-cartegrise');
+    const placeholder = document.getElementById('add-veh-placeholder-cartegrise');
+    const hidden = document.getElementById('add-veh-hidden-cartegrise');
+    const badge = document.getElementById('add-veh-badge-cartegrise');
+    if (preview) preview.classList.add('hidden');
+    if (placeholder) placeholder.classList.remove('hidden');
+    if (hidden) hidden.value = '';
+    if (badge) {
+      badge.innerText = 'Carte grise obligatoire';
+      badge.className = 'text-[9px] text-gray-400 italic';
+    }
+
+    window.AgroBeyApp.showToast('success', 'Véhicule Déposé', `Le véhicule (${plate}) a été soumis pour validation par le Super-Admin.`);
+    this.switchDriverModalTab('vehicles');
+    this.renderRegisteredVehiclesList(window.AgroBeyAuth.getCurrentUser());
+    this.render();
+  }
+
+  handleUpdateDriverDocs(event) {
+    if (event) event.preventDefault();
+    const user = window.AgroBeyAuth.getCurrentUser();
+    if (!user) return;
+
+    const newPhoto = document.getElementById('docs-hidden-avatar')?.value;
+    const newLicense = document.getElementById('docs-hidden-license')?.value;
+    const newZone = document.getElementById('docs-update-zone')?.value;
+
+    if (newPhoto) {
+      user.avatar = newPhoto;
+      user.driverPhoto = newPhoto;
+    }
+    if (newLicense) {
+      user.driverLicenseDoc = newLicense;
+    }
+    if (newZone) {
+      user.coverageZones = newZone;
+    }
 
     window.AgroBeyDB.saveUser(user);
-    window.AgroBeyDB.addSystemLog('DELIVERY', 'Mise à jour Véhicule', `${user.name} a mis à jour son véhicule : ${vehicle} (${plate}) - Zone: ${zones}`, user.name);
+    window.AgroBeyDB.addSystemLog('DELIVERY', 'Mise à Jour Documents', `${user.name} a actualisé ses pièces d'identité et de permis`, user.name);
 
+    window.AgroBeyApp.showToast('success', 'Profil Mis à Jour', 'Vos documents et photo ont été mis à jour avec succès.');
     document.getElementById('driver-upgrade-modal')?.classList.add('hidden');
-    window.AgroBeyApp.showToast('success', 'Véhicule Enregistré !', `Votre véhicule (${vehicle.split('(')[0]}) et zone ont été mis à jour avec succès.`);
     this.render();
   }
 
@@ -219,14 +365,27 @@ class AgroBeyDelivery {
     const user = window.AgroBeyAuth.getCurrentUser();
     if (!user || user.id !== driverId) return;
 
-    user.vehicleType = newVehicle;
+    const vehicles = user.vehicles || [];
+    const matchedVehicle = vehicles.find(v => v.type === newVehicle && v.status === 'approved') || vehicles.find(v => v.status === 'approved');
+
+    if (matchedVehicle) {
+      user.vehicleType = matchedVehicle.type;
+      user.vehiclePlate = matchedVehicle.plate;
+      user.vehiculeType = matchedVehicle.category || (matchedVehicle.type.toLowerCase().includes('moto') ? 'moto' : matchedVehicle.type.toLowerCase().includes('tricycle') ? 'tricycle' : matchedVehicle.type.toLowerCase().includes('camion') ? 'camion' : 'camionnette');
+    } else {
+      user.vehicleType = newVehicle;
+    }
+
     window.AgroBeyDB.saveUser(user);
-    window.AgroBeyDB.addSystemLog('DELIVERY', 'Changement Véhicule Rapide', `${user.name} a changé son véhicule actif pour : ${newVehicle}`, user.name);
-    window.AgroBeyApp.showToast('info', 'Véhicule Modifié', `Véhicule actif : ${newVehicle.split('(')[0]}`);
+    window.AgroBeyDB.addSystemLog('DELIVERY', 'Changement Véhicule Rapide', `${user.name} a changé son véhicule actif pour : ${user.vehicleType} (${user.vehiclePlate || 'N/A'})`, user.name);
+    window.AgroBeyApp.showToast('info', 'Véhicule Modifié', `Véhicule actif : ${user.vehicleType.split('(')[0]}`);
     this.render();
   }
 
   renderPendingApprovalView(user) {
+    const approvedVehicles = (user.vehicles || []).filter(v => v.status === 'approved');
+    const pendingVehicles = (user.vehicles || []).filter(v => v.status === 'pending_approval' || !v.status);
+
     return `
       <div class="max-w-2xl mx-auto bg-slate-900 border-2 border-amber-500/60 rounded-3xl p-6 sm:p-10 text-white shadow-2xl text-center space-y-5">
         <div class="w-16 h-16 rounded-3xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center text-3xl mx-auto shadow-lg shadow-amber-500/20 animate-pulse">
@@ -235,28 +394,39 @@ class AgroBeyDelivery {
 
         <div>
           <div class="inline-block px-3 py-1 rounded-full bg-amber-950 text-amber-300 border border-amber-800 text-[10px] font-black uppercase tracking-wider mb-2">
-            Vérification Transporteur en Cours
+            Vérification Transporteur & Carte Grise en Cours
           </div>
           <h2 class="text-2xl font-black text-white">Compte Livreur en Attente de Validation</h2>
           <p class="text-xs text-slate-300 mt-2 max-w-md mx-auto leading-relaxed">
-            Bienvenue <strong>${user.name}</strong> ! Votre profil de transporteur (${user.vehicleType || 'Véhicule'}) est en cours d'examen par le <strong>Super-Admin ou l'ingénieur IT</strong>.
+            Bienvenue <strong>${user.name}</strong> ! Votre dossier de transporteur, votre permis de conduire et votre flotte de véhicules sont en cours d'examen par le <strong>Super-Admin / IT</strong>.
           </p>
         </div>
 
-        <div class="p-4 bg-slate-950 rounded-2xl border border-slate-800 text-left text-xs space-y-2 max-w-md mx-auto">
-          <div class="flex justify-between"><span class="text-slate-500">Véhicule déclaré :</span> <strong class="text-white">${user.vehicleType || 'Non renseigné'}</strong></div>
+        <div class="p-4 bg-slate-950 rounded-2xl border border-slate-800 text-left text-xs space-y-2.5 max-w-md mx-auto">
+          <div class="flex items-center gap-3 border-b border-slate-800 pb-2">
+            <img src="${user.avatar || user.driverPhoto || 'assets/logo.jpg'}" class="w-12 h-12 rounded-xl object-cover border border-amber-500/50">
+            <div>
+              <div class="font-bold text-white">${user.name}</div>
+              <div class="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
+                <i class="fa-solid fa-camera"></i> Photo de face enregistrée
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-between"><span class="text-slate-500">Permis de conduire :</span> <span class="text-purple-300 font-bold flex items-center gap-1"><i class="fa-solid fa-lock text-[9px]"></i> Document fourni</span></div>
+          <div class="flex justify-between"><span class="text-slate-500">Véhicules déclarés :</span> <strong class="text-amber-300 font-bold">${user.vehicles?.length || 1} véhicule(s) (${pendingVehicles.length} en attente)</strong></div>
           <div class="flex justify-between"><span class="text-slate-500">Zones couvertes :</span> <strong class="text-white">${user.coverageZones || 'Sénégal'}</strong></div>
-          <div class="flex justify-between"><span class="text-slate-500">Statut actuel :</span> <span class="text-amber-400 font-bold">⏳ Examen Admin / IT</span></div>
+          <div class="flex justify-between pt-1 border-t border-slate-800/80"><span class="text-slate-500">Statut actuel :</span> <span class="text-amber-400 font-black">⏳ Examen Super-Admin</span></div>
         </div>
 
         <div class="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3">
-          <a href="https://wa.me/221770000000" target="_blank" class="w-full sm:w-auto px-6 py-3 bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-2">
-            <i class="fa-brands fa-whatsapp text-sm"></i>
-            <span>Contacter le Support Logistique</span>
-          </a>
-          <button onclick="window.AgroBeyApp.switchTab('marketplace')" class="w-full sm:w-auto px-5 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs rounded-xl border border-slate-700 transition">
-            Parcourir les Offres
+          <button onclick="window.AgroBeyApp.delivery.openDriverUpgradeModal('vehicles')" class="w-full sm:w-auto px-5 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-xl shadow transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-sliders"></i>
+            <span>Gérer ma Flotte & Documents</span>
           </button>
+          <a href="https://wa.me/221770000000" target="_blank" class="w-full sm:w-auto px-5 py-3 bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-2">
+            <i class="fa-brands fa-whatsapp text-sm"></i>
+            <span>Support Logistique</span>
+          </a>
         </div>
       </div>
     `;
@@ -272,6 +442,10 @@ class AgroBeyDelivery {
     const completedMissions = myDeliveries.filter(d => d.status === 'delivered');
     const availableMissions = allDeliveries.filter(d => d.status === 'available');
 
+    // Véhicules approuvés et en attente
+    const approvedVehicles = (user.vehicles || []).filter(v => v.status === 'approved');
+    const pendingVehicles = (user.vehicles || []).filter(v => v.status === 'pending_approval' || !v.status);
+
     // Déclenchement de l'initialisation de la carte Leaflet après injection du DOM
     setTimeout(() => {
       this.initDriverLiveMap(user, activeMissions, availableMissions);
@@ -283,7 +457,12 @@ class AgroBeyDelivery {
         <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
           <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
             <div class="flex items-center gap-4">
-              <img src="${user.avatar || 'assets/logo.jpg'}" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover border-2 ${isOnline ? 'border-emerald-500 ring-4 ring-emerald-500/20' : 'border-slate-700'}">
+              <div class="relative">
+                <img src="${user.avatar || user.driverPhoto || 'assets/logo.jpg'}" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover border-2 ${isOnline ? 'border-emerald-500 ring-4 ring-emerald-500/20' : 'border-slate-700'}">
+                <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-600 border-2 border-slate-900 text-white flex items-center justify-center text-[9px] shadow" title="Photo de face vérifiée">
+                  <i class="fa-solid fa-check"></i>
+                </span>
+              </div>
               <div>
                 <div class="flex items-center gap-2 flex-wrap">
                   <h2 class="text-xl sm:text-2xl font-black text-white">${user.name}</h2>
@@ -291,19 +470,34 @@ class AgroBeyDelivery {
                     ${isOnline ? '🟢 En Service & Géolocalisé' : '🔴 Hors Ligne'}
                   </span>
                 </div>
-                <!-- Barre de sélection de véhicule avec petite flèche (Chevron) & Zone -->
+
+                <!-- Barre de sélection de véhicule DYNAMIQUE (UNIQUEMENT VÉHICULES VALIDÉS) -->
                 <div class="flex items-center gap-2 mt-2 flex-wrap">
-                  <div class="relative inline-flex items-center">
-                    <select onchange="window.AgroBeyApp.delivery.changeDriverVehicle('${user.id}', this.value)" class="appearance-none pl-8 pr-8 py-1.5 bg-slate-800/95 hover:bg-slate-800 text-amber-300 border border-amber-500/40 rounded-xl text-xs font-bold outline-none cursor-pointer transition shadow-inner">
-                      <option value="🛵 Moto Tiak-Tiak Express (Colis Légers < 30 kg)" ${user.vehicleType?.includes('Moto') ? 'selected' : ''}>🛵 Moto Express (&lt; 30 kg)</option>
-                      <option value="🛺 Tricycle Utilitaire Benne (Jusqu'à 500 kg)" ${user.vehicleType?.includes('Tricycle') ? 'selected' : ''}>🛺 Tricycle Benne (500 kg)</option>
-                      <option value="🚐 Camionnette Frigorifique / Isotherme (3.5 Tonnes)" ${(!user.vehicleType || user.vehicleType.includes('Frigo') || user.vehicleType.includes('3.5')) ? 'selected' : ''}>🚐 Camionnette Frigo (3.5T)</option>
-                      <option value="🚛 Camion Plateau Ridelles (10 Tonnes - Gros Volumes)" ${user.vehicleType?.includes('Plateau') || user.vehicleType?.includes('10') ? 'selected' : ''}>🚛 Camion Plateau (10 Tonnes)</option>
-                      <option value="🚜 Bétaillère Spécialisée (Transport Bétail & Ladoum)" ${user.vehicleType?.includes('Bétaillère') || user.vehicleType?.includes('Ladoum') ? 'selected' : ''}>🚜 Bétaillère (Bétail & Ladoum)</option>
-                    </select>
-                    <i class="fa-solid fa-truck text-amber-400 text-xs absolute left-2.5 pointer-events-none"></i>
-                    <i class="fa-solid fa-chevron-down text-amber-400 text-[10px] absolute right-2.5 pointer-events-none"></i>
-                  </div>
+                  ${approvedVehicles.length > 0 ? `
+                    <div class="relative inline-flex items-center">
+                      <select onchange="window.AgroBeyApp.delivery.changeDriverVehicle('${user.id}', this.value)" class="appearance-none pl-8 pr-8 py-1.5 bg-slate-800/95 hover:bg-slate-800 text-amber-300 border border-amber-500/40 rounded-xl text-xs font-bold outline-none cursor-pointer transition shadow-inner">
+                        ${approvedVehicles.map(v => `
+                          <option value="${v.type}" ${user.vehicleType === v.type ? 'selected' : ''}>
+                            ${v.type} (${v.plate})
+                          </option>
+                        `).join('')}
+                      </select>
+                      <i class="fa-solid fa-truck text-amber-400 text-xs absolute left-2.5 pointer-events-none"></i>
+                      <i class="fa-solid fa-chevron-down text-amber-400 text-[10px] absolute right-2.5 pointer-events-none"></i>
+                    </div>
+                  ` : `
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-950/80 border border-amber-500/60 rounded-xl text-amber-300 text-xs font-bold">
+                      <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
+                      <span>⚠️ Aucun véhicule validé</span>
+                      <button onclick="window.AgroBeyApp.delivery.openDriverUpgradeModal('add')" class="ml-1.5 underline font-black text-amber-200">Enregistrer</button>
+                    </div>
+                  `}
+
+                  ${pendingVehicles.length > 0 ? `
+                    <span class="text-[10px] text-amber-300 bg-amber-950/90 px-2 py-0.5 rounded-full border border-amber-700 flex items-center gap-1" title="Véhicule en cours d'examen par le Super-Admin">
+                      <i class="fa-solid fa-hourglass-half text-[9px]"></i> ${pendingVehicles.length} en attente
+                    </span>
+                  ` : ''}
 
                   <span class="text-xs text-slate-400 flex items-center gap-1">
                     <i class="fa-solid fa-location-dot text-emerald-400"></i> <strong class="text-slate-200">${user.currentZone || user.location || 'Thiès'}</strong>
@@ -312,11 +506,12 @@ class AgroBeyDelivery {
               </div>
             </div>
 
-            <!-- Boutons Disponibilité & Paramètres Véhicule -->
+            <!-- Boutons Disponibilité & Paramètres Flotte -->
             <div class="flex items-center gap-2 flex-wrap">
-              <button onclick="window.AgroBeyApp.delivery.openDriverUpgradeModal()" class="px-4 py-3 rounded-2xl font-bold text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-2" title="Modifier immatriculation, zones et permis">
+              <button onclick="window.AgroBeyApp.delivery.openDriverUpgradeModal('vehicles')" class="px-4 py-3 rounded-2xl font-bold text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-2" title="Gérer ma flotte, cartes grises et pièces d'identité">
                 <i class="fa-solid fa-sliders text-amber-400"></i>
-                <span>Modifier mon véhicule</span>
+                <span>Gérer ma Flotte</span>
+                <span class="px-1.5 py-0.2 bg-slate-700 text-amber-300 text-[10px] rounded-full font-bold">${approvedVehicles.length}</span>
                 <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
               </button>
 

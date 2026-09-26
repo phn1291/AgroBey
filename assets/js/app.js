@@ -105,7 +105,7 @@ class AgroBeyApplication {
       });
     }
 
-    // Formulaire d'inscription public
+    // Formulaire d'inscription public avec gestion des photos & pièces livreur
     const regForm = document.getElementById('auth-register-form');
     if (regForm) {
       regForm.addEventListener('submit', async (e) => {
@@ -116,14 +116,63 @@ class AgroBeyApplication {
         const role = document.querySelector('input[name="reg-role"]:checked')?.value || 'client';
         const pwd = document.getElementById('reg-password').value;
         const location = document.getElementById('reg-location').value.trim();
-        const vehicleType = document.getElementById('reg-vehicle')?.value;
         const errBox = document.getElementById('auth-error-box');
 
+        // Champs spécifiques Transporteur
+        let vehicleType = null;
+        let vehiclePlate = null;
+        let driverPhoto = null;
+        let driverLicenseDoc = null;
+        let carteGriseDoc = null;
+
+        if (role === 'delivery') {
+          vehicleType = document.getElementById('reg-vehicle')?.value;
+          vehiclePlate = document.getElementById('reg-vehicle-plate')?.value.trim();
+          driverPhoto = document.getElementById('reg-hidden-driver-photo')?.value;
+          driverLicenseDoc = document.getElementById('reg-hidden-license')?.value;
+          carteGriseDoc = document.getElementById('reg-hidden-cartegrise')?.value;
+
+          if (!driverPhoto) {
+            if (errBox) {
+              errBox.innerText = '⚠️ Photo du livreur obligatoire : Veuillez prendre un selfie ou charger une photo de face.';
+              errBox.classList.remove('hidden');
+            }
+            this.showToast('warning', 'Photo Requise', 'Veuillez prendre une photo de votre visage (visible par tous).');
+            return;
+          }
+
+          if (!vehiclePlate) {
+            if (errBox) {
+              errBox.innerText = '⚠️ Plaque d\'immatriculation obligatoire pour enregistrer votre véhicule.';
+              errBox.classList.remove('hidden');
+            }
+            return;
+          }
+        }
+
         try {
-          const res = await window.AgroBeyAuth.register({ name, email, phone, role, password: pwd, location, vehicleType });
+          const res = await window.AgroBeyAuth.register({ 
+            name, 
+            email, 
+            phone, 
+            role, 
+            password: pwd, 
+            location, 
+            vehicleType,
+            vehiclePlate,
+            driverPhoto,
+            driverLicenseDoc,
+            carteGriseDoc
+          });
+
           if (res.success) {
             window.AgroBeyAuth.closeAuthModal();
-            this.showToast('success', 'Compte Créé', `Bienvenue parmi nous, ${name} !`);
+            if (role === 'delivery') {
+              this.showToast('info', 'Dossier Livreur Transmis', 'Votre dossier et votre véhicule sont en cours d\'examen par le Super-Admin.');
+              this.switchTab('delivery');
+            } else {
+              this.showToast('success', 'Compte Créé', `Bienvenue parmi nous, ${name} !`);
+            }
           } else {
             if (errBox) {
               errBox.innerText = res.message || 'Impossible de créer le compte.';
@@ -137,6 +186,41 @@ class AgroBeyApplication {
           }
         }
       });
+    }
+  }
+
+  // --- TRAITEMENT GÉNÉRIQUE D'UPLOAD & CAPTURE PHOTO/DOCUMENTS ---
+  async handleDriverDocUpload(event, previewImgId, placeholderId, hiddenInputId, badgeId) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    try {
+      const dataUrl = await AgroBeyAuth.processImageFile(file, 900, 0.82);
+      if (!dataUrl) return;
+
+      const previewImg = document.getElementById(previewImgId);
+      const placeholder = placeholderId ? document.getElementById(placeholderId) : null;
+      const hiddenInput = hiddenInputId ? document.getElementById(hiddenInputId) : null;
+      const badge = badgeId ? document.getElementById(badgeId) : null;
+
+      if (previewImg) {
+        previewImg.src = dataUrl;
+        previewImg.classList.remove('hidden');
+      }
+      if (placeholder) {
+        placeholder.classList.add('hidden');
+      }
+      if (hiddenInput) {
+        hiddenInput.value = dataUrl;
+      }
+      if (badge) {
+        badge.innerText = '✓ Document chargé (' + (file.size > 1024 * 1024 ? (file.size / (1024*1024)).toFixed(1) + ' Mo' : Math.round(file.size / 1024) + ' Ko') + ')';
+        badge.className = 'text-[9px] text-emerald-600 font-bold';
+      }
+      this.showToast('success', 'Document Enregistré', 'Photo capturée et prête pour validation.');
+    } catch (err) {
+      console.error('Erreur traitement photo:', err);
+      this.showToast('error', 'Erreur Document', 'Impossible de traiter cette image.');
     }
   }
 

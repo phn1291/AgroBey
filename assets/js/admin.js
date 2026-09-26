@@ -1490,10 +1490,18 @@ class AgroBeyAdmin {
                     <td class="py-3.5 px-4">
                       ${u.role === 'delivery' ? `
                         <div class="space-y-1 text-[11px]">
-                          <div class="font-bold text-slate-200 capitalize flex items-center gap-1">
-                            <i class="fa-solid fa-gauge text-purple-400"></i> ${u.vehiculeType || 'Véhicule'} (${u.vehiculePlate || 'N/A'})
+                          <div class="flex items-center gap-1.5 flex-wrap">
+                            <span class="text-[10px] text-emerald-300 font-bold bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800 flex items-center gap-1">
+                              <i class="fa-solid fa-camera text-emerald-400"></i> Photo Publique
+                            </span>
+                            <span class="text-[10px] ${u.driverLicenseDoc ? 'text-purple-300 bg-purple-950 border-purple-800' : 'text-slate-500 bg-slate-900 border-slate-700'} font-bold px-2 py-0.5 rounded border flex items-center gap-1">
+                              <i class="fa-solid fa-lock text-purple-400"></i> Permis : ${u.driverLicenseDoc ? 'Fourni' : 'Non fourni'}
+                            </span>
                           </div>
-                          <div class="text-[10px] text-slate-400">Zone : ${u.coverageZone || u.location || 'Sénégal'}</div>
+                          <div class="font-bold text-slate-200 capitalize flex items-center gap-1 mt-1">
+                            <i class="fa-solid fa-truck text-amber-400"></i> ${u.vehicles?.length || 1} véhicule(s) : <span class="text-amber-300 font-mono">${(u.vehicles || []).filter(v => v.status === 'approved').length} validé(s)</span>
+                          </div>
+                          <div class="text-[10px] text-slate-400">Zone : ${u.coverageZones || u.coverageZone || u.location || 'Sénégal'}</div>
                         </div>
                       ` : u.isVerified ? `
                         <span class="text-emerald-400 font-bold flex items-center gap-1">
@@ -1505,6 +1513,13 @@ class AgroBeyAdmin {
                     </td>
                     <td class="py-3.5 px-4 text-right">
                       <div class="flex items-center justify-end gap-1.5 flex-wrap">
+                        ${u.role === 'delivery' ? `
+                          <button onclick="window.AgroBeyApp.admin.openDriverDocsModal('${u.id}')" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-xs shadow-md transition flex items-center gap-1.5" title="Inspecter la photo, le permis et les cartes grises">
+                            <i class="fa-solid fa-magnifying-glass-chart"></i>
+                            <span>Inspecter Dossier</span>
+                          </button>
+                        ` : ''}
+
                         ${isPendingSeller ? `
                           <button onclick="window.AgroBeyApp.admin.handleApproveSeller('${u.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-xl text-xs shadow-md transition flex items-center gap-1.5" title="Valider ce compte vendeur">
                             <i class="fa-solid fa-circle-check"></i>
@@ -1516,7 +1531,7 @@ class AgroBeyAdmin {
                         ` : isPendingDriver ? `
                           <button onclick="window.AgroBeyApp.admin.handleApproveDriver('${u.id}')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-extrabold rounded-xl text-xs shadow-md transition flex items-center gap-1.5" title="Agréer ce compte livreur">
                             <i class="fa-solid fa-truck-fast"></i>
-                            <span>Valider Livreur</span>
+                            <span>Valider Tout</span>
                           </button>
                           <button onclick="window.AgroBeyApp.admin.handleRejectDriver('${u.id}')" class="px-2.5 py-1.5 bg-red-950/80 hover:bg-red-900 border border-red-800 text-red-300 font-bold rounded-xl text-xs transition" title="Refuser le livreur">
                             <i class="fa-solid fa-xmark"></i> Rejeter
@@ -1553,6 +1568,209 @@ class AgroBeyAdmin {
         </div>
       </div>
     `;
+  }
+
+  // --- MODALE D'INSPECTION DÉTAILLÉE DES PIÈCES JUSTIFICATIVES DU LIVREUR (ADMIN/IT ONLY) ---
+  openDriverDocsModal(userId) {
+    const user = window.AgroBeyDB.getUserById(userId);
+    if (!user) return;
+
+    const modal = document.getElementById('admin-driver-docs-modal');
+    const content = document.getElementById('admin-driver-docs-modal-content');
+    if (!modal || !content) return;
+
+    const vehicles = user.vehicles || [];
+    const pendingVehicles = vehicles.filter(v => v.status === 'pending_approval' || !v.status);
+    const approvedVehicles = vehicles.filter(v => v.status === 'approved');
+
+    content.innerHTML = `
+      <div class="space-y-6">
+        <!-- En-tête Dossier -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-14 h-14 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center text-2xl font-black shadow-lg">
+              <i class="fa-solid fa-id-card-clip"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-xl font-black text-white">${user.name}</h3>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${user.isDriverApproved ? 'bg-emerald-600 text-white' : 'bg-amber-500 text-slate-950'}">
+                  ${user.isDriverApproved ? 'Transporteur Agréé' : 'En Attente de Validation'}
+                </span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">${user.email} • 📞 ${user.phone || 'Non renseigné'} • 📍 ${user.coverageZones || user.location || 'Sénégal'}</p>
+            </div>
+          </div>
+
+          <div class="text-right">
+            <span class="text-[10px] text-slate-400 uppercase font-bold block">Dossier Inscription</span>
+            <span class="text-xs font-mono text-cyan-300 font-bold">${new Date(user.createdAt || Date.now()).toLocaleDateString('fr-FR')}</span>
+          </div>
+        </div>
+
+        <!-- 1. Photo de Profil Publique (Visible par tous) -->
+        <div class="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="font-black text-white text-xs flex items-center gap-2">
+              <i class="fa-solid fa-user-tag text-emerald-400"></i>
+              <span>1. Photo d'Identité / Visage du Livreur</span>
+            </h4>
+            <span class="text-[10px] font-bold text-emerald-300 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">
+              <i class="fa-solid fa-eye text-[8px]"></i> Visible par tous (Profil & Clients)
+            </span>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <img src="${user.driverPhoto || user.avatar || 'assets/logo.jpg'}" class="w-24 h-24 rounded-2xl object-cover border-2 border-emerald-500 shadow-lg cursor-pointer hover:scale-105 transition" onclick="window.open('${user.driverPhoto || user.avatar || 'assets/logo.jpg'}', '_blank')" title="Cliquez pour agrandir">
+            <div class="text-xs text-slate-300 space-y-1">
+              <p class="font-bold text-white">Photo de face conforme</p>
+              <p class="text-[11px] text-slate-400 leading-relaxed">Cette photo est présentée aux acheteurs lors du suivi de commande en direct et sur les courses assignées.</p>
+              <a href="${user.driverPhoto || user.avatar || 'assets/logo.jpg'}" target="_blank" class="inline-flex items-center gap-1 text-[11px] text-emerald-400 hover:underline font-bold">
+                <i class="fa-solid fa-up-right-from-square"></i> Ouvrir en plein écran
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Photo du Permis de Conduire (Confidentiel Admin Uniquement) -->
+        <div class="p-4 bg-slate-950 rounded-2xl border-2 border-purple-500/40 space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="font-black text-white text-xs flex items-center gap-2">
+              <i class="fa-solid fa-id-card text-purple-400"></i>
+              <span>2. Permis de Conduire</span>
+            </h4>
+            <span class="text-[10px] font-black text-purple-300 bg-purple-950 px-2 py-0.5 rounded border border-purple-700 flex items-center gap-1">
+              <i class="fa-solid fa-lock text-[8px]"></i> Strictement Confidentiel Admin
+            </span>
+          </div>
+
+          ${user.driverLicenseDoc ? `
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <img src="${user.driverLicenseDoc}" class="w-40 h-28 rounded-xl object-cover border-2 border-purple-500/60 shadow-lg cursor-pointer hover:scale-105 transition shrink-0" onclick="window.open('${user.driverLicenseDoc}', '_blank')" title="Cliquez pour zoomer le permis">
+              <div class="text-xs text-slate-300 space-y-1.5">
+                <p class="font-bold text-white">Document Permis : <span class="text-purple-300">${user.driverLicense || 'Permis Valide'}</span></p>
+                <p class="text-[11px] text-slate-400">Vérifiez la lisibilité de la date de validité, du nom et de la catégorie de permis.</p>
+                <a href="${user.driverLicenseDoc}" target="_blank" class="inline-flex items-center gap-1 text-[11px] text-purple-400 hover:underline font-bold">
+                  <i class="fa-solid fa-magnifying-glass-plus"></i> Agrandir le Permis en Haute Définition
+                </a>
+              </div>
+            </div>
+          ` : `
+            <div class="p-3 bg-red-950/40 rounded-xl border border-red-800 text-red-300 text-xs">
+              ⚠️ Aucun document de permis téléversé. Demandez au livreur de compléter son dossier.
+            </div>
+          `}
+        </div>
+
+        <!-- 3. Flotte de Véhicules & Cartes Grises Déclarées -->
+        <div class="p-4 bg-slate-950 rounded-2xl border-2 border-amber-500/40 space-y-4">
+          <div class="flex items-center justify-between">
+            <h4 class="font-black text-white text-xs flex items-center gap-2">
+              <i class="fa-solid fa-truck-ramp-box text-amber-400"></i>
+              <span>3. Flotte de Véhicules & Cartes Grises (${vehicles.length})</span>
+            </h4>
+            <span class="text-[10px] font-black text-amber-300 bg-amber-950 px-2 py-0.5 rounded border border-amber-700 flex items-center gap-1">
+              <i class="fa-solid fa-lock text-[8px]"></i> Cartes Grises Confidentielles Admin
+            </span>
+          </div>
+
+          <div class="space-y-3">
+            ${vehicles.length > 0 ? vehicles.map(v => {
+              const isApproved = v.status === 'approved';
+              const isPending = v.status === 'pending_approval' || !v.status;
+              const isRejected = v.status === 'rejected';
+
+              return `
+                <div class="p-3.5 bg-slate-900 rounded-xl border ${isApproved ? 'border-emerald-500/50' : isPending ? 'border-amber-500/50' : 'border-red-500/50'} space-y-3">
+                  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold text-white text-xs">${v.type}</span>
+                      <span class="font-mono text-amber-300 font-black text-xs px-2 py-0.5 rounded bg-slate-950 border border-slate-800">${v.plate}</span>
+                    </div>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase ${isApproved ? 'bg-emerald-950 text-emerald-300 border border-emerald-800' : isPending ? 'bg-amber-950 text-amber-300 border border-amber-800' : 'bg-red-950 text-red-300 border border-red-800'}">
+                      ${isApproved ? '✅ Validé' : isPending ? '⏳ En Attente' : '❌ Rejeté'}
+                    </span>
+                  </div>
+
+                  <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                    ${v.carteGriseDoc ? `
+                      <img src="${v.carteGriseDoc}" class="w-32 h-20 rounded-lg object-cover border border-slate-700 cursor-pointer hover:scale-105 transition shrink-0" onclick="window.open('${v.carteGriseDoc}', '_blank')" title="Cliquez pour zoomer la carte grise">
+                      <div class="text-xs space-y-1">
+                        <p class="text-[11px] text-slate-300">Carte grise officielle du véhicule <strong>${v.plate}</strong></p>
+                        <a href="${v.carteGriseDoc}" target="_blank" class="text-[11px] text-amber-400 hover:underline font-bold flex items-center gap-1">
+                          <i class="fa-solid fa-file-image"></i> Inspecter la Carte Grise en HD
+                        </a>
+                      </div>
+                    ` : `
+                      <div class="text-xs text-red-400 italic">Carte grise non fournie</div>
+                    `}
+
+                    <div class="sm:ml-auto flex items-center gap-2 pt-2 sm:pt-0">
+                      ${!isApproved ? `
+                        <button onclick="window.AgroBeyApp.admin.handleApproveVehicle('${user.id}', '${v.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-xl text-[11px] shadow transition flex items-center gap-1">
+                          <i class="fa-solid fa-check"></i> Valider ce Véhicule
+                        </button>
+                      ` : ''}
+                      ${!isRejected ? `
+                        <button onclick="window.AgroBeyApp.admin.handleRejectVehicle('${user.id}', '${v.id}')" class="px-2.5 py-1.5 bg-red-950/80 hover:bg-red-900 border border-red-800 text-red-300 font-bold rounded-xl text-[11px] transition">
+                          Refuser
+                        </button>
+                      ` : ''}
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('') : `
+              <div class="text-slate-400 text-xs text-center py-3">Aucun véhicule enregistré.</div>
+            `}
+          </div>
+        </div>
+
+        <!-- Actions Globales du Dossier -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-slate-800">
+          <button onclick="document.getElementById('admin-driver-docs-modal').classList.add('hidden')" class="w-full sm:w-auto px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl text-xs transition">
+            Fermer l'Inspection
+          </button>
+
+          <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+            <button onclick="window.AgroBeyApp.admin.handleRejectDriver('${user.id}'); document.getElementById('admin-driver-docs-modal').classList.add('hidden');" class="px-4 py-2.5 bg-red-950/80 hover:bg-red-900 border border-red-800 text-red-300 font-bold rounded-xl text-xs transition">
+              Rejeter le Dossier
+            </button>
+            <button onclick="window.AgroBeyApp.admin.handleApproveDriver('${user.id}'); document.getElementById('admin-driver-docs-modal').classList.add('hidden');" class="px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black rounded-xl text-xs shadow-lg transition flex items-center gap-1.5">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>Valider Tout & Agréer Livreur</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    modal.classList.remove('hidden');
+  }
+
+  handleApproveVehicle(userId, vehicleId) {
+    const currentUser = window.AgroBeyAuth ? window.AgroBeyAuth.getCurrentUser() : null;
+    const staffName = currentUser ? `${currentUser.name} (${currentUser.roleLabel || currentUser.role.toUpperCase()})` : 'Super-Admin';
+    const approved = window.AgroBeyDB.approveDriverVehicle(userId, vehicleId, staffName);
+    if (approved) {
+      window.AgroBeyApp.showToast('success', 'Véhicule Validé', `Le véhicule (${approved.plate}) a été validé avec succès.`);
+      this.openDriverDocsModal(userId);
+      this.render();
+    }
+  }
+
+  handleRejectVehicle(userId, vehicleId) {
+    const reason = prompt('Motif du refus du véhicule (ex: Carte grise non lisible, immatriculation invalide) :', 'Carte grise non conforme ou illisible');
+    if (reason === null) return;
+
+    const currentUser = window.AgroBeyAuth ? window.AgroBeyAuth.getCurrentUser() : null;
+    const staffName = currentUser ? `${currentUser.name} (${currentUser.roleLabel || currentUser.role.toUpperCase()})` : 'Super-Admin';
+    const rejected = window.AgroBeyDB.rejectDriverVehicle(userId, vehicleId, reason, staffName);
+    if (rejected) {
+      window.AgroBeyApp.showToast('warning', 'Véhicule Rejeté', `Le véhicule (${rejected.plate}) a été refusé.`);
+      this.openDriverDocsModal(userId);
+      this.render();
+    }
   }
 
   handleApproveSeller(userId) {

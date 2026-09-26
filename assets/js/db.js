@@ -250,17 +250,39 @@ const DEFAULT_USERS = [
     phone: '+221 77 650 11 22',
     whatsapp: '221776501122',
     location: 'Thiès, Pout & Niayes',
-    avatar: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=200&q=80',
+    avatar: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=300&q=80',
+    driverPhoto: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=300&q=80',
+    driverLicenseDoc: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=600&q=80',
     passwordHash: 'e5f9d8d1889325c2eff88e7295da5eccbad60b17e11e8f1910525935d2f9fd20', // AgroDelivery@2026
     salt: 'agrobey_salt_driver',
     isVerified: true,
     isDriverApproved: true,
     driverStatus: 'approved',
-    badge: 'Transporteur Certifié AgroBey',
+    badge: '🚚 Transporteur Certifié Ferm2Table',
     vehiculeType: 'camionnette',
-    vehicleType: 'Camionnette Frigorifique (3.5 Tonnes)',
+    vehicleType: '🚐 Camionnette Frigorifique / Isotherme (3.5 Tonnes)',
     vehiculePlate: 'DK-4820-BG',
     vehiclePlate: 'DK-4820-BG',
+    vehicles: [
+      {
+        id: 'veh-101',
+        type: '🚐 Camionnette Frigorifique / Isotherme (3.5 Tonnes)',
+        category: 'camionnette',
+        plate: 'DK-4820-BG',
+        carteGriseDoc: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=600&q=80',
+        status: 'approved',
+        createdAt: '2026-08-15T08:00:00Z'
+      },
+      {
+        id: 'veh-102',
+        type: '🛵 Moto Tiak-Tiak Express (Colis Légers < 30 kg)',
+        category: 'moto',
+        plate: 'DK-3310-AF',
+        carteGriseDoc: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=600&q=80',
+        status: 'approved',
+        createdAt: '2026-08-20T10:00:00Z'
+      }
+    ],
     coverageZone: 'Thiès, Pout, Niayes, Dakar',
     coverageZones: 'Thiès, Pout, Niayes, Dakar',
     currentLat: 14.7800,
@@ -284,17 +306,30 @@ const DEFAULT_USERS = [
     phone: '+221 78 440 22 88',
     whatsapp: '221784402288',
     location: 'Dakar, Pikine & Rufisque',
-    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80',
+    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80',
+    driverPhoto: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80',
+    driverLicenseDoc: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=600&q=80',
     passwordHash: 'e5f9d8d1889325c2eff88e7295da5eccbad60b17e11e8f1910525935d2f9fd20', // AgroDelivery@2026
     salt: 'agrobey_salt_driver',
     isVerified: false,
     isDriverApproved: false,
     driverStatus: 'pending_approval',
     badge: '⏳ Validation Admin/IT en cours',
-    vehiculeType: 'moto',
-    vehicleType: 'Tricycle Utilitaire (500 kg)',
+    vehiculeType: 'tricycle',
+    vehicleType: '🛺 Tricycle Utilitaire Benne (Jusqu\'à 500 kg)',
     vehiculePlate: 'DK-9912-AY',
     vehiclePlate: 'DK-9912-AY',
+    vehicles: [
+      {
+        id: 'veh-201',
+        type: '🛺 Tricycle Utilitaire Benne (Jusqu\'à 500 kg)',
+        category: 'tricycle',
+        plate: 'DK-9912-AY',
+        carteGriseDoc: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80',
+        status: 'pending_approval',
+        createdAt: '2026-09-08T10:00:00Z'
+      }
+    ],
     coverageZone: 'Dakar Centre, Pikine, Guédiawaye, Rufisque',
     coverageZones: 'Dakar Centre, Pikine, Guédiawaye, Rufisque',
     currentLat: 14.7549,
@@ -318,17 +353,30 @@ const DEFAULT_USERS = [
     phone: '+221 77 810 55 66',
     whatsapp: '221778105566',
     location: 'Dakar, Almadies & Plateau',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
+    driverPhoto: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
+    driverLicenseDoc: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=600&q=80',
     passwordHash: 'e5f9d8d1889325c2eff88e7295da5eccbad60b17e11e8f1910525935d2f9fd20', // AgroDelivery@2026
     salt: 'agrobey_salt_driver',
     isVerified: true,
     isDriverApproved: true,
     driverStatus: 'approved',
-    badge: 'Transporteur Certifié AgroBey',
+    badge: '🚚 Transporteur Certifié Ferm2Table',
     vehiculeType: 'moto',
-    vehicleType: 'Moto Express avec Caisson Isotherme',
+    vehicleType: '🛵 Moto Tiak-Tiak Express (Colis Légers < 30 kg)',
     vehiculePlate: 'DK-1044-AA',
     vehiclePlate: 'DK-1044-AA',
+    vehicles: [
+      {
+        id: 'veh-301',
+        type: '🛵 Moto Tiak-Tiak Express (Colis Légers < 30 kg)',
+        category: 'moto',
+        plate: 'DK-1044-AA',
+        carteGriseDoc: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=600&q=80',
+        status: 'approved',
+        createdAt: '2026-08-20T09:00:00Z'
+      }
+    ],
     coverageZone: 'Dakar Urbain, Almadies, Plateau, Yoff',
     coverageZones: 'Dakar Urbain, Almadies, Plateau, Yoff',
     currentLat: 14.7200,
@@ -352,17 +400,39 @@ const DEFAULT_USERS = [
     phone: '+221 77 340 77 88',
     whatsapp: '221773407788',
     location: 'Saint-Louis, Richard-Toll & Podor',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80',
+    driverPhoto: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80',
+    driverLicenseDoc: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=600&q=80',
     passwordHash: 'e5f9d8d1889325c2eff88e7295da5eccbad60b17e11e8f1910525935d2f9fd20', // AgroDelivery@2026
     salt: 'agrobey_salt_driver',
     isVerified: true,
     isDriverApproved: true,
     driverStatus: 'approved',
-    badge: 'Transporteur Certifié Poids Lourd',
+    badge: '🚚 Transporteur Certifié Poids Lourd',
     vehiculeType: 'camion',
-    vehicleType: 'Camion Plateau Ridelles (10 Tonnes)',
+    vehicleType: '🚛 Camion Plateau Ridelles (10 Tonnes)',
     vehiculePlate: 'SL-7832-B',
     vehiclePlate: 'SL-7832-B',
+    vehicles: [
+      {
+        id: 'veh-401',
+        type: '🚛 Camion Plateau Ridelles (10 Tonnes)',
+        category: 'camion',
+        plate: 'SL-7832-B',
+        carteGriseDoc: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=600&q=80',
+        status: 'approved',
+        createdAt: '2026-08-22T11:00:00Z'
+      },
+      {
+        id: 'veh-402',
+        type: '🚜 Bétaillère Spécialisée (Bétail & Ladoum)',
+        category: 'camion',
+        plate: 'SL-5510-C',
+        carteGriseDoc: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=600&q=80',
+        status: 'approved',
+        createdAt: '2026-08-25T14:00:00Z'
+      }
+    ],
     coverageZone: 'Vallée du Fleuve, Saint-Louis, Podor, Louga',
     coverageZones: 'Vallée du Fleuve, Saint-Louis, Podor, Louga',
     currentLat: 16.2000,
@@ -2223,6 +2293,202 @@ class AgroBeyDatabase {
     this.addSystemLog('AUTH', 'Rejet Compte Vendeur', `Compte de ${user.name} rejeté par ${rejectedBy} (Motif: ${reason})`, rejectedBy);
     this.notify();
     return user;
+  }
+
+  // --- VALIDATION & GESTION DES LIVREURS ET VÉHICULES PAR ADMIN / IT ---
+  approveDriver(userId, approvedBy = 'Admin/IT') {
+    const user = this.getUserById(userId);
+    if (!user) return null;
+
+    user.role = 'delivery';
+    user.isDriverApproved = true;
+    user.driverStatus = 'approved';
+    user.isVerified = true;
+    user.badge = '🚚 Transporteur Certifié Ferm2Table';
+    user.approvedBy = approvedBy;
+    user.approvedAt = new Date().toISOString();
+
+    // Valider tous les véhicules en attente du livreur
+    if (user.vehicles && user.vehicles.length > 0) {
+      user.vehicles.forEach(v => {
+        if (!v.status || v.status === 'pending_approval') {
+          v.status = 'approved';
+          v.approvedAt = new Date().toISOString();
+        }
+      });
+      // Définir le véhicule actif s'il n'est pas encore défini
+      const firstApproved = user.vehicles.find(v => v.status === 'approved');
+      if (firstApproved) {
+        user.vehicleType = firstApproved.type;
+        user.vehiclePlate = firstApproved.plate;
+        user.vehiculeType = firstApproved.category || (firstApproved.type.toLowerCase().includes('moto') ? 'moto' : firstApproved.type.toLowerCase().includes('tricycle') ? 'tricycle' : firstApproved.type.toLowerCase().includes('camion') ? 'camion' : 'camionnette');
+      }
+    }
+
+    this.saveUser(user);
+
+    this.createNotification({
+      recipientId: user.id,
+      title: '🎉 Profil Transporteur & Véhicules Validés !',
+      message: `Félicitations ${user.name} ! Vos documents (Permis & Carte Grise) et véhicules ont été vérifiés et validés par ${approvedBy}. Votre cockpit livreur et la bourse des courses sont désormais actifs.`,
+      type: 'account'
+    });
+
+    this.addSystemLog('DELIVERY', 'Validation Transporteur', `Livreur ${user.name} et sa flotte validés par ${approvedBy}`, approvedBy);
+    this.notify();
+    return user;
+  }
+
+  rejectDriver(userId, reason = 'Documents non conformes', rejectedBy = 'Admin/IT') {
+    const user = this.getUserById(userId);
+    if (!user) return null;
+
+    user.isDriverApproved = false;
+    user.driverStatus = 'rejected';
+    user.badge = 'Non approuvé';
+    user.rejectedBy = rejectedBy;
+    user.rejectionReason = reason;
+
+    this.saveUser(user);
+
+    this.createNotification({
+      recipientId: user.id,
+      title: 'Dossier Transporteur non approuvé',
+      message: `Votre demande de transporteur a été refusée par l'administration (${rejectedBy}). Motif : ${reason}. Veuillez mettre à jour vos pièces (permis, carte grise ou photo) pour réexamen.`,
+      type: 'account'
+    });
+
+    this.addSystemLog('DELIVERY', 'Rejet Transporteur', `Livreur ${user.name} rejeté par ${rejectedBy} (Motif: ${reason})`, rejectedBy);
+    this.notify();
+    return user;
+  }
+
+  addDriverVehicle(userId, vehicleData) {
+    const user = this.getUserById(userId);
+    if (!user) return null;
+
+    if (!user.vehicles) user.vehicles = [];
+
+    const newVehicle = {
+      id: 'veh-' + Date.now().toString().slice(-6),
+      type: vehicleData.type || '🚐 Camionnette Frigorifique / Isotherme (3.5 Tonnes)',
+      category: vehicleData.category || (vehicleData.type.toLowerCase().includes('moto') ? 'moto' : vehicleData.type.toLowerCase().includes('tricycle') ? 'tricycle' : vehicleData.type.toLowerCase().includes('camion') ? 'camion' : 'camionnette'),
+      plate: (vehicleData.plate || 'DK-PROV').toUpperCase().trim(),
+      carteGriseDoc: vehicleData.carteGriseDoc || null,
+      status: 'pending_approval', // Par défaut en attente de validation admin
+      createdAt: new Date().toISOString()
+    };
+
+    user.vehicles.push(newVehicle);
+    this.saveUser(user);
+    this.addSystemLog('DELIVERY', 'Nouveau Véhicule Enregistré', `${user.name} a déclaré un véhicule : ${newVehicle.type} (${newVehicle.plate}) - Carte grise soumise`, user.name);
+    this.notify();
+    return newVehicle;
+  }
+
+  approveDriverVehicle(userId, vehicleId, approvedBy = 'Admin/IT') {
+    const user = this.getUserById(userId);
+    if (!user || !user.vehicles) return null;
+
+    const vehicle = user.vehicles.find(v => v.id === vehicleId);
+    if (vehicle) {
+      vehicle.status = 'approved';
+      vehicle.approvedAt = new Date().toISOString();
+      vehicle.approvedBy = approvedBy;
+
+      // Si le compte livreur était en attente, le passer en approuvé dès qu'un véhicule est validé
+      user.isDriverApproved = true;
+      user.driverStatus = 'approved';
+      user.badge = '🚚 Transporteur Certifié Ferm2Table';
+
+      // S'il n'avait pas de véhicule actif, activer celui-ci
+      if (!user.vehicleType || user.vehicles.filter(v => v.status === 'approved').length === 1) {
+        user.vehicleType = vehicle.type;
+        user.vehiclePlate = vehicle.plate;
+        user.vehiculeType = vehicle.category;
+      }
+
+      this.saveUser(user);
+      this.createNotification({
+        recipientId: user.id,
+        title: '✅ Véhicule Validé !',
+        message: `Votre véhicule ${vehicle.type} (${vehicle.plate}) a été validé par ${approvedBy} et est maintenant disponible dans votre cockpit.`,
+        type: 'vehicle'
+      });
+      this.addSystemLog('DELIVERY', 'Approbation Véhicule', `Véhicule ${vehicle.plate} (${user.name}) validé par ${approvedBy}`, approvedBy);
+      this.notify();
+      return vehicle;
+    }
+    return null;
+  }
+
+  rejectDriverVehicle(userId, vehicleId, reason = 'Carte grise illisible ou non valide', rejectedBy = 'Admin/IT') {
+    const user = this.getUserById(userId);
+    if (!user || !user.vehicles) return null;
+
+    const vehicle = user.vehicles.find(v => v.id === vehicleId);
+    if (vehicle) {
+      vehicle.status = 'rejected';
+      vehicle.rejectionReason = reason;
+      vehicle.rejectedBy = rejectedBy;
+
+      // Si c'était le véhicule actif, basculer sur un autre véhicule validé s'il existe
+      const remainingApproved = user.vehicles.find(v => v.id !== vehicleId && v.status === 'approved');
+      if (remainingApproved) {
+        user.vehicleType = remainingApproved.type;
+        user.vehiclePlate = remainingApproved.plate;
+        user.vehiculeType = remainingApproved.category;
+      } else {
+        user.isDriverApproved = false;
+        user.driverStatus = 'pending_approval';
+      }
+
+      this.saveUser(user);
+      this.createNotification({
+        recipientId: user.id,
+        title: '❌ Véhicule Refusé',
+        message: `Votre véhicule ${vehicle.type} (${vehicle.plate}) a été refusé par l'administration (${rejectedBy}). Motif : ${reason}.`,
+        type: 'vehicle'
+      });
+      this.addSystemLog('DELIVERY', 'Rejet Véhicule', `Véhicule ${vehicle.plate} (${user.name}) refusé par ${rejectedBy} (Motif: ${reason})`, rejectedBy);
+      this.notify();
+      return vehicle;
+    }
+    return null;
+  }
+
+  deleteDriverVehicle(userId, vehicleId) {
+    const user = this.getUserById(userId);
+    if (!user || !user.vehicles) return false;
+
+    user.vehicles = user.vehicles.filter(v => v.id !== vehicleId);
+    
+    // Si c'était le véhicule actif, réassigner
+    const nextApproved = user.vehicles.find(v => v.status === 'approved');
+    if (nextApproved) {
+      user.vehicleType = nextApproved.type;
+      user.vehiclePlate = nextApproved.plate;
+      user.vehiculeType = nextApproved.category;
+    } else {
+      user.vehicleType = null;
+      user.vehiclePlate = null;
+    }
+
+    this.saveUser(user);
+    this.notify();
+    return true;
+  }
+
+  getDriverApprovedVehicles(userId) {
+    const user = this.getUserById(userId);
+    if (!user || !user.vehicles) return [];
+    return user.vehicles.filter(v => v.status === 'approved');
+  }
+
+  getDriverVehicles(userId) {
+    const user = this.getUserById(userId);
+    if (!user || !user.vehicles) return [];
+    return user.vehicles;
   }
 
   // --- ALIASES ET MÉTHODES DE COMPATIBILITÉ ---

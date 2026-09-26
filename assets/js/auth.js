@@ -365,11 +365,11 @@ class AgroBeyAuth {
     }
   }
 
-  // --- INSCRIPTION SÉCURISÉE ---
+  // --- INSCRIPTION SÉCURISÉE AVEC DOCUMENTS LIVREUR & VÉHICULES ---
   async register(userData) {
     const existing = window.AgroBeyDB.getUserByEmail(userData.email);
     if (existing) {
-      return { success: false, message: 'Cette adresse email est déjà enregistrée sur AgroBey.' };
+      return { success: false, message: 'Cette adresse email est déjà enregistrée sur Ferm2Table.' };
     }
 
     const salt = this.generateSalt();
@@ -377,6 +377,40 @@ class AgroBeyAuth {
 
     const isSellerRole = userData.role === 'seller';
     const isDriverRole = userData.role === 'delivery';
+
+    // Traitement spécifique pour les transporteurs
+    let initialVehicles = [];
+    if (isDriverRole) {
+      const vType = userData.vehicleType || '🚐 Camionnette Frigorifique / Isotherme (3.5 Tonnes)';
+      const vCategory = vType.toLowerCase().includes('moto') ? 'moto' : vType.toLowerCase().includes('tricycle') ? 'tricycle' : vType.toLowerCase().includes('camion') ? 'camion' : 'camionnette';
+      const vPlate = (userData.vehiclePlate || 'DK-PROVISOIRE').toUpperCase().trim();
+      const vCarteGrise = userData.carteGriseDoc || null;
+
+      initialVehicles.push({
+        id: 'veh-' + Date.now().toString().slice(-6),
+        type: vType,
+        category: vCategory,
+        plate: vPlate,
+        carteGriseDoc: vCarteGrise,
+        status: 'pending_approval', // En attente de validation administrative
+        createdAt: new Date().toISOString()
+      });
+
+      // Si d'autres véhicules ont été ajoutés lors de l'inscription
+      if (Array.isArray(userData.additionalVehicles) && userData.additionalVehicles.length > 0) {
+        userData.additionalVehicles.forEach((extra, idx) => {
+          initialVehicles.push({
+            id: 'veh-' + (Date.now() + idx + 1).toString().slice(-6),
+            type: extra.type,
+            category: extra.category || 'camionnette',
+            plate: extra.plate.toUpperCase().trim(),
+            carteGriseDoc: extra.carteGriseDoc || null,
+            status: 'pending_approval',
+            createdAt: new Date().toISOString()
+          });
+        });
+      }
+    }
 
     const newUser = {
       id: 'user-' + Date.now().toString().slice(-6),
@@ -389,23 +423,29 @@ class AgroBeyAuth {
       passwordHash,
       salt,
       location: userData.location || 'Sénégal',
-      avatar: userData.avatar || (isDriverRole 
-        ? 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=200&q=80'
-        : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'),
+      // Photo de profil publique : prise de photo de face obligatoire pour le livreur
+      avatar: userData.driverPhoto || userData.avatar || (isDriverRole 
+        ? 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=300&q=80'
+        : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80'),
+      driverPhoto: userData.driverPhoto || (isDriverRole ? (userData.avatar || 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=300&q=80') : null),
+      // Documents Confidentiels (visibles par Admin uniquement)
+      driverLicenseDoc: userData.driverLicenseDoc || (isDriverRole ? 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=600&q=80' : null),
+      vehicles: initialVehicles,
+      vehicleType: isDriverRole ? (initialVehicles[0]?.type || userData.vehicleType) : null,
+      vehiclePlate: isDriverRole ? (initialVehicles[0]?.plate || userData.vehiclePlate) : null,
+      vehiculeType: isDriverRole ? (initialVehicles[0]?.category || 'camionnette') : null,
       isVerified: false,
       isSellerApproved: isSellerRole ? false : true,
       sellerStatus: isSellerRole ? 'pending_approval' : 'none',
-      isDriverApproved: isDriverRole ? false : true,
+      isDriverApproved: isDriverRole ? false : true, // Nécessite validation admin
       driverStatus: isDriverRole ? 'pending_approval' : 'none',
-      vehicleType: userData.vehicleType || (isDriverRole ? 'Camionnette / Utilitaire' : null),
-      vehiclePlate: userData.vehiclePlate || (isDriverRole ? 'DK-EN-COURS' : null),
       coverageZones: userData.coverageZones || userData.location || 'Sénégal',
-      driverLicense: userData.driverLicense || (isDriverRole ? 'Permis B' : null),
+      driverLicense: userData.driverLicense || (isDriverRole ? 'Permis Conforme' : null),
       availability: isDriverRole ? 'offline' : null,
       completedDeliveries: 0,
       earnings: 0,
       rating: 5.0,
-      badge: isSellerRole ? '⏳ Validation Vendeur en attente' : isDriverRole ? '⏳ Validation Livreur en attente' : 'Acheteur',
+      badge: isSellerRole ? '⏳ Validation Vendeur en attente' : isDriverRole ? '⏳ Validation Dossier Livreur en cours' : 'Acheteur',
       status: 'active',
       createdAt: new Date().toISOString()
     };
@@ -415,11 +455,47 @@ class AgroBeyAuth {
     if (isSellerRole) {
       window.AgroBeyDB.addSystemLog('AUTH', 'Demande Inscription Vendeur', `Nouveau vendeur : ${newUser.name} (${newUser.email}), en attente de validation par Admin/IT`, newUser.name);
     } else if (isDriverRole) {
-      window.AgroBeyDB.addSystemLog('AUTH', 'Demande Inscription Transporteur', `Nouveau livreur : ${newUser.name} (${newUser.email} - ${newUser.vehicleType}), en attente de validation par Admin/IT`, newUser.name);
+      window.AgroBeyDB.addSystemLog('AUTH', 'Demande Inscription Transporteur', `Nouveau livreur : ${newUser.name} (${newUser.email} - ${initialVehicles.length} véhicule(s) déclaré(s)), pièces d'identité et permis en attente de validation Super-Admin/IT`, newUser.name);
     }
 
     // Auto-connexion
     return await this.login(newUser.email, userData.password, true);
+  }
+
+  // --- UTILITAIRE DE TRAITEMENT ET COMPRESSION D'IMAGE (POUR PHOTOS & DOCUMENTS) ---
+  static processImageFile(file, maxWidth = 800, quality = 0.8) {
+    return new Promise((resolve, reject) => {
+      if (!file) {
+        resolve(null);
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const dataUrl = canvas.toDataURL('image/jpeg', quality);
+          resolve(dataUrl);
+        };
+        img.onerror = () => resolve(e.target.result);
+        img.src = e.target.result;
+      };
+      reader.onerror = (err) => reject(err);
+      reader.readAsDataURL(file);
+    });
   }
 
   isSellerApproved() {
